@@ -28,8 +28,6 @@ export function installRouteMiddleware<T extends PageProps>(options: RouteMiddle
             if ("props" in data) {
                 const props = await data.props;
 
-                console.log(123);
-
                 return {
                     props: {
                         ...data.props,
@@ -37,8 +35,6 @@ export function installRouteMiddleware<T extends PageProps>(options: RouteMiddle
                     } as T,
                 };
             }
-
-            console.log(44);
 
             return data;
         };

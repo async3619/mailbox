@@ -13,6 +13,7 @@ export const theme = extendTheme({
                 background: {
                     default: "#eff3f5",
                 },
+                divider: "#c0cdd9",
             },
         },
         dark: {
@@ -22,5 +23,17 @@ export const theme = extendTheme({
     typography: {
         fontFamily: [globalFont.style.fontFamily, "sans-serif"].join(","),
         fontWeightRegular: 600,
+    },
+    components: {
+        MuiTooltip: {
+            defaultProps: {
+                arrow: true,
+            },
+            styleOverrides: {
+                tooltip: {
+                    fontSize: "0.8rem",
+                },
+            },
+        },
     },
 });

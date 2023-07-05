@@ -1,4 +1,5 @@
 import React from "react";
+import { RecoilRoot } from "recoil";
 
 import Head from "next/head";
 import type { AppProps } from "next/app";
@@ -16,11 +17,13 @@ export default function App({ Component, pageProps }: AppProps<PageProps>) {
             <Head>
                 <title>{pageProps.title ? `${pageProps.title} - Mailbox` : "Mailbox"}</title>
             </Head>
-            <CssVarsProvider theme={theme}>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            </CssVarsProvider>
+            <RecoilRoot>
+                <CssVarsProvider theme={theme}>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </CssVarsProvider>
+            </RecoilRoot>
         </>
     );
 }
