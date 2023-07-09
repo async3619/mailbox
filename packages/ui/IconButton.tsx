@@ -9,15 +9,19 @@ interface Props extends React.ComponentProps<typeof Root> {
     tooltipPlacement?: "top" | "bottom" | "left" | "right";
 }
 
-export const IconButton = ({ tooltip, tooltipPlacement, ...props }: Props) => {
-    const content = <Root {...props} />;
-    if (tooltip) {
-        return (
-            <Tooltip title={tooltip} placement={tooltipPlacement}>
-                {content}
-            </Tooltip>
-        );
-    }
+export const IconButton = React.forwardRef(
+    ({ tooltip, tooltipPlacement, ...props }: Props, ref: React.Ref<HTMLButtonElement>) => {
+        const content = <Root ref={ref} {...props} />;
+        if (tooltip) {
+            return (
+                <Tooltip title={tooltip} placement={tooltipPlacement}>
+                    {content}
+                </Tooltip>
+            );
+        }
 
-    return content;
-};
+        return content;
+    },
+);
+
+IconButton.displayName = "IconButton";

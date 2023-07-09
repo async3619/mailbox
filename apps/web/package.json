@@ -15,25 +15,39 @@
         "@dnd-kit/utilities": "^3.2.1",
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
+        "@hookform/resolvers": "^3.1.1",
         "@mui/icons-material": "^5.13.7",
+        "@mui/lab": "^5.0.0-alpha.135",
         "@mui/material": "^5.13.6",
-        "next": "^13.4.1",
+        "is-url": "^1.2.4",
+        "masto": "^5.11.3",
+        "next": "^13.4.9",
         "rc-scrollbars": "^1.1.6",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-hook-form": "^7.45.1",
         "react-merge-refs": "^2.0.2",
+        "react-transition-group": "^4.4.5",
         "react-use-measure": "^2.1.1",
         "recoil": "^0.7.7",
+        "recoil-persist": "^5.1.0",
         "shortid": "^2.2.16",
-        "ui": "*"
+        "ui": "*",
+        "utility-types": "^3.10.0",
+        "yup": "^1.2.0",
+        "zod": "^3.21.4"
     },
     "devDependencies": {
+        "@types/is-url": "^1.2.30",
         "@types/node": "^17.0.12",
         "@types/react": "^18.0.22",
         "@types/react-dom": "^18.0.7",
         "@types/shortid": "^0.0.29",
         "eslint-config-custom": "*",
+        "ts-node": "^10.9.1",
+        "ts-patch": "^3.0.1",
         "tsconfig": "*",
-        "typescript": "^4.5.3"
+        "type-fest": "^3.12.0",
+        "typescript": "^5.1.6"
     }
 }

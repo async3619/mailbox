@@ -10,18 +10,28 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 
 import { LogoSvg } from "@components/LogoSvg";
+import { useDialog } from "@components/Dialog";
+import { AddAccountDialog } from "@components/Dialog/AddAccount";
 
 import { columnState } from "@states/columns";
+import { useAccounts } from "@states/accounts";
+
 import { DRAWER_WIDTH } from "@styles/constants";
 
-import { Title } from "@components/Navigator.styles";
+import { Title } from "@components/Layout/Navigator.styles";
+import { AccountButton } from "@components/AccountButton";
 
 export function Navigator() {
     const [columns, setColumns] = useRecoilState(columnState);
+    const { showDialog } = useDialog();
+    const { accounts } = useAccounts();
 
-    function handleAddClick() {
+    const handleAccountAdd = () => {
+        showDialog(AddAccountDialog);
+    };
+    const handleAddClick = () => {
         setColumns(columns => [...columns, { id: shortid() }]);
-    }
+    };
 
     return (
         <Drawer
@@ -69,7 +79,16 @@ export function Navigator() {
                     <Divider sx={{ mb: 2, mt: 2 }} />
                     <Box display="flex" justifyContent="center">
                         <Stack spacing={2}>
-                            <IconButton color="primary" tooltip="Add Account" tooltipPlacement="right">
+                            {accounts.map(account => (
+                                <AccountButton key={account.getUniqueId()} account={account} />
+                            ))}
+                            <IconButton
+                                color="primary"
+                                tooltip="Add Account"
+                                tooltipPlacement="right"
+                                onClick={handleAccountAdd}
+                                size="large"
+                            >
                                 <PersonAddAltRoundedIcon />
                             </IconButton>
                         </Stack>

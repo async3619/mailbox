@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
+import { SMALLER_COLUMN_WIDTH } from "@styles/constants";
 
 export const Root = styled.div`
-    width: ${({ theme }) => theme.spacing(35)};
+    width: ${SMALLER_COLUMN_WIDTH}px;
 
     margin: 0;
-    border: 1px solid ${({ theme }) => theme.vars.palette.divider};
+    border: 1px solid ${({ theme }) => theme.palette.divider};
     border-radius: ${({ theme }) => theme.spacing(0.5)};
 
     background: white;
@@ -12,7 +13,7 @@ export const Root = styled.div`
 
 export const Header = styled.div`
     padding: ${({ theme }) => theme.spacing(1.5)};
-    border-bottom: 1px solid ${({ theme }) => theme.vars.palette.divider};
+    border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
 
     display: flex;
     align-items: center;
@@ -40,7 +41,7 @@ export const Handle = styled.button`
         width: 2px;
         height: ${({ theme }) => theme.spacing(2)};
 
-        background: ${({ theme }) => theme.vars.palette.text.disabled};
+        background: ${({ theme }) => theme.palette.text.disabled};
 
         opacity: 0.5;
     }
@@ -51,14 +52,14 @@ export const Handle = styled.button`
 
     &:hover,
     &:focus-visible {
-        background: ${({ theme }) => theme.vars.palette.action.hover};
+        background: ${({ theme }) => theme.palette.action.hover};
     }
 
     &:focus-visible {
-        box-shadow: 0 0 0 2px ${({ theme }) => theme.vars.palette.action.focus};
+        box-shadow: 0 0 0 2px ${({ theme }) => theme.palette.action.focus};
     }
 
     &:active {
-        background: ${({ theme }) => theme.vars.palette.action.selected};
+        background: ${({ theme }) => theme.palette.action.selected};
     }
 `;

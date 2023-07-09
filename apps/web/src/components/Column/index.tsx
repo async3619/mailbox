@@ -14,7 +14,7 @@ export interface ColumnProps {
     instanceId: string;
 }
 
-export const Column = React.forwardRef(({ title, instanceId }: ColumnProps) => {
+export const Column = ({ title, instanceId }: ColumnProps) => {
     const setColumnNode = useColumnNodeSetter(instanceId);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: instanceId,
@@ -39,6 +39,6 @@ export const Column = React.forwardRef(({ title, instanceId }: ColumnProps) => {
             </Header>
         </Root>
     );
-});
+};
 
 Column.displayName = "Column";

@@ -4,9 +4,9 @@ import { RecoilRoot } from "recoil";
 import Head from "next/head";
 import type { AppProps } from "next/app";
 
-import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material";
 
-import { Layout } from "@components/Layout";
+import { DialogProvider } from "@components/Dialog/Provider";
 
 import { theme } from "@styles/theme";
 import { PageProps } from "@utils/routes/types";
@@ -18,11 +18,11 @@ export default function App({ Component, pageProps }: AppProps<PageProps>) {
                 <title>{pageProps.title ? `${pageProps.title} - Mailbox` : "Mailbox"}</title>
             </Head>
             <RecoilRoot>
-                <CssVarsProvider theme={theme}>
-                    <Layout>
+                <ThemeProvider theme={theme}>
+                    <DialogProvider>
                         <Component {...pageProps} />
-                    </Layout>
-                </CssVarsProvider>
+                    </DialogProvider>
+                </ThemeProvider>
             </RecoilRoot>
         </>
     );
