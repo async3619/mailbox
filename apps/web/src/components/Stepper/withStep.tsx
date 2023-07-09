@@ -20,9 +20,9 @@ export const withStep =
             return (
                 <BaseStep step={step}>
                     <BaseComponent
-                        moveNext={moveNext}
-                        onComplete={onComplete}
                         {...(restProps as unknown as HocProps)}
+                        onComplete={onComplete}
+                        moveNext={moveNext}
                     />
                 </BaseStep>
             );

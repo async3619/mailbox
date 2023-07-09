@@ -9,7 +9,7 @@ import useMeasure from "react-use-measure";
 
 export interface StepRendererProps {
     stepHolder: StepHolder;
-    onMoveNext: (step: Step, keyName: string) => void;
+    onMoveNext: (step: Step, keyName?: string) => void;
     onHeightChange(height: number): void;
     onComplete?(): void;
 }
@@ -43,7 +43,6 @@ export const StepRenderer = ({ stepHolder, onMoveNext, onHeightChange, onComplet
     const nodeRef = React.useRef<HTMLDivElement>(null);
     const [measureRef, { height }] = useMeasure();
     const { step, show } = stepHolder;
-    const { component: Component } = step;
 
     React.useEffect(() => {
         onHeightChange(height);
@@ -56,11 +55,20 @@ export const StepRenderer = ({ stepHolder, onMoveNext, onHeightChange, onComplet
         [step, onMoveNext],
     );
 
+    let content: React.ReactNode;
+    if (step.type === "normal-step") {
+        const { component: Component } = step;
+        content = <Component step={step} moveNext={moveNext} onComplete={onComplete} />;
+    } else if (step.type === "branched-step") {
+        const { component: Component } = step;
+        content = <Component step={step} moveNext={moveNext} onComplete={onComplete} />;
+    }
+
     return (
         <Transition nodeRef={nodeRef} in={show} timeout={500}>
             {status => (
                 <Root ref={mergeRefs([nodeRef, measureRef])} style={{ ...styles[status] }}>
-                    <Component step={step} moveNext={moveNext} onComplete={onComplete} />
+                    {content}
                 </Root>
             )}
         </Transition>

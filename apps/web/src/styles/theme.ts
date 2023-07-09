@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material";
 
 const { palette } = createTheme();
 const { augmentColor } = palette;
-const createColor = mainColor => augmentColor({ color: { main: mainColor } });
+const createColor = (mainColor: string) => augmentColor({ color: { main: mainColor } });
 
 const globalFont = localFont({
     src: "./suit.woff2",

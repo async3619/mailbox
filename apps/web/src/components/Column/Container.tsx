@@ -64,7 +64,7 @@ export function ColumnContainer({ setColumns, columns }: ColumnContainerProps) {
         (event: DragEndEvent) => {
             const { active, over } = event;
 
-            if (active.id !== over.id) {
+            if (over && active.id !== over.id) {
                 setColumns(items => {
                     const oldIndex = items.findIndex(({ id }) => id === active.id);
                     const newIndex = items.findIndex(({ id }) => id === over.id);

@@ -14,3 +14,15 @@ declare module "@mui/material/styles" {
     interface Palette extends CustomPalette {}
     interface PaletteOptions extends CustomPalette {}
 }
+
+declare module "@mui/lab" {
+    interface ButtonPropsColorOverrides {
+        mastodon: true;
+    }
+}
+
+declare module "@mui/material" {
+    interface ButtonPropsColorOverrides {
+        mastodon: true;
+    }
+}

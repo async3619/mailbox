@@ -5,7 +5,7 @@ export interface LayoutContextValue {
     scroller: Scrollbars | null;
 }
 
-export const LayoutContext = React.createContext<LayoutContextValue>(null);
+export const LayoutContext = React.createContext<LayoutContextValue | null>(null);
 
 export function useLayout() {
     const layout = React.useContext(LayoutContext);

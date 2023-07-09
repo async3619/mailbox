@@ -25,11 +25,15 @@ export function Stepper({ step, onComplete }: StepperProps) {
 
     const handleMoveNext = React.useCallback((step: Step, keyName?: string) => {
         setSteps(prevSteps => {
-            let nextStep: Step;
-            if (step.type === "branched-step" && keyName) {
+            let nextStep: Step | undefined;
+            if (step.type === "branched-step" && keyName && step.branches) {
                 nextStep = step.branches[keyName];
             } else if (step.type === "normal-step") {
                 nextStep = step.next;
+            }
+
+            if (!nextStep) {
+                throw new Error("Next step is not defined");
             }
 
             return [

@@ -1,17 +1,17 @@
 import React from "react";
 import { OuterProps } from "@components/Stepper/withStep";
 
-export interface BaseStep {
-    component: React.ComponentType<OuterProps>;
-}
+export interface BaseStep {}
 
 export interface NormalStep extends BaseStep {
     type: "normal-step";
     next?: Step;
+    component: React.ComponentType<OuterProps<NormalStep>>;
 }
 export interface BranchedStep<BranchNames extends string> extends BaseStep {
     type: "branched-step";
     branches?: Record<BranchNames, Step>;
+    component: React.ComponentType<OuterProps<BranchedStep<string>>>;
 }
 
 export type Step<BranchNames extends string = string> = NormalStep | BranchedStep<BranchNames>;
