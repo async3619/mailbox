@@ -25,7 +25,7 @@ export interface DialogContextValue {
     hideBackdrop(): void;
 }
 
-export const DialogContext = React.createContext<DialogContextValue>(null);
+export const DialogContext = React.createContext<DialogContextValue | null>(null);
 
 export function useDialog() {
     const dialog = React.useContext(DialogContext);

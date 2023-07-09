@@ -7,11 +7,16 @@ import { useDialog } from "@components/Dialog";
 import { AccountHydrator, BaseAccount } from "@services/base/account";
 import { hydrateAccount } from "@services/index";
 
+export enum HydrationStatus {
+    Prepare,
+    Hydrating,
+    Done,
+}
+
 export interface AccountStateData {
     accounts: BaseAccount<string>[];
     hydrators: AccountHydrator<BaseAccount<string>>[];
 }
-
 interface StateData {
     accountState: AccountStateData;
 }
@@ -60,21 +65,21 @@ export function useAccounts() {
 
     return { accounts, addAccount };
 }
-
 export function useHydrateAccounts() {
     const [{ hydrators }, setAccountData] = useRecoilState(accountState);
-    const [isHydrating, setIsHydrating] = React.useState(false);
+    const [hydrationStatus, setHydrationStatus] = React.useState<HydrationStatus>(HydrationStatus.Prepare);
     const dialog = useDialog();
     const hydrate = React.useCallback(async () => {
         if (hydrators.length === 0) {
+            setHydrationStatus(HydrationStatus.Done);
             return;
         }
 
-        if (isHydrating) {
+        if (hydrationStatus !== HydrationStatus.Prepare) {
             return;
         }
 
-        setIsHydrating(true);
+        setHydrationStatus(HydrationStatus.Hydrating);
         dialog.showBackdrop();
 
         const newAccounts = await Promise.all(hydrators.map(hydrator => hydrator.hydrate()));
@@ -87,10 +92,12 @@ export function useHydrateAccounts() {
         });
 
         dialog.hideBackdrop();
-        setIsHydrating(false);
-    }, [dialog, hydrators, isHydrating, setAccountData]);
+        setHydrationStatus(HydrationStatus.Done);
+    }, [dialog, hydrators, hydrationStatus, setAccountData]);
 
     React.useEffect(() => {
         hydrate();
     }, [hydrate]);
+
+    return { hydrationStatus };
 }

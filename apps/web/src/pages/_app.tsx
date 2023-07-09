@@ -1,5 +1,6 @@
 import React from "react";
 import { RecoilRoot } from "recoil";
+import { SnackbarProvider } from "notistack";
 
 import Head from "next/head";
 import type { AppProps } from "next/app";
@@ -20,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps<PageProps>) {
             <RecoilRoot>
                 <ThemeProvider theme={theme}>
                     <DialogProvider>
+                        <SnackbarProvider />
                         <Component {...pageProps} />
                     </DialogProvider>
                 </ThemeProvider>

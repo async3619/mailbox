@@ -4,7 +4,7 @@ import { BaseDialogProps } from "ui/dialogs";
 
 import { Backdrop, CircularProgress } from "@mui/material";
 
-import { DialogContext, DialogInstance } from "@components/Dialog";
+import { DialogContext, DialogContextValue, DialogInstance } from "@components/Dialog";
 
 import { Fn } from "@utils/types";
 
@@ -32,13 +32,13 @@ export class DialogProvider extends React.Component<React.PropsWithChildren, Dia
         }));
     };
 
-    private showDialog = (component: React.ComponentType<BaseDialogProps>, props?: Record<string, unknown>) => {
+    private showDialog: DialogContextValue["showDialog"] = (component, props?: Record<string, unknown>) => {
         return new Promise<void>(res => {
             const id = shortid();
             const dialogInstance: DialogInstance<BaseDialogProps> = {
                 id,
                 open: true,
-                component,
+                component: component as DialogInstance<BaseDialogProps>["component"],
                 props: props ?? {},
                 onClose: this.handleClose.bind(this, id, res),
                 onClosed: this.handleClosed.bind(this, id),

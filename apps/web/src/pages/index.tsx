@@ -1,10 +1,11 @@
 import React from "react";
+import { enqueueSnackbar } from "notistack";
 
 import { ColumnContainer } from "@components/Column/Container";
 import { Layout } from "@components/Layout";
 import { useDialog } from "@components/Dialog";
 
-import { useAccounts, useHydrateAccounts } from "@states/accounts";
+import { HydrationStatus, useAccounts, useHydrateAccounts } from "@states/accounts";
 import { useColumns } from "@states/columns";
 
 import { MastodonAuth } from "@services/mastodon/auth";
@@ -20,14 +21,13 @@ export interface IndexProps extends PageProps {
 
 export default function Index(props: IndexProps) {
     const code = React.useRef(props.mastodonCode);
-    const { addAccount } = useAccounts();
+    const { addAccount, accounts } = useAccounts();
     const { showBackdrop, hideBackdrop } = useDialog();
     const [columns, setColumns] = useColumns();
-
-    useHydrateAccounts();
+    const { hydrationStatus } = useHydrateAccounts();
 
     React.useEffect(() => {
-        if (!code.current) {
+        if (!code.current || hydrationStatus !== HydrationStatus.Done) {
             return;
         }
 
@@ -36,6 +36,7 @@ export default function Index(props: IndexProps) {
             return;
         }
 
+        localStorage.removeItem(MASTODON_TEMP_AUTH_KEY);
         const authData = JSON.parse(rawAuthData);
         if (!isMastodonTempAuthData(authData)) {
             throw new Error("There was something wrong with the Mastodon authentication process.");
@@ -50,11 +51,29 @@ export default function Index(props: IndexProps) {
             .getToken(client_id, client_secret, redirect_uri, code.current)
             .then(data => MastodonAccount.create(instanceUrl, data))
             .then(account => {
-                addAccount(account);
-                localStorage.removeItem(MASTODON_TEMP_AUTH_KEY);
+                const oldAccount = accounts.find(acc => acc.getUniqueId() === account.getUniqueId());
+                if (!oldAccount) {
+                    return account;
+                }
+
+                return oldAccount.getUserId();
+            })
+            .then(account => {
+                if (typeof account === "string") {
+                    enqueueSnackbar(`Given account ${account} already connected`);
+                } else {
+                    addAccount(account);
+                }
+
                 hideBackdrop();
+            })
+            .catch(() => {
+                hideBackdrop();
+                enqueueSnackbar("Failed to connect account", {
+                    variant: "error",
+                });
             });
-    }, [addAccount, hideBackdrop, showBackdrop]);
+    }, [addAccount, hideBackdrop, showBackdrop, accounts, hydrationStatus]);
 
     return (
         <Layout>
