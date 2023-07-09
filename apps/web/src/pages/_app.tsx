@@ -7,6 +7,7 @@ import type { AppProps } from "next/app";
 
 import { ThemeProvider } from "@mui/material";
 
+import { Splash } from "@components/Splash";
 import { DialogProvider } from "@components/Dialog/Provider";
 
 import { theme } from "@styles/theme";
@@ -22,7 +23,9 @@ export default function App({ Component, pageProps }: AppProps<PageProps>) {
                 <ThemeProvider theme={theme}>
                     <DialogProvider>
                         <SnackbarProvider />
-                        <Component {...pageProps} />
+                        <Splash>
+                            <Component {...pageProps} />
+                        </Splash>
                     </DialogProvider>
                 </ThemeProvider>
             </RecoilRoot>

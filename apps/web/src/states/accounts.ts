@@ -2,7 +2,7 @@ import React from "react";
 import { atom, useRecoilState } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
-import { useDialog } from "@components/Dialog";
+import { useSplash } from "@components/Splash";
 
 import { AccountHydrator, BaseAccount } from "@services/base/account";
 import { hydrateAccount } from "@services/index";
@@ -68,7 +68,7 @@ export function useAccounts() {
 export function useHydrateAccounts() {
     const [{ hydrators }, setAccountData] = useRecoilState(accountState);
     const [hydrationStatus, setHydrationStatus] = React.useState<HydrationStatus>(HydrationStatus.Prepare);
-    const dialog = useDialog();
+    const splash = useSplash();
     const hydrate = React.useCallback(async () => {
         if (hydrators.length === 0) {
             setHydrationStatus(HydrationStatus.Done);
@@ -80,7 +80,6 @@ export function useHydrateAccounts() {
         }
 
         setHydrationStatus(HydrationStatus.Hydrating);
-        dialog.showBackdrop();
 
         const newAccounts = await Promise.all(hydrators.map(hydrator => hydrator.hydrate()));
         setAccountData(data => {
@@ -91,9 +90,9 @@ export function useHydrateAccounts() {
             };
         });
 
-        dialog.hideBackdrop();
+        splash.hide();
         setHydrationStatus(HydrationStatus.Done);
-    }, [dialog, hydrators, hydrationStatus, setAccountData]);
+    }, [splash, hydrators, hydrationStatus, setAccountData]);
 
     React.useEffect(() => {
         hydrate();
