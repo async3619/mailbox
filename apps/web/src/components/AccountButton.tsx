@@ -1,18 +1,27 @@
 import React from "react";
+import { ImageButton } from "ui";
+
+import { Tooltip } from "@mui/material";
+
+import { useDrawerMenu } from "@components/DrawerMenu";
+import { AddColumnDrawerMenu } from "@components/DrawerMenu/AddColumn";
 
 import { BaseAccount } from "@services/base/account";
-
-import { ImageButton } from "ui/ImageButton";
-import { Tooltip } from "@mui/material";
 
 export interface AccountButtonProps {
     account: BaseAccount<string>;
 }
 
 export function AccountButton({ account }: AccountButtonProps) {
+    const drawerMenu = useDrawerMenu();
+
+    const handleClick = React.useCallback(() => {
+        drawerMenu.showDrawerMenu(AddColumnDrawerMenu, { account });
+    }, [drawerMenu, account]);
+
     return (
         <Tooltip title={account.getUserId()} placement="right">
-            <ImageButton imageSrc={account.getAvatarUrl()} />
+            <ImageButton imageSrc={account.getAvatarUrl()} onClick={handleClick} />
         </Tooltip>
     );
 }

@@ -23,7 +23,7 @@ export default function Index(props: IndexProps) {
     const code = React.useRef(props.mastodonCode);
     const { addAccount, accounts } = useAccounts();
     const { showBackdrop, hideBackdrop } = useDialog();
-    const [columns, setColumns] = useColumns();
+    const { columns, setColumns } = useColumns();
     const { hydrationStatus } = useHydrateAccounts();
 
     React.useEffect(() => {

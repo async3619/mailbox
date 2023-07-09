@@ -3,6 +3,7 @@ import { login, mastodon } from "masto";
 
 import { AccountHydrator, BaseAccount } from "@services/base/account";
 import { GetTokenData } from "@services/mastodon/auth.types";
+import { MastodonTimeline } from "@services/mastodon/timeline";
 
 const SERIALIZED_MASTODON_ACCOUNT = z.object({
     serviceType: z.literal("mastodon"),
@@ -45,19 +46,20 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
     }
 
     public getUniqueId() {
-        return this.account.id;
+        return `@${this.account.username}@${this.instanceUrl}`;
     }
-
     public getUserId() {
         return this.account.username;
     }
-
     public getDisplayName() {
         return this.account.displayName;
     }
-
     public getAvatarUrl() {
         return this.account.avatar;
+    }
+
+    public getTimeline(): MastodonTimeline {
+        return new MastodonTimeline(this, this.client);
     }
 
     public serialize() {

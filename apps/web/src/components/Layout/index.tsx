@@ -9,6 +9,7 @@ import { GlobalStyles } from "@components/Layout/index.styles";
 
 import { Global } from "@emotion/react";
 import { DRAWER_WIDTH } from "@styles/constants";
+import { DrawerMenuProvider } from "@components/DrawerMenu/Provider";
 
 export interface LayoutProps {
     children: React.ReactNode;
@@ -19,20 +20,25 @@ export function Layout({ children }: LayoutProps) {
 
     return (
         <LayoutContext.Provider value={{ scroller: scrollBarRef }}>
-            <NoSsr>
-                <Global styles={GlobalStyles} />
-                <CssBaseline />
-                <Navigator />
-                <Box position="fixed" top={0} left={DRAWER_WIDTH} right={0} bottom={0}>
-                    <Scrollbars ref={setScrollBarRef}>
-                        <Box display="flex" height="100vh">
-                            <Box component="main" p={1} flex="1 1 auto">
-                                {children}
-                            </Box>
+            <DrawerMenuProvider>
+                {drawerMenuNode => (
+                    <NoSsr>
+                        <Global styles={GlobalStyles} />
+                        <CssBaseline />
+                        <Navigator />
+                        <Box position="fixed" top={0} left={DRAWER_WIDTH} right={0} bottom={0}>
+                            {drawerMenuNode}
+                            <Scrollbars ref={setScrollBarRef}>
+                                <Box display="flex" height="100vh">
+                                    <Box component="main" p={1} flex="1 1 auto">
+                                        {children}
+                                    </Box>
+                                </Box>
+                            </Scrollbars>
                         </Box>
-                    </Scrollbars>
-                </Box>
-            </NoSsr>
+                    </NoSsr>
+                )}
+            </DrawerMenuProvider>
         </LayoutContext.Provider>
     );
 }

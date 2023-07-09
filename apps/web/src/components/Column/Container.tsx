@@ -19,13 +19,14 @@ import {
 } from "@dnd-kit/sortable";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
-import { ColumnInstance, useColumnNodes } from "@states/columns";
+import { useColumnNodes } from "@states/columns";
 
-import { Column } from "@components/Column";
 import { useLayout } from "@components/Layout/context";
+import { ColumnInstance } from "@components/Column/types";
 import { Root } from "@components/Column/Container.styles";
 
 import { getClosestIndex } from "@utils/closest";
+import { Column } from "@components/Column/index";
 
 export interface ColumnContainerProps {
     columns: ColumnInstance[];
@@ -94,8 +95,8 @@ export function ColumnContainer({ setColumns, columns }: ColumnContainerProps) {
             <SortableContext strategy={horizontalListSortingStrategy} items={columns}>
                 <Root ref={rootRef}>
                     <Stack direction="row" spacing={1} sx={{ minWidth: "100%", height: "100%" }}>
-                        {columns.map(({ id }) => (
-                            <Column key={id} title={`Column ${id}`} instanceId={id} />
+                        {columns.map(column => (
+                            <Column key={column.id} column={column} />
                         ))}
                     </Stack>
                 </Root>

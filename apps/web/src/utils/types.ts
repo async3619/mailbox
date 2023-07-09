@@ -6,3 +6,4 @@ export type Fn<TArgs, TReturn> = TArgs extends unknown[]
 
 export type Nullable<T> = T | null | undefined;
 export type KeyOf<T> = Exclude<keyof T, number | symbol>;
+export type Resolved<T> = T extends Promise<infer U> ? U : T;

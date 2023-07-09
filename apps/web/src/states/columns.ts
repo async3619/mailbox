@@ -1,14 +1,13 @@
+import shortid from "shortid";
 import { atom, useRecoilState } from "recoil";
 import React from "react";
 import { RecoilEnv } from "recoil";
 
+import { ColumnInstance } from "@components/Column/types";
+
 import { persistAtom } from "@states/index";
 
 RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
-
-export interface ColumnInstance {
-    id: string;
-}
 
 export const columnState = atom<ColumnInstance[]>({
     key: "columnState",
@@ -21,7 +20,19 @@ export const columnNodeState = atom<Record<ColumnInstance["id"], HTMLElement>>({
 });
 
 export function useColumns() {
-    return useRecoilState(columnState);
+    const [columns, setColumns] = useRecoilState(columnState);
+    const addColumns = React.useCallback(
+        (...newColumns: Omit<ColumnInstance, "id">[]) => {
+            setColumns(prev => [...prev, ...newColumns.map(c => ({ ...c, id: shortid() }))]);
+        },
+        [setColumns],
+    );
+
+    return {
+        columns,
+        setColumns,
+        addColumns,
+    };
 }
 
 export function useColumnNodes() {

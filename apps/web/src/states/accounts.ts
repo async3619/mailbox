@@ -65,12 +65,21 @@ export function useAccounts() {
 
     return { accounts, addAccount };
 }
+export function useAccount(id: string) {
+    const [{ accounts }] = useRecoilState(accountState);
+
+    return React.useMemo(() => {
+        return accounts.find(account => account.getUniqueId() === id) ?? null;
+    }, [accounts, id]);
+}
+
 export function useHydrateAccounts() {
     const [{ hydrators }, setAccountData] = useRecoilState(accountState);
     const [hydrationStatus, setHydrationStatus] = React.useState<HydrationStatus>(HydrationStatus.Prepare);
     const splash = useSplash();
     const hydrate = React.useCallback(async () => {
         if (hydrators.length === 0) {
+            splash.hide();
             setHydrationStatus(HydrationStatus.Done);
             return;
         }

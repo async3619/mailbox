@@ -4,6 +4,9 @@ import { SMALLER_COLUMN_WIDTH } from "@styles/constants";
 export const Root = styled.div`
     width: ${SMALLER_COLUMN_WIDTH}px;
 
+    display: flex;
+    flex-direction: column;
+
     margin: 0;
     border: 1px solid ${({ theme }) => theme.palette.divider};
     border-radius: ${({ theme }) => theme.spacing(0.5)};
@@ -62,4 +65,25 @@ export const Handle = styled.button`
     &:active {
         background: ${({ theme }) => theme.palette.action.selected};
     }
+`;
+
+export const Body = styled.div`
+    position: relative;
+
+    overflow-y: auto;
+`;
+
+export const Content = styled.div`
+    height: 100%;
+
+    position: relative;
+`;
+
+export const ProgressWrapper = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    transition: ${({ theme }) => theme.transitions.create("opacity")};
 `;

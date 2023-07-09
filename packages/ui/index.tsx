@@ -1,2 +1,5 @@
 export * from "./IconButton";
+export * from "./ImageButton";
 export * from "./Button";
+export * from "./Avatar";
+export * from "./List";

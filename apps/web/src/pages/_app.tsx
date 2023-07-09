@@ -11,6 +11,7 @@ import { Splash } from "@components/Splash";
 import { DialogProvider } from "@components/Dialog/Provider";
 
 import { theme } from "@styles/theme";
+
 import { PageProps } from "@utils/routes/types";
 
 export default function App({ Component, pageProps }: AppProps<PageProps>) {

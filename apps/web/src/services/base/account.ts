@@ -1,6 +1,9 @@
+import { BaseTimeline } from "@services/base/timeline";
+
 export abstract class BaseAccount<
     TServiceType extends string,
     TRawData extends Record<string, unknown> = Record<string, unknown>,
+    TTimeline extends BaseTimeline<unknown> = BaseTimeline<unknown>,
 > {
     private readonly serviceType: TServiceType;
 
@@ -16,6 +19,8 @@ export abstract class BaseAccount<
     public abstract getUserId(): string;
     public abstract getDisplayName(): string;
     public abstract getAvatarUrl(): string;
+
+    public abstract getTimeline(): TTimeline;
 
     public abstract serialize(): TRawData;
 }
