@@ -14,6 +14,8 @@ import { theme } from "@styles/theme";
 
 import { PageProps } from "@utils/routes/types";
 
+import "swiper/css";
+
 export default function App({ Component, pageProps }: AppProps<PageProps>) {
     return (
         <>

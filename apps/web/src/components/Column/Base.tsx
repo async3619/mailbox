@@ -16,14 +16,23 @@ export interface ColumnProps {
     instance: ColumnInstance;
     children: React.ReactNode;
     loading?: boolean;
+    onScroll?: (offset: number) => void;
 }
 
-export const BaseColumn = ({ instance, children, loading }: ColumnProps) => {
+export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProps) => {
     const { id, title } = instance;
     const setColumnNode = useColumnNodeSetter(id);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id,
     });
+
+    const handleScroll = React.useCallback(
+        (event: React.UIEvent<HTMLElement>) => {
+            const { scrollTop } = event.currentTarget;
+            onScroll?.(scrollTop);
+        },
+        [onScroll],
+    );
 
     const ref = React.useMemo(() => {
         return mergeRefs([setNodeRef, setColumnNode]);
@@ -46,7 +55,7 @@ export const BaseColumn = ({ instance, children, loading }: ColumnProps) => {
                 <ProgressWrapper style={{ opacity: loading ? 1 : 0 }}>
                     <LinearProgress />
                 </ProgressWrapper>
-                <Scrollbars autoHide>
+                <Scrollbars autoHide onScroll={handleScroll}>
                     <Body>{children}</Body>
                 </Scrollbars>
             </Content>

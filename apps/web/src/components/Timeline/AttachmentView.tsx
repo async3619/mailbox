@@ -1,78 +1,52 @@
 import React from "react";
 
-import { PostItem } from "@services/base/timeline";
+import { Typography } from "@mui/material";
+import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 
-import { Item, Root } from "@components/Timeline/AttachmentView.styles";
-import { Grid } from "@mui/material";
+import { TimelineItem } from "@services/base/timeline";
+
+import { Label, Play, Root } from "@components/Timeline/AttachmentView.styles";
 
 export interface AttachmentViewProps {
-    attachments: PostItem["attachments"];
+    onClick?: () => void;
+    attachment: TimelineItem["attachments"][0];
+    aspectRatio?: string | false;
+    fullHeight?: boolean;
 }
 
-export function AttachmentView({ attachments }: AttachmentViewProps) {
-    let content: React.ReactNode;
-    if (attachments.length === 1) {
-        content = (
-            <>
-                <Grid item xs={12}>
-                    <Item key={attachments[0].url} style={{ backgroundImage: `url(${attachments[0].previewUrl})` }} />
-                </Grid>
-            </>
-        );
-    } else if (attachments.length === 3) {
-        content = (
-            <>
-                <Grid item xs={6}>
-                    <Item
-                        key={attachments[0].url}
-                        style={{
-                            height: "100%",
-                            backgroundImage: `url(${attachments[0].previewUrl})`,
-                            aspectRatio: "auto",
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <Grid container spacing={0.5}>
-                        <Grid item xs={12}>
-                            <Item
-                                key={attachments[1].url}
-                                style={{ backgroundImage: `url(${attachments[1].previewUrl})`, aspectRatio: "16 / 9" }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Item
-                                key={attachments[2].url}
-                                style={{ backgroundImage: `url(${attachments[2].previewUrl})`, aspectRatio: "16 / 9" }}
-                            />
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </>
-        );
-    } else {
-        const targetAttachments = attachments.slice(0, 4);
-        const aspectRatio = attachments.length === 2 ? "1 / 1" : undefined;
+export function AttachmentView({ attachment, aspectRatio, fullHeight = false, onClick }: AttachmentViewProps) {
+    const previewUrl = attachment.previewUrl;
+    let children: React.ReactNode = null;
 
-        content = (
+    if (attachment.type === "gifv" && attachment.url) {
+        children = (
             <>
-                {targetAttachments.map((attachment, index) => (
-                    <Grid item xs={6} key={+index}>
-                        <Item
-                            key={attachment.url}
-                            style={{ backgroundImage: `url(${attachment.previewUrl})`, aspectRatio }}
-                        />
-                    </Grid>
-                ))}
+                <video src={attachment.url} role="application" autoPlay loop />
+                <Typography variant="caption" component={Label}>
+                    GIF
+                </Typography>
+            </>
+        );
+    } else if (attachment.type === "video" && attachment.url) {
+        children = (
+            <>
+                <Play>
+                    <PlayArrowRoundedIcon fontSize="inherit" />
+                </Play>
             </>
         );
     }
 
     return (
-        <Root>
-            <Grid container spacing={0.5}>
-                {content}
-            </Grid>
+        <Root
+            onClick={onClick}
+            style={{
+                backgroundImage: `url(${previewUrl})`,
+                aspectRatio: aspectRatio === false ? "auto" : aspectRatio,
+                height: fullHeight ? "100%" : undefined,
+            }}
+        >
+            {children}
         </Root>
     );
 }

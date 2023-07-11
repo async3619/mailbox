@@ -16,11 +16,13 @@ export const Header = styled.div`
 `;
 
 export const Content = styled.div`
+    font-size: 0.85rem;
+
     p {
         margin: 0;
         padding: 0;
 
-        font-size: 0.85rem;
+        font-size: inherit;
         white-space: pre-wrap;
         unicode-bidi: plaintext;
         overflow-wrap: break-word;

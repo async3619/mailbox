@@ -7,11 +7,12 @@ import updateLocale from "dayjs/plugin/updateLocale";
 
 import { Box, Typography } from "@mui/material";
 
-import { PostItem } from "@services/base/timeline";
+import { TimelineItem } from "@services/base/timeline";
 
+import { AttachmentList } from "@components/Timeline/AttachmentList";
 import { EmojiText } from "@components/EmojiText";
+
 import { Content, Header, Root } from "@components/Timeline/Item.styles";
-import { AttachmentView } from "@components/Timeline/AttachmentView";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -35,7 +36,7 @@ dayjs.updateLocale("en", {
 });
 
 export interface TimelineItemProps {
-    item: PostItem;
+    item: TimelineItem;
 }
 
 export const TimelineItem = React.memo(({ item }: TimelineItemProps) => {
@@ -86,7 +87,7 @@ export const TimelineItem = React.memo(({ item }: TimelineItemProps) => {
             <Content dangerouslySetInnerHTML={{ __html: content }} />
             {attachments.length > 0 && (
                 <Box mt={2}>
-                    <AttachmentView attachments={attachments} />
+                    <AttachmentList attachments={attachments} />
                 </Box>
             )}
         </Root>

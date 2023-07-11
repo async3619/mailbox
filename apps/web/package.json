@@ -39,6 +39,7 @@
         "recoil-persist": "^5.1.0",
         "rxjs": "^7.8.1",
         "shortid": "^2.2.16",
+        "swiper": "^10.0.4",
         "ui": "*",
         "utility-types": "^3.10.0",
         "yup": "^1.2.0",

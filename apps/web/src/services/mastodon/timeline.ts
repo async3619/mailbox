@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { mastodon, WsEvents } from "masto";
 
-import { BaseTimeline, PostItem } from "@services/base/timeline";
+import { BaseTimeline, TimelineItem } from "@services/base/timeline";
 import { MastodonAccount } from "@services/mastodon/account";
 
 import { Resolved } from "@utils/types";
@@ -21,7 +21,7 @@ export class MastodonTimeline extends BaseTimeline<MastodonStatus> {
         this.client = client;
     }
 
-    public async getItems(count: number): Promise<PostItem[]> {
+    public async getItems(count: number): Promise<TimelineItem[]> {
         const result: MastodonStatus[] = [];
         let maxId: string | null = null;
         while (true) {
@@ -42,7 +42,7 @@ export class MastodonTimeline extends BaseTimeline<MastodonStatus> {
         return result.map(status => this.compose(status));
     }
 
-    public compose(post: MastodonStatus): PostItem {
+    protected compose(post: MastodonStatus): TimelineItem {
         if (!post.account.url) {
             throw new Error("Invalid post data");
         }
@@ -69,7 +69,11 @@ export class MastodonTimeline extends BaseTimeline<MastodonStatus> {
     public async start() {
         this.currentConnection = await this.client.v1.stream.streamPublicTimeline();
         this.currentConnection.on("update", status => {
-            this.notify(status);
+            this.notify({ type: "newItem", item: status });
+        });
+
+        this.currentConnection.on("delete", id => {
+            this.notify({ type: "deletion", id });
         });
     }
     public async stop() {

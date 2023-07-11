@@ -1,6 +1,5 @@
-import React from "react";
-import { Subject, Subscription } from "rxjs";
 import dayjs from "dayjs";
+import { Subject } from "rxjs";
 
 import { Fn, Nullable } from "@utils/types";
 
@@ -10,7 +9,7 @@ export interface PostAttachment {
     previewUrl: Nullable<string>;
 }
 
-export interface PostItem {
+export interface TimelineItem {
     serviceType: string;
     id: string;
     title?: string;
@@ -23,84 +22,65 @@ export interface PostItem {
     attachments: PostAttachment[];
 }
 
-export abstract class BaseTimeline<TPostItem> {
-    private readonly subject: Subject<PostItem>;
-
-    protected constructor() {
-        this.subject = new Subject<PostItem>();
-    }
-
-    public subscribe(subscriber: Fn<[PostItem], void>) {
-        return this.subject.subscribe({ next: subscriber });
-    }
-
-    public notify(post: TPostItem) {
-        this.subject.next(this.compose(post));
-    }
-
-    public abstract getItems(count: number): Promise<PostItem[]>;
-
-    public abstract compose(post: TPostItem): PostItem;
-
-    public abstract start(): Promise<void>;
-    public abstract stop(): Promise<void>;
+interface SubscriptionCallbacks {
+    newItems?: Fn<[TimelineItem], void>;
+    deletion?: Fn<[TimelineItem["id"]], void>;
 }
 
-export function useSubscribeTimeline<TPostItem>(
-    timeline: Nullable<BaseTimeline<TPostItem>>,
-    maxLength = 50,
-): [boolean, PostItem[]] {
-    const [initialized, setInitialized] = React.useState(false);
-    const [items, setItems] = React.useState<PostItem[]>([]);
-    const subscriber = React.useRef<Subscription | null>(null);
-    const callback = React.useCallback(
-        (item: PostItem) => {
-            setItems(oldItems => {
-                const items = [item, ...oldItems];
-                if (items.length > maxLength) {
-                    return items.slice(0, maxLength);
-                }
+interface DeletionNotification {
+    type: "deletion";
+    id: TimelineItem["id"];
+}
+interface NewItemNotification<TPostItem> {
+    type: "newItem";
+    item: TPostItem;
+}
+export type Notification<TPostItem> = DeletionNotification | NewItemNotification<TPostItem>;
 
-                return items;
-            });
-        },
-        [maxLength],
-    );
+export interface SubscriptionInstance {
+    unsubscribe: Fn<[], void>;
+}
 
-    React.useEffect(() => {
-        if (!timeline) {
-            return;
+export abstract class BaseTimeline<TPostItem> {
+    private newItem: Subject<TimelineItem>;
+    private deletion: Subject<TimelineItem["id"]>;
+
+    protected constructor() {
+        this.newItem = new Subject<TimelineItem>();
+        this.deletion = new Subject<TimelineItem["id"]>();
+    }
+
+    public subscribe({ deletion, newItems }: SubscriptionCallbacks): SubscriptionInstance {
+        if (newItems) {
+            this.newItem.subscribe({ next: newItems });
         }
 
-        timeline.getItems(maxLength).then(items => {
-            setItems(items);
-            setInitialized(true);
-        });
-    }, [maxLength, timeline]);
-
-    React.useEffect(() => {
-        if (!timeline || !initialized) {
-            return;
+        if (deletion) {
+            this.deletion.subscribe({ next: deletion });
         }
 
-        timeline.start();
+        return {
+            unsubscribe: () => {
+                this.newItem.unsubscribe();
+                this.deletion.unsubscribe();
 
-        return () => {
-            timeline.stop();
+                this.newItem = new Subject<TimelineItem>();
+                this.deletion = new Subject<TimelineItem["id"]>();
+            },
         };
-    }, [timeline, initialized]);
+    }
 
-    React.useEffect(() => {
-        subscriber.current = timeline?.subscribe(callback) ?? null;
+    protected notify(post: Notification<TPostItem>) {
+        if (post.type === "deletion") {
+            this.deletion.next(post.id);
+        } else {
+            this.newItem.next(this.compose(post.item));
+        }
+    }
 
-        return () => {
-            if (!subscriber.current) {
-                return;
-            }
+    public abstract getItems(count: number): Promise<TimelineItem[]>;
 
-            subscriber.current.unsubscribe();
-        };
-    }, [callback, timeline]);
-
-    return [!initialized, items];
+    protected abstract compose(post: TPostItem): TimelineItem;
+    public abstract start(): Promise<void>;
+    public abstract stop(): Promise<void>;
 }

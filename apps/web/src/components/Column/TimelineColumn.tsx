@@ -5,7 +5,7 @@ import { TimelineColumnInstance } from "@components/Column/types";
 import { BaseColumn } from "@components/Column/Base";
 
 import { useAccount } from "@states/accounts";
-import { useSubscribeTimeline } from "@services/base/timeline";
+import { TimelineSubscription } from "@components/TimelineSubscription";
 
 export interface TimelineColumnProps {
     instance: TimelineColumnInstance;
@@ -15,7 +15,7 @@ export function TimelineColumn({ instance }: TimelineColumnProps) {
     const { accountId, data } = instance;
     const account = useAccount(accountId);
     const timeline = React.useMemo(() => account?.getTimeline(), [account]);
-    const [loading, items] = useSubscribeTimeline(timeline);
+    const [scrollPosition, setScrollPosition] = React.useState(0);
 
     if (!account) {
         return null;
@@ -28,8 +28,12 @@ export function TimelineColumn({ instance }: TimelineColumnProps) {
     }
 
     return (
-        <BaseColumn loading={loading} instance={instance}>
-            <Timeline items={items} />
-        </BaseColumn>
+        <TimelineSubscription timeline={timeline} shouldTrim={scrollPosition === 0}>
+            {(items, loading) => (
+                <BaseColumn loading={loading} instance={instance} onScroll={setScrollPosition}>
+                    <Timeline items={items} />
+                </BaseColumn>
+            )}
+        </TimelineSubscription>
     );
 }
