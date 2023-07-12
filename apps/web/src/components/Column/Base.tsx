@@ -8,19 +8,21 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 import { ColumnInstance } from "@components/Column/types";
-import { Body, Content, Handle, Header, ProgressWrapper, Root } from "@components/Column/Base.styles";
+import { Content, Handle, Header, ProgressWrapper, Root } from "@components/Column/Base.styles";
 
 import { useColumnNodeSetter } from "@states/columns";
+import { Fn } from "@utils/types";
 
 export interface ColumnProps {
     instance: ColumnInstance;
-    children: React.ReactNode;
+    children: React.ReactNode | Fn<[view: HTMLElement | null], React.ReactNode>;
     loading?: boolean;
     onScroll?: (offset: number) => void;
 }
 
 export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProps) => {
     const { id, title } = instance;
+    const [scrollbars, setScrollbars] = React.useState<Scrollbars | null>(null);
     const setColumnNode = useColumnNodeSetter(id);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id,
@@ -55,8 +57,9 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
                 <ProgressWrapper style={{ opacity: loading ? 1 : 0 }}>
                     <LinearProgress />
                 </ProgressWrapper>
-                <Scrollbars autoHide onScroll={handleScroll}>
-                    <Body>{children}</Body>
+                <Scrollbars ref={setScrollbars} autoHide onScroll={handleScroll}>
+                    {typeof children === "function" && children(scrollbars?.view ?? null)}
+                    {typeof children !== "function" && children}
                 </Scrollbars>
             </Content>
         </Root>

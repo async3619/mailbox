@@ -7,5 +7,16 @@ export const Root = styled.div`
     margin: 0;
     padding: 0;
 
+    position: relative;
+
     overflow-x: hidden;
+    overflow-y: hidden;
+`;
+
+export const Content = styled.div`
+    width: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 0;
 `;

@@ -67,12 +67,6 @@ export const Handle = styled.button`
     }
 `;
 
-export const Body = styled.div`
-    position: relative;
-
-    overflow-y: auto;
-`;
-
 export const Content = styled.div`
     height: 100%;
 
