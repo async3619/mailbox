@@ -15,6 +15,6 @@ export const Root = styled.div`
         display: block;
         object-fit: contain;
 
-        transition: ${({ theme }) => theme.transitions.create("width")};
+        transition: ${({ theme }) => theme.transitions.create(["width", "height"])};
     }
 `;

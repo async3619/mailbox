@@ -21,7 +21,7 @@ export function MediaViewerItem({ attachment, active, expanded }: MediaViewerIte
             return;
         }
 
-        let expandingDimension: "width" | "height" | undefined;
+        let expandingDimension: "width" | "height";
         if (attachment.width > attachment.height) {
             expandingDimension = "width";
         } else {
@@ -31,7 +31,7 @@ export function MediaViewerItem({ attachment, active, expanded }: MediaViewerIte
         return {
             aspectRatio:
                 attachment.width && attachment.height ? `${attachment.width} / ${attachment.height}` : undefined,
-            [expandingDimension]: expanded ? "100%" : `${attachment.width}px`,
+            [expandingDimension]: expanded ? "100%" : `${attachment[expandingDimension]}px`,
         };
     }, [attachment, expanded]);
 
