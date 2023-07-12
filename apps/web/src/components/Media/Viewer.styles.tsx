@@ -51,6 +51,7 @@ export const Container = styled.div`
 `;
 
 export const SwiperRoot = styled(Swiper)`
+    width: 100%;
     height: 100%;
 `;
 

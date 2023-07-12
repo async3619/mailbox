@@ -111,7 +111,11 @@ export function MediaViewer({ attachments, onClose, onClosed, index, open, onInd
                         <SwiperRoot onSwiper={setSwiper}>
                             {attachments.map((attachment, i) => (
                                 <SwiperSlide key={i}>
-                                    <MediaViewerItem attachment={attachment} active={index === i && open} />
+                                    <MediaViewerItem
+                                        attachment={attachment}
+                                        active={index === i && open}
+                                        expanded={mediaExpanded}
+                                    />
                                 </SwiperSlide>
                             ))}
                         </SwiperRoot>

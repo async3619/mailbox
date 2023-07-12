@@ -7,20 +7,24 @@ import { Root } from "@components/Media/MediaViewerItem.styles";
 export interface MediaViewerItemProps {
     attachment: PostAttachment;
     active: boolean;
+    expanded?: boolean;
 }
 
-export function MediaViewerItem({ attachment, active }: MediaViewerItemProps) {
-    const videoRef = React.useRef<HTMLVideoElement>(null);
+export function MediaViewerItem({ attachment, active, expanded }: MediaViewerItemProps) {
+    const [mediaDOM, setMediaDOM] = React.useState<HTMLImageElement | HTMLVideoElement | null>(null);
+    const mediaRef = React.useCallback((node: HTMLImageElement | HTMLVideoElement | null) => {
+        setMediaDOM(node);
+    }, []);
 
     let content: React.ReactNode | null = null;
     if (attachment?.url) {
         if (attachment.type === "image") {
             // eslint-disable-next-line @next/next/no-img-element
-            content = <img src={attachment.url} alt={attachment.url} className="media" />;
+            content = <img ref={mediaRef} src={attachment.url} alt={attachment.url} className="media" />;
         } else if (attachment.type === "video" || attachment.type === "gifv") {
             content = (
                 <video
-                    ref={videoRef}
+                    ref={mediaRef}
                     src={attachment.url}
                     role="application"
                     controls={attachment.type !== "gifv"}
@@ -32,16 +36,28 @@ export function MediaViewerItem({ attachment, active }: MediaViewerItemProps) {
     }
 
     React.useEffect(() => {
-        if (!videoRef.current) {
+        if (!mediaDOM) {
+            return;
+        }
+
+        if (!(mediaDOM instanceof HTMLVideoElement)) {
             return;
         }
 
         if (active) {
-            videoRef.current.play();
+            mediaDOM.play();
         } else {
-            videoRef.current.pause();
+            mediaDOM.pause();
         }
-    }, [videoRef, active]);
+    }, [mediaDOM, active]);
+
+    React.useEffect(() => {
+        if (!mediaDOM) {
+            return;
+        }
+
+        mediaDOM.style.width = expanded ? "100%" : "";
+    }, [mediaDOM, expanded]);
 
     return <Root>{content}</Root>;
 }
