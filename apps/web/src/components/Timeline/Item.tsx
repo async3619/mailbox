@@ -1,4 +1,5 @@
 import React from "react";
+import useMeasure from "react-use-measure";
 import { Avatar } from "ui";
 
 import dayjs from "dayjs";
@@ -37,13 +38,23 @@ dayjs.updateLocale("en", {
 
 export interface TimelineItemProps {
     item: TimelineItem;
+    onHeightChange?: (height: number) => void;
 }
 
-export const TimelineItemView = React.memo(({ item }: TimelineItemProps) => {
+export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineItemProps) => {
+    const [measureRef, { height }] = useMeasure();
     const { avatarUrl, content, accountName, accountId, instanceUrl, createdAt, attachments } = item;
 
+    React.useEffect(() => {
+        if (!height) {
+            return;
+        }
+
+        onHeightChange?.(height);
+    }, [height]);
+
     return (
-        <Root>
+        <Root ref={measureRef}>
             <Header>
                 <Avatar size="small" src={avatarUrl} sx={{ flex: "0 0 auto" }} />
                 <Box minWidth={0} display="flex" flex="1 1 auto">

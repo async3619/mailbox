@@ -31,7 +31,7 @@ export function TimelineColumn({ instance }: TimelineColumnProps) {
         <TimelineSubscription timeline={timeline} shouldTrim={scrollPosition === 0}>
             {(items, loading) => (
                 <BaseColumn loading={loading} instance={instance} onScroll={setScrollPosition}>
-                    <Timeline items={items} />
+                    {view => <Timeline items={items} scrollElement={view} />}
                 </BaseColumn>
             )}
         </TimelineSubscription>
