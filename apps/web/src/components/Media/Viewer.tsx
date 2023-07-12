@@ -12,10 +12,10 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 
 import { PostAttachment } from "@services/base/timeline";
 
+import { MediaViewerItem } from "@components/Media/ViewerItem";
 import { Container, Content, Controls, Navigator, Root, SwiperRoot } from "@components/Media/Viewer.styles";
 
 import { stopPropagation } from "@utils/stopPropagation";
-import { MediaViewerItem } from "@components/Media/MediaViewerItem";
 
 export interface MediaViewerProps {
     open: boolean;

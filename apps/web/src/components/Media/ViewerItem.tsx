@@ -2,7 +2,7 @@ import React from "react";
 
 import { PostAttachment } from "@services/base/timeline";
 
-import { Root } from "@components/Media/MediaViewerItem.styles";
+import { Root } from "@components/Media/ViewerItem.styles";
 
 export interface MediaViewerItemProps {
     attachment: PostAttachment;
@@ -16,11 +16,30 @@ export function MediaViewerItem({ attachment, active, expanded }: MediaViewerIte
         setMediaDOM(node);
     }, []);
 
+    const styles: React.CSSProperties | undefined = React.useMemo(() => {
+        if (!attachment.width || !attachment.height) {
+            return;
+        }
+
+        let expandingDimension: "width" | "height" | undefined;
+        if (attachment.width > attachment.height) {
+            expandingDimension = "width";
+        } else {
+            expandingDimension = "height";
+        }
+
+        return {
+            aspectRatio:
+                attachment.width && attachment.height ? `${attachment.width} / ${attachment.height}` : undefined,
+            [expandingDimension]: expanded ? "100%" : `${attachment.width}px`,
+        };
+    }, [attachment, expanded]);
+
     let content: React.ReactNode | null = null;
     if (attachment?.url) {
         if (attachment.type === "image") {
             // eslint-disable-next-line @next/next/no-img-element
-            content = <img ref={mediaRef} src={attachment.url} alt={attachment.url} className="media" />;
+            content = <img ref={mediaRef} src={attachment.url} alt={attachment.url} className="media" style={styles} />;
         } else if (attachment.type === "video" || attachment.type === "gifv") {
             content = (
                 <video
@@ -30,6 +49,7 @@ export function MediaViewerItem({ attachment, active, expanded }: MediaViewerIte
                     controls={attachment.type !== "gifv"}
                     loop
                     className="media"
+                    style={styles}
                 />
             );
         }
@@ -50,14 +70,6 @@ export function MediaViewerItem({ attachment, active, expanded }: MediaViewerIte
             mediaDOM.pause();
         }
     }, [mediaDOM, active]);
-
-    React.useEffect(() => {
-        if (!mediaDOM) {
-            return;
-        }
-
-        mediaDOM.style.width = expanded ? "100%" : "";
-    }, [mediaDOM, expanded]);
 
     return <Root>{content}</Root>;
 }

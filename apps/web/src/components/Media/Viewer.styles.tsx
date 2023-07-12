@@ -20,14 +20,6 @@ export const Root = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    .media {
-        max-width: 100%;
-        max-height: 100%;
-
-        display: block;
-        object-fit: contain;
-    }
 `;
 
 export const Content = styled.div`
