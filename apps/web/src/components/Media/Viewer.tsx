@@ -68,6 +68,11 @@ export function MediaViewer({ attachments, onClose, onClosed, index, open, onInd
         [index, onIndexChange],
     );
 
+    const handleClosed = React.useCallback(() => {
+        onClosed?.();
+        setMediaExpanded(false);
+    }, [onClosed]);
+
     React.useEffect(() => {
         const keydownHandler = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
@@ -97,7 +102,7 @@ export function MediaViewer({ attachments, onClose, onClosed, index, open, onInd
         <Backdrop
             open={open}
             onClick={onClose}
-            onExited={onClosed}
+            onExited={handleClosed}
             sx={{
                 zIndex: theme => theme.zIndex.drawer + 1,
             }}
