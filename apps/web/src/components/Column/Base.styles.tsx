@@ -1,8 +1,15 @@
 import styled from "@emotion/styled";
 import { SMALLER_COLUMN_WIDTH } from "@styles/constants";
 
+export const Wrapper = styled.div`
+    height: 100%;
+
+    display: flex;
+`;
+
 export const Root = styled.div`
     width: ${SMALLER_COLUMN_WIDTH}px;
+    height: 100%;
 
     display: flex;
     flex-direction: column;
@@ -12,14 +19,19 @@ export const Root = styled.div`
     border-radius: ${({ theme }) => theme.spacing(0.5)};
 
     background: white;
+
+    transition: ${({ theme }) => theme.transitions.create("border-radius")};
 `;
 
 export const Header = styled.div`
-    padding: ${({ theme }) => theme.spacing(1.5)};
+    height: ${({ theme }) => theme.spacing(7)};
+
+    padding: ${({ theme }) => theme.spacing(0, 1.5)};
     border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
 
     display: flex;
     align-items: center;
+    flex: 0 0 ${({ theme }) => theme.spacing(7)};
 `;
 
 export const Handle = styled.button`
