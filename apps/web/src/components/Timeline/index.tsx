@@ -2,7 +2,7 @@ import React from "react";
 
 import { TimelineItem } from "@services/base/timeline";
 
-import { TimelineItem as TimelineItemView } from "@components/Timeline/Item";
+import { TimelineItemView } from "@components/Timeline/Item";
 import { Root } from "@components/Timeline/index.styles";
 
 export interface TimelineProps {

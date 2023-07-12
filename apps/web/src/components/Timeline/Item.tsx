@@ -39,7 +39,7 @@ export interface TimelineItemProps {
     item: TimelineItem;
 }
 
-export const TimelineItem = React.memo(({ item }: TimelineItemProps) => {
+export const TimelineItemView = React.memo(({ item }: TimelineItemProps) => {
     const { avatarUrl, content, accountName, accountId, instanceUrl, createdAt, attachments } = item;
 
     return (
@@ -94,4 +94,4 @@ export const TimelineItem = React.memo(({ item }: TimelineItemProps) => {
     );
 });
 
-TimelineItem.displayName = "TimelineItem";
+TimelineItemView.displayName = "TimelineItemView";
