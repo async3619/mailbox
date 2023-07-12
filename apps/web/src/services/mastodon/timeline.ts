@@ -62,6 +62,8 @@ export class MastodonTimeline extends BaseTimeline<MastodonStatus> {
                 type: attachment.type,
                 url: attachment.url,
                 previewUrl: attachment.previewUrl,
+                width: attachment.meta?.original?.width,
+                height: attachment.meta?.original?.height,
             })),
         };
     }

@@ -12,10 +12,10 @@ import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 
 import { PostAttachment } from "@services/base/timeline";
 
+import { MediaViewerItem } from "@components/Media/ViewerItem";
 import { Container, Content, Controls, Navigator, Root, SwiperRoot } from "@components/Media/Viewer.styles";
 
 import { stopPropagation } from "@utils/stopPropagation";
-import { MediaViewerItem } from "@components/Media/MediaViewerItem";
 
 export interface MediaViewerProps {
     open: boolean;
@@ -68,6 +68,11 @@ export function MediaViewer({ attachments, onClose, onClosed, index, open, onInd
         [index, onIndexChange],
     );
 
+    const handleClosed = React.useCallback(() => {
+        onClosed?.();
+        setMediaExpanded(false);
+    }, [onClosed]);
+
     React.useEffect(() => {
         const keydownHandler = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
@@ -97,7 +102,7 @@ export function MediaViewer({ attachments, onClose, onClosed, index, open, onInd
         <Backdrop
             open={open}
             onClick={onClose}
-            onExited={onClosed}
+            onExited={handleClosed}
             sx={{
                 zIndex: theme => theme.zIndex.drawer + 1,
             }}
@@ -111,7 +116,11 @@ export function MediaViewer({ attachments, onClose, onClosed, index, open, onInd
                         <SwiperRoot onSwiper={setSwiper}>
                             {attachments.map((attachment, i) => (
                                 <SwiperSlide key={i}>
-                                    <MediaViewerItem attachment={attachment} active={index === i && open} />
+                                    <MediaViewerItem
+                                        attachment={attachment}
+                                        active={index === i && open}
+                                        expanded={mediaExpanded}
+                                    />
                                 </SwiperSlide>
                             ))}
                         </SwiperRoot>

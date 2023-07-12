@@ -7,6 +7,8 @@ export interface PostAttachment {
     type: "image" | "video" | "gifv" | "audio" | "unknown";
     url: Nullable<string>;
     previewUrl: Nullable<string>;
+    width?: number;
+    height?: number;
 }
 
 export interface TimelineItem {
