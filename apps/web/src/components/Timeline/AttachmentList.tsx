@@ -40,7 +40,7 @@ export function AttachmentList({ attachments }: AttachmentListProps) {
                 </Grid>
             </>
         );
-    } else if (attachments.length === 3) {o
+    } else if (attachments.length === 3) {
         content = (
             <>
                 <Grid item xs={6}>
