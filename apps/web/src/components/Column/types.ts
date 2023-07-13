@@ -9,11 +9,17 @@ export enum ImagePreviewSize {
     Rectangle = "rectangle",
 }
 
+export enum SensitiveBlurring {
+    WithBlur = "withBlur",
+    WithoutBlur = "withoutBlur",
+}
+
 export interface BaseColumnInstance {
     id: string;
     title: string;
     size: ColumnSize;
     imagePreviewSize: ImagePreviewSize;
+    sensitiveBlurring: SensitiveBlurring;
 }
 
 interface MastodonTimelineData {

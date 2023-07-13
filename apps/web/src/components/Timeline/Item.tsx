@@ -51,7 +51,7 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
         }
 
         onHeightChange?.(height);
-    }, [height]);
+    }, [onHeightChange, height]);
 
     return (
         <Root ref={measureRef}>
@@ -98,7 +98,7 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
             <Content dangerouslySetInnerHTML={{ __html: content }} />
             {attachments.length > 0 && (
                 <Box mt={2}>
-                    <AttachmentList attachments={attachments} />
+                    <AttachmentList post={item} attachments={attachments} />
                 </Box>
             )}
         </Root>

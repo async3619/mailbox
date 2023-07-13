@@ -5,7 +5,7 @@ import { Box, Divider, Stack, Typography } from "@mui/material";
 
 import { useColumns } from "@states/columns";
 
-import { ColumnSize, ImagePreviewSize } from "@components/Column/types";
+import { ColumnSize, ImagePreviewSize, SensitiveBlurring } from "@components/Column/types";
 import { BaseColumnSidebar, ColumnSidebarProps } from "@components/Column/Sidebar/Base";
 
 import { Root } from "@components/Column/Sidebar/Settings/Column.styles";
@@ -51,6 +51,25 @@ export function ColumnSettingsSidebar(props: ColumnSidebarProps) {
                             }}
                             value={instance.imagePreviewSize ?? ImagePreviewSize.Rectangle}
                             onChange={size => updateColumn(instance.id, { imagePreviewSize: size })}
+                        />
+                    </Box>
+                    <Divider />
+                    <Box>
+                        <Typography gutterBottom variant="body2" fontWeight={600}>
+                            Show Sensitive Images
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            Specify to show sensitive images without blurring in this column.
+                        </Typography>
+                        <Switch
+                            fullWidth
+                            size="small"
+                            options={{
+                                [SensitiveBlurring.WithoutBlur]: "Show",
+                                [SensitiveBlurring.WithBlur]: "Hide",
+                            }}
+                            value={instance.sensitiveBlurring ?? SensitiveBlurring.WithBlur}
+                            onChange={value => updateColumn(instance.id, { sensitiveBlurring: value })}
                         />
                     </Box>
                 </Stack>

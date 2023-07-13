@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { ButtonBase } from "@mui/material";
 
-export const Root = styled(ButtonBase)`
+export const Root = styled(ButtonBase)<{ blur: boolean }>`
     width: 100%;
 
     margin: 0;
@@ -27,6 +27,23 @@ export const Root = styled(ButtonBase)`
 
         object-fit: cover;
     }
+
+    &:before {
+        content: "";
+
+        width: 100%;
+        height: 100%;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+
+        visibility: ${({ blur }) => (blur ? "visible" : "hidden")};
+
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(12px);
+    }
 `;
 
 export const Label = styled.div`
@@ -37,6 +54,7 @@ export const Label = styled.div`
     position: absolute;
     left: 0;
     bottom: 0;
+    z-index: 10;
 
     color: white;
     background-color: rgba(0, 0, 0, 0.75);

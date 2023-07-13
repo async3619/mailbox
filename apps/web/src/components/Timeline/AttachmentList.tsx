@@ -10,10 +10,11 @@ import { useColumn } from "@components/Column/context";
 import { Root } from "@components/Timeline/AttachmentList.styles";
 
 export interface AttachmentListProps {
+    post: TimelineItem;
     attachments: TimelineItem["attachments"];
 }
 
-export function AttachmentList({ attachments }: AttachmentListProps) {
+export function AttachmentList({ post, attachments }: AttachmentListProps) {
     const media = useMedia();
     const { imagePreviewSize = ImagePreviewSize.Rectangle } = useColumn();
     const handlePreviewClick = React.useCallback(
@@ -29,6 +30,7 @@ export function AttachmentList({ attachments }: AttachmentListProps) {
             <>
                 <Grid item xs={12}>
                     <AttachmentView
+                        post={post}
                         attachment={attachments[0]}
                         onClick={() => handlePreviewClick(0)}
                         aspectRatio={
@@ -45,6 +47,7 @@ export function AttachmentList({ attachments }: AttachmentListProps) {
             <>
                 <Grid item xs={6}>
                     <AttachmentView
+                        post={post}
                         attachment={attachments[0]}
                         fullHeight
                         aspectRatio={false}
@@ -54,10 +57,18 @@ export function AttachmentList({ attachments }: AttachmentListProps) {
                 <Grid item xs={6}>
                     <Grid container spacing={0.5}>
                         <Grid item xs={12}>
-                            <AttachmentView attachment={attachments[1]} onClick={() => handlePreviewClick(2)} />
+                            <AttachmentView
+                                post={post}
+                                attachment={attachments[1]}
+                                onClick={() => handlePreviewClick(2)}
+                            />
                         </Grid>
                         <Grid item xs={12}>
-                            <AttachmentView attachment={attachments[2]} onClick={() => handlePreviewClick(3)} />
+                            <AttachmentView
+                                post={post}
+                                attachment={attachments[2]}
+                                onClick={() => handlePreviewClick(3)}
+                            />
                         </Grid>
                     </Grid>
                 </Grid>
@@ -72,6 +83,7 @@ export function AttachmentList({ attachments }: AttachmentListProps) {
                 {targetAttachments.map((attachment, index) => (
                     <Grid item xs={6} key={+index}>
                         <AttachmentView
+                            post={post}
                             key={attachment.url}
                             attachment={attachment}
                             aspectRatio={aspectRatio}

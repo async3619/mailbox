@@ -58,6 +58,7 @@ export class MastodonTimeline extends BaseTimeline<MastodonStatus> {
             accountId: `@${post.account.acct}`,
             instanceUrl: parsedUrl.hostname,
             createdAt: dayjs(post.createdAt),
+            sensitive: post.sensitive,
             attachments: post.mediaAttachments.map(attachment => ({
                 type: attachment.type,
                 url: attachment.url,

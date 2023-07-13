@@ -5,16 +5,20 @@ import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 
 import { TimelineItem } from "@services/base/timeline";
 
+import { useColumn } from "@components/Column/context";
 import { Label, Play, Root } from "@components/Timeline/AttachmentView.styles";
+import { SensitiveBlurring } from "@components/Column/types";
 
 export interface AttachmentViewProps {
     onClick?: () => void;
+    post: TimelineItem;
     attachment: TimelineItem["attachments"][0];
     aspectRatio?: string | false;
     fullHeight?: boolean;
 }
 
-export function AttachmentView({ attachment, aspectRatio, fullHeight = false, onClick }: AttachmentViewProps) {
+export function AttachmentView({ post, attachment, aspectRatio, fullHeight = false, onClick }: AttachmentViewProps) {
+    const { sensitiveBlurring } = useColumn();
     const previewUrl = attachment.previewUrl;
     let children: React.ReactNode = null;
 
@@ -39,6 +43,7 @@ export function AttachmentView({ attachment, aspectRatio, fullHeight = false, on
 
     return (
         <Root
+            blur={sensitiveBlurring === SensitiveBlurring.WithBlur && post.sensitive}
             onClick={onClick}
             style={{
                 backgroundImage: `url(${previewUrl})`,
