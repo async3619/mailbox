@@ -5,5 +5,5 @@ import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 export interface ButtonProps extends LoadingButtonProps {}
 
 export const Button = (props: ButtonProps) => {
-    return <LoadingButton {...props} />;
+    return <LoadingButton disableElevation {...props} />;
 };

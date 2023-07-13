@@ -21,6 +21,7 @@ export interface TimelineItem {
     accountId: string;
     instanceUrl?: string;
     createdAt: dayjs.Dayjs;
+    sensitive: boolean;
     attachments: PostAttachment[];
 }
 
