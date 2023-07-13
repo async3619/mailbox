@@ -1,7 +1,9 @@
 import styled from "@emotion/styled";
 import { ButtonBase } from "@mui/material";
 
-export const Root = styled(ButtonBase)<{ blur: boolean }>`
+export const Root = styled(ButtonBase, {
+    shouldForwardProp: prop => prop !== "blur",
+})<{ blur: boolean }>`
     width: 100%;
 
     margin: 0;
