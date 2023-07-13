@@ -1,7 +1,8 @@
+import _ from "lodash";
 import dayjs from "dayjs";
 import { mastodon, WsEvents } from "masto";
 
-import { BaseTimeline, TimelineItem } from "@services/base/timeline";
+import { BaseTimeline, PostAuthor, TimelineItem } from "@services/base/timeline";
 import { MastodonAccount } from "@services/mastodon/account";
 
 import { MastodonTimelineData } from "@components/Column/types";
@@ -11,6 +12,7 @@ import { Nullable, Resolved } from "@utils/types";
 export type MastodonStatus = Resolved<ReturnType<mastodon.v1.StatusRepository["fetch"]>>;
 
 export class MastodonTimeline extends BaseTimeline<MastodonStatus> {
+    private readonly accountMap: Map<string, PostAuthor> = new Map();
     private readonly account: MastodonAccount;
     private readonly client: mastodon.Client;
     private readonly data: Readonly<MastodonTimelineData>;
@@ -63,8 +65,20 @@ export class MastodonTimeline extends BaseTimeline<MastodonStatus> {
             throw new Error("Invalid post data");
         }
 
+        const authorToCache = _.chain([post.account, post.reblog?.account]).compact().value();
+        for (const author of authorToCache) {
+            if (!this.accountMap.has(author.id)) {
+                this.accountMap.set(author.id, {
+                    avatarUrl: author.avatarStatic,
+                    accountName: author.displayName || author.username,
+                    accountId: `@${author.acct}`,
+                });
+            }
+        }
+
         const parsedUrl = new URL(post.account.url);
         const target = post.reblog ?? post;
+        const originPostAuthor = post.inReplyToAccountId ? this.accountMap.get(post.inReplyToAccountId) : null;
 
         return {
             serviceType: this.account.getServiceType(),
@@ -73,6 +87,7 @@ export class MastodonTimeline extends BaseTimeline<MastodonStatus> {
             instanceUrl: parsedUrl.hostname,
             createdAt: dayjs(target.createdAt),
             sensitive: target.sensitive,
+            originPostAuthor,
             attachments: target.mediaAttachments.map(attachment => ({
                 type: attachment.type,
                 url: attachment.url,

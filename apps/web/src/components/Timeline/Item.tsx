@@ -8,6 +8,7 @@ import updateLocale from "dayjs/plugin/updateLocale";
 
 import { Box, Typography } from "@mui/material";
 import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
+import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded";
 
 import { TimelineItem } from "@services/base/timeline";
 
@@ -44,7 +45,7 @@ export interface TimelineItemProps {
 
 export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineItemProps) => {
     const [measureRef, { height }] = useMeasure();
-    const { content, author, repostedBy, instanceUrl, createdAt, attachments } = item;
+    const { content, author, repostedBy, instanceUrl, createdAt, attachments, originPostAuthor } = item;
 
     React.useEffect(() => {
         if (!height) {
@@ -54,11 +55,21 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
         onHeightChange?.(height);
     }, [onHeightChange, height]);
 
+    let helperTextIcon: React.ReactNode = null;
+    let helperTextContent: string | null = null;
+    if (repostedBy) {
+        helperTextIcon = <RepeatRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
+        helperTextContent = `${repostedBy.accountName} reposted`;
+    } else if (originPostAuthor) {
+        helperTextIcon = <ReplyRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
+        helperTextContent = `replied to ${originPostAuthor.accountName}`;
+    }
+
     return (
         <Root ref={measureRef}>
-            {repostedBy && (
+            {helperTextContent && helperTextIcon && (
                 <Box mb={1.5} display="flex" fontSize="0.8rem" alignItems="center" color="text.secondary">
-                    <RepeatRoundedIcon fontSize="small" sx={{ mr: 1 }} />
+                    {helperTextIcon}
                     <Typography
                         variant="body2"
                         component="div"
@@ -66,7 +77,7 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
                         color="text.primary"
                         sx={{ opacity: 0.6 }}
                     >
-                        <EmojiText instanceUrl={instanceUrl}>{repostedBy.accountName}</EmojiText> reposted
+                        <EmojiText instanceUrl={instanceUrl}>{helperTextContent}</EmojiText>
                     </Typography>
                 </Box>
             )}

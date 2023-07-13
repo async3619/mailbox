@@ -28,6 +28,7 @@ export interface TimelineItem {
     sensitive: boolean;
     attachments: PostAttachment[];
     repostedBy?: PostAuthor;
+    originPostAuthor?: Nullable<PostAuthor>;
 }
 
 interface SubscriptionCallbacks {
