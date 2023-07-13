@@ -13,7 +13,7 @@ import { BaseAccount } from "@services/base/account";
 import { useColumns } from "@states/columns";
 
 import { MastodonLogo } from "@components/Svg/Mastodon";
-import { ColumnSize } from "@components/Column/types";
+import { ColumnSize, ImagePreviewSize, SensitiveBlurring } from "@components/Column/types";
 import { BaseDrawerMenu, BaseDrawerMenuProps } from "@components/DrawerMenu/Base";
 import { Header, Root } from "@components/DrawerMenu/AddColumn.styles";
 
@@ -30,6 +30,8 @@ export function AddColumnDrawerMenu({ account, ...rest }: AddColumnDrawerMenuPro
                 title,
                 accountId: account.getUniqueId(),
                 size: ColumnSize.Small,
+                sensitiveBlurring: SensitiveBlurring.WithBlur,
+                imagePreviewSize: ImagePreviewSize.Rectangle,
                 data: {
                     type: "mastodon",
                     timelineType: "home",
