@@ -51,6 +51,17 @@ export const Header = styled.div`
     }
 `;
 
+export const Title = styled.div`
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    flex: 1 1 auto;
+
+    cursor: pointer;
+`;
+
 export const Handle = styled.button`
     margin-right: ${({ theme }) => theme.spacing(0.5)};
     padding: ${({ theme }) => theme.spacing(0.75, 0.5)};

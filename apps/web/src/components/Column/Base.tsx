@@ -14,7 +14,7 @@ import { ColumnSidebarProps } from "@components/Column/Sidebar/Base";
 import { ColumnSettingsSidebar } from "@components/Column/Sidebar/Settings/Column";
 
 import { ColumnInstance } from "@components/Column/types";
-import { Content, Handle, Header, ProgressWrapper, Root, Wrapper } from "@components/Column/Base.styles";
+import { Content, Handle, Header, ProgressWrapper, Root, Title, Wrapper } from "@components/Column/Base.styles";
 
 import { useColumnNodeSetter, useColumns } from "@states/columns";
 import { Fn } from "@utils/types";
@@ -47,6 +47,9 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
         [onScroll],
     );
 
+    const handleTitleClick = React.useCallback(() => {
+        scrollbars?.scrollToTop();
+    }, [scrollbars]);
     const handleColumnDelete = React.useCallback(() => removeColumn(id), [id, removeColumn]);
     const handleSettingsClick = React.useCallback(() => {
         setSidebar(prev => ({ component: prev.component === null ? ColumnSettingsSidebar : null }));
@@ -78,9 +81,11 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
                 >
                     <Header>
                         <Handle {...attributes} {...listeners} />
-                        <Typography variant="h6" fontSize="1rem" fontWeight={600} lineHeight={1} flex="1 1 auto">
-                            {title}
-                        </Typography>
+                        <Title role="button" onClick={handleTitleClick}>
+                            <Typography variant="h6" fontSize="1rem" fontWeight={600} lineHeight={1}>
+                                {title}
+                            </Typography>
+                        </Title>
                         <Stack direction="row" spacing={1} className="controls">
                             <IconButton
                                 size="small"
