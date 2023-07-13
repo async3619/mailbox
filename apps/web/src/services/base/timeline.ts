@@ -11,18 +11,23 @@ export interface PostAttachment {
     height?: number;
 }
 
+export interface PostAuthor {
+    avatarUrl: string;
+    accountName: string;
+    accountId: string;
+}
+
 export interface TimelineItem {
     serviceType: string;
     id: string;
     title?: string;
     content: string;
-    avatarUrl: string;
-    accountName: string;
-    accountId: string;
+    author: PostAuthor;
     instanceUrl?: string;
     createdAt: dayjs.Dayjs;
     sensitive: boolean;
     attachments: PostAttachment[];
+    repostedBy?: PostAuthor;
 }
 
 interface SubscriptionCallbacks {

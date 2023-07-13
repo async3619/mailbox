@@ -4,6 +4,7 @@ import { login, mastodon } from "masto";
 import { AccountHydrator, BaseAccount } from "@services/base/account";
 import { GetTokenData } from "@services/mastodon/auth.types";
 import { MastodonTimeline } from "@services/mastodon/timeline";
+import { TimelineData } from "@components/Column/types";
 
 const SERIALIZED_MASTODON_ACCOUNT = z.object({
     serviceType: z.literal("mastodon"),
@@ -58,8 +59,12 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         return this.account.avatar;
     }
 
-    public getTimeline(): MastodonTimeline {
-        return new MastodonTimeline(this, this.client);
+    public getTimeline(data: TimelineData): MastodonTimeline {
+        if (data.type !== "mastodon") {
+            throw new Error(`Invalid timeline data type: ${data.type}`);
+        }
+
+        return new MastodonTimeline(this, this.client, data);
     }
 
     public serialize() {

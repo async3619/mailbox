@@ -1,4 +1,5 @@
 import { BaseTimeline } from "@services/base/timeline";
+import { TimelineData } from "@components/Column/types";
 
 export abstract class BaseAccount<
     TServiceType extends string,
@@ -20,7 +21,7 @@ export abstract class BaseAccount<
     public abstract getDisplayName(): string;
     public abstract getAvatarUrl(): string;
 
-    public abstract getTimeline(): TTimeline;
+    public abstract getTimeline(data: TimelineData): TTimeline;
 
     public abstract serialize(): TRawData;
 }

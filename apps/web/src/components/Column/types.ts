@@ -3,12 +3,10 @@ export enum ColumnSize {
     Medium = "medium",
     Large = "large",
 }
-
 export enum ImagePreviewSize {
     Original = "original",
     Rectangle = "rectangle",
 }
-
 export enum SensitiveBlurring {
     WithBlur = "withBlur",
     WithoutBlur = "withoutBlur",
@@ -22,12 +20,12 @@ export interface BaseColumnInstance {
     sensitiveBlurring: SensitiveBlurring;
 }
 
-interface MastodonTimelineData {
+export interface MastodonTimelineData {
     type: "mastodon";
     timelineType: "home" | "local" | "fed";
 }
 
-type TimelineData = MastodonTimelineData;
+export type TimelineData = MastodonTimelineData;
 
 export interface TimelineColumnInstance extends BaseColumnInstance {
     type: "timeline";

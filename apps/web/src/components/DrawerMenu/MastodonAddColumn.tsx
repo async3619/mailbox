@@ -13,18 +13,22 @@ import { BaseAccount } from "@services/base/account";
 import { useColumns } from "@states/columns";
 
 import { MastodonLogo } from "@components/Svg/Mastodon";
-import { ColumnSize, ImagePreviewSize, SensitiveBlurring } from "@components/Column/types";
+import { ColumnSize, ImagePreviewSize, MastodonTimelineData, SensitiveBlurring } from "@components/Column/types";
 import { BaseDrawerMenu, BaseDrawerMenuProps } from "@components/DrawerMenu/Base";
-import { Header, Root } from "@components/DrawerMenu/AddColumn.styles";
+import { Header, Root } from "@components/DrawerMenu/MastodonAddColumn.styles";
 
 export interface AddColumnDrawerMenuProps extends BaseDrawerMenuProps {
     account: BaseAccount<string>;
 }
 
-export function AddColumnDrawerMenu({ account, ...rest }: AddColumnDrawerMenuProps) {
+export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawerMenuProps) {
+    if (account.getServiceType() !== "mastodon") {
+        throw new Error(`Invalid service type: ${account.getServiceType()}`);
+    }
+
     const { addColumns } = useColumns();
     const handleClick = React.useCallback(
-        (title: string) => {
+        (title: string, timelineType: MastodonTimelineData["timelineType"]) => {
             addColumns({
                 type: "timeline",
                 title,
@@ -32,10 +36,7 @@ export function AddColumnDrawerMenu({ account, ...rest }: AddColumnDrawerMenuPro
                 size: ColumnSize.Small,
                 sensitiveBlurring: SensitiveBlurring.WithBlur,
                 imagePreviewSize: ImagePreviewSize.Rectangle,
-                data: {
-                    type: "mastodon",
-                    timelineType: "home",
-                },
+                data: { type: "mastodon", timelineType },
             });
 
             rest.close();
@@ -73,21 +74,21 @@ export function AddColumnDrawerMenu({ account, ...rest }: AddColumnDrawerMenuPro
                     <ListItem
                         startIcon={<HomeRoundedIcon fontSize="small" />}
                         endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                        onClick={() => handleClick("Home")}
+                        onClick={() => handleClick("Home", "home")}
                     >
                         Home
                     </ListItem>
                     <ListItem
                         startIcon={<PeopleAltRoundedIcon fontSize="small" />}
                         endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                        onClick={() => handleClick("Local Timeline")}
+                        onClick={() => handleClick("Local Timeline", "local")}
                     >
                         Local Timeline
                     </ListItem>
                     <ListItem
                         startIcon={<PublicRoundedIcon fontSize="small" />}
                         endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                        onClick={() => handleClick("Federated Timeline")}
+                        onClick={() => handleClick("Federated Timeline", "fed")}
                     >
                         Federated Timeline
                     </ListItem>

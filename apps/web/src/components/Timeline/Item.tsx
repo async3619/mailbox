@@ -7,6 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 
 import { Box, Typography } from "@mui/material";
+import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
 
 import { TimelineItem } from "@services/base/timeline";
 
@@ -43,7 +44,7 @@ export interface TimelineItemProps {
 
 export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineItemProps) => {
     const [measureRef, { height }] = useMeasure();
-    const { avatarUrl, content, accountName, accountId, instanceUrl, createdAt, attachments } = item;
+    const { content, author, repostedBy, instanceUrl, createdAt, attachments } = item;
 
     React.useEffect(() => {
         if (!height) {
@@ -55,8 +56,27 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
 
     return (
         <Root ref={measureRef}>
+            {repostedBy && (
+                <Box mb={1.5} display="flex" fontSize="0.8rem" alignItems="center" color="text.secondary">
+                    <RepeatRoundedIcon fontSize="small" sx={{ mr: 1 }} />
+                    <Typography
+                        variant="body2"
+                        component="div"
+                        fontSize="inherit"
+                        color="text.primary"
+                        sx={{ opacity: 0.6 }}
+                    >
+                        <EmojiText instanceUrl={instanceUrl}>{repostedBy.accountName}</EmojiText> reposted
+                    </Typography>
+                </Box>
+            )}
             <Header>
-                <Avatar size="small" src={avatarUrl} sx={{ flex: "0 0 auto" }} />
+                <Avatar
+                    size="medium"
+                    src={author.avatarUrl}
+                    secondarySrc={repostedBy?.avatarUrl}
+                    sx={{ flex: "0 0 auto" }}
+                />
                 <Box minWidth={0} display="flex" flex="1 1 auto">
                     <Box display="flex" flexDirection="column" flex="1 1 auto" ml={1} minWidth={0}>
                         <Typography
@@ -67,7 +87,7 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
                             textOverflow="ellipsis"
                             whiteSpace="nowrap"
                         >
-                            <EmojiText instanceUrl={instanceUrl}>{accountName}</EmojiText>
+                            <EmojiText instanceUrl={instanceUrl}>{author.accountName}</EmojiText>
                         </Typography>
                         <Typography
                             variant="body2"
@@ -78,7 +98,7 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
                             textOverflow="ellipsis"
                             whiteSpace="nowrap"
                         >
-                            {accountId}
+                            {author.accountId}
                         </Typography>
                     </Box>
                     <Box ml={1}>

@@ -14,7 +14,7 @@ export interface TimelineColumnProps {
 export function TimelineColumn({ instance }: TimelineColumnProps) {
     const { accountId, data } = instance;
     const account = useAccount(accountId);
-    const timeline = React.useMemo(() => account?.getTimeline(), [account]);
+    const timeline = React.useMemo(() => account?.getTimeline(instance.data), [account, instance]);
     const [scrollPosition, setScrollPosition] = React.useState(0);
 
     if (!account) {
