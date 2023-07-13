@@ -27,7 +27,6 @@ import { Root } from "@components/Column/Container.styles";
 
 import { getClosestIndex } from "@utils/closest";
 import { Column } from "@components/Column/index";
-import { ColumnContext } from "@components/Column/context";
 
 export interface ColumnContainerProps {
     columns: ColumnInstance[];
@@ -78,24 +77,6 @@ export function ColumnContainer({ setColumns, columns }: ColumnContainerProps) {
         [setColumns],
     );
 
-    const updateInstance = React.useCallback(
-        (id: string, instance: Partial<ColumnInstance>) => {
-            setColumns(items => {
-                return items.map(item => {
-                    if (item.id === id) {
-                        return {
-                            ...item,
-                            ...instance,
-                        };
-                    }
-
-                    return item;
-                });
-            });
-        },
-        [setColumns],
-    );
-
     React.useEffect(() => {
         document.addEventListener("wheel", handleWheel, { passive: false });
 
@@ -105,23 +86,21 @@ export function ColumnContainer({ setColumns, columns }: ColumnContainerProps) {
     }, [handleWheel]);
 
     return (
-        <ColumnContext.Provider value={{ updateInstance }}>
-            <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                modifiers={[restrictToHorizontalAxis]}
-                onDragEnd={handleDragEnd}
-            >
-                <SortableContext strategy={horizontalListSortingStrategy} items={columns}>
-                    <Root ref={rootRef}>
-                        <Stack direction="row" spacing={1} sx={{ minWidth: "100%", height: "100%" }}>
-                            {columns.map(column => (
-                                <Column key={column.id} column={column} />
-                            ))}
-                        </Stack>
-                    </Root>
-                </SortableContext>
-            </DndContext>
-        </ColumnContext.Provider>
+        <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            modifiers={[restrictToHorizontalAxis]}
+            onDragEnd={handleDragEnd}
+        >
+            <SortableContext strategy={horizontalListSortingStrategy} items={columns}>
+                <Root ref={rootRef}>
+                    <Stack direction="row" spacing={1} sx={{ minWidth: "100%", height: "100%" }}>
+                        {columns.map(column => (
+                            <Column key={column.id} column={column} />
+                        ))}
+                    </Stack>
+                </Root>
+            </SortableContext>
+        </DndContext>
     );
 }

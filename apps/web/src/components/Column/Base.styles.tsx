@@ -34,6 +34,21 @@ export const Header = styled.div`
     display: flex;
     align-items: center;
     flex: 0 0 ${({ theme }) => theme.spacing(7)};
+
+    .controls {
+        opacity: 0;
+
+        transition: ${({ theme }) =>
+            theme.transitions.create("opacity", {
+                duration: theme.transitions.duration.shortest,
+            })};
+    }
+
+    &:hover {
+        .controls {
+            opacity: 1;
+        }
+    }
 `;
 
 export const Handle = styled.button`

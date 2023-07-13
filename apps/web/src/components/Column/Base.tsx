@@ -1,21 +1,20 @@
 import React from "react";
 import { mergeRefs } from "react-merge-refs";
-import useMeasure from "react-use-measure";
 import Scrollbars from "rc-scrollbars";
 
 import { IconButton } from "ui";
 
-import { LinearProgress, Typography } from "@mui/material";
+import { LinearProgress, Stack, Typography } from "@mui/material";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 
 import { ColumnSidebar } from "@components/Column/Sidebar";
 import { ColumnInstance } from "@components/Column/types";
 import { Content, Handle, Header, ProgressWrapper, Root, Wrapper } from "@components/Column/Base.styles";
 
-import { useColumnNodeSetter } from "@states/columns";
+import { useColumnNodeSetter, useColumns } from "@states/columns";
 import { Fn } from "@utils/types";
 
 export interface ColumnProps {
@@ -31,6 +30,7 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
     const [settingsOpen, setSettingsOpen] = React.useState(false);
     const setColumnNode = useColumnNodeSetter(id);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+    const { removeColumn } = useColumns();
 
     const handleScroll = React.useCallback(
         (event: React.UIEvent<HTMLElement>) => {
@@ -39,6 +39,10 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
         },
         [onScroll],
     );
+
+    const handleColumnDelete = React.useCallback(() => {
+        removeColumn(id);
+    }, []);
 
     const handleSettingsClick = React.useCallback(() => {
         setSettingsOpen(prev => !prev);
@@ -68,14 +72,25 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
                     <Typography variant="h6" fontSize="1rem" fontWeight={600} lineHeight={1} flex="1 1 auto">
                         {title}
                     </Typography>
-                    <IconButton
-                        size="small"
-                        tooltip="Column Settings"
-                        tooltipPlacement="bottom"
-                        onClick={handleSettingsClick}
-                    >
-                        <SettingsRoundedIcon fontSize="small" />
-                    </IconButton>
+                    <Stack direction="row" spacing={1} className="controls">
+                        <IconButton
+                            size="small"
+                            tooltip="Delete Column"
+                            tooltipPlacement="bottom"
+                            color="error"
+                            onClick={handleColumnDelete}
+                        >
+                            <DeleteRoundedIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                            size="small"
+                            tooltip="Column Settings"
+                            tooltipPlacement="bottom"
+                            onClick={handleSettingsClick}
+                        >
+                            <SettingsRoundedIcon fontSize="small" />
+                        </IconButton>
+                    </Stack>
                 </Header>
                 <Content>
                     <ProgressWrapper style={{ opacity: loading ? 1 : 0 }}>
