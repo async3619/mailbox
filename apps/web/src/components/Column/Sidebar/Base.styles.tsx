@@ -2,14 +2,8 @@ import styled from "@emotion/styled";
 import { COLUMN_SIDEBAR_WIDTH } from "@styles/constants";
 
 export const Wrapper = styled.div`
-    max-width: 0;
-
     margin: 0;
     padding: 0;
-
-    overflow-x: hidden;
-
-    transition: ${({ theme }) => theme.transitions.create("max-width")};
 `;
 
 export const Root = styled.div`
@@ -23,9 +17,6 @@ export const Root = styled.div`
     overflow: hidden;
 
     background: #fff;
-
-    transform: translateX(-${COLUMN_SIDEBAR_WIDTH}px);
-    transition: ${({ theme }) => theme.transitions.create("transform")};
 `;
 
 export const Header = styled.div`

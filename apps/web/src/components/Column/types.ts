@@ -4,10 +4,16 @@ export enum ColumnSize {
     Large = "large",
 }
 
+export enum ImagePreviewSize {
+    Original = "original",
+    Rectangle = "rectangle",
+}
+
 export interface BaseColumnInstance {
     id: string;
     title: string;
     size: ColumnSize;
+    imagePreviewSize: ImagePreviewSize;
 }
 
 interface MastodonTimelineData {

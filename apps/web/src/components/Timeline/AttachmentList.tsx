@@ -5,6 +5,8 @@ import { TimelineItem } from "@services/base/timeline";
 
 import { useMedia } from "@components/Media";
 import { AttachmentView } from "@components/Timeline/AttachmentView";
+import { ImagePreviewSize } from "@components/Column/types";
+import { useColumn } from "@components/Column/context";
 import { Root } from "@components/Timeline/AttachmentList.styles";
 
 export interface AttachmentListProps {
@@ -13,6 +15,7 @@ export interface AttachmentListProps {
 
 export function AttachmentList({ attachments }: AttachmentListProps) {
     const media = useMedia();
+    const { imagePreviewSize = ImagePreviewSize.Rectangle } = useColumn();
     const handlePreviewClick = React.useCallback(
         (index: number) => {
             media.openMediaViewer(attachments, index);
@@ -25,11 +28,19 @@ export function AttachmentList({ attachments }: AttachmentListProps) {
         content = (
             <>
                 <Grid item xs={12}>
-                    <AttachmentView attachment={attachments[0]} onClick={() => handlePreviewClick(0)} />
+                    <AttachmentView
+                        attachment={attachments[0]}
+                        onClick={() => handlePreviewClick(0)}
+                        aspectRatio={
+                            imagePreviewSize === ImagePreviewSize.Original
+                                ? `${attachments[0].width} / ${attachments[0].height}`
+                                : undefined
+                        }
+                    />
                 </Grid>
             </>
         );
-    } else if (attachments.length === 3) {
+    } else if (attachments.length === 3) {o
         content = (
             <>
                 <Grid item xs={6}>
