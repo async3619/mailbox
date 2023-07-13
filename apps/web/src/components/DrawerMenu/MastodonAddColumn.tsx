@@ -9,11 +9,12 @@ import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 
 import { BaseAccount } from "@services/base/account";
+import { PostTimelineType, TimelineType } from "@services/types";
 
 import { useColumns } from "@states/columns";
 
 import { MastodonLogo } from "@components/Svg/Mastodon";
-import { ColumnSize, ImagePreviewSize, MastodonTimelineData, SensitiveBlurring } from "@components/Column/types";
+import { ColumnSize, ImagePreviewSize, SensitiveBlurring } from "@components/Column/types";
 import { BaseDrawerMenu, BaseDrawerMenuProps } from "@components/DrawerMenu/Base";
 import { Header, Root } from "@components/DrawerMenu/MastodonAddColumn.styles";
 
@@ -28,7 +29,7 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
 
     const { addColumns } = useColumns();
     const handleClick = React.useCallback(
-        (title: string, timelineType: MastodonTimelineData["timelineType"]) => {
+        (title: string, timelineType: PostTimelineType) => {
             addColumns({
                 type: "timeline",
                 title,
@@ -36,7 +37,7 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
                 size: ColumnSize.Small,
                 sensitiveBlurring: SensitiveBlurring.WithBlur,
                 imagePreviewSize: ImagePreviewSize.Rectangle,
-                data: { type: "mastodon", timelineType },
+                timelineType,
             });
 
             rest.close();
@@ -74,21 +75,21 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
                     <ListItem
                         startIcon={<HomeRoundedIcon fontSize="small" />}
                         endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                        onClick={() => handleClick("Home", "home")}
+                        onClick={() => handleClick("Home", TimelineType.Home)}
                     >
                         Home
                     </ListItem>
                     <ListItem
                         startIcon={<PeopleAltRoundedIcon fontSize="small" />}
                         endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                        onClick={() => handleClick("Local Timeline", "local")}
+                        onClick={() => handleClick("Local Timeline", TimelineType.Local)}
                     >
                         Local Timeline
                     </ListItem>
                     <ListItem
                         startIcon={<PublicRoundedIcon fontSize="small" />}
                         endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                        onClick={() => handleClick("Federated Timeline", "fed")}
+                        onClick={() => handleClick("Federated Timeline", TimelineType.Federated)}
                     >
                         Federated Timeline
                     </ListItem>

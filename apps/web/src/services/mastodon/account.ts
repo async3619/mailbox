@@ -1,10 +1,11 @@
 import { z } from "zod";
-import { login, mastodon } from "masto";
+import { login, mastodon, WsEvents } from "masto";
+import dayjs from "dayjs";
+import compact from "lodash/compact";
 
 import { AccountHydrator, BaseAccount } from "@services/base/account";
 import { GetTokenData } from "@services/mastodon/auth.types";
-import { MastodonTimeline } from "@services/mastodon/timeline";
-import { TimelineData } from "@components/Column/types";
+import { PostAuthor, PostTimelineType, TimelinePost, TimelineType } from "@services/types";
 
 const SERIALIZED_MASTODON_ACCOUNT = z.object({
     serviceType: z.literal("mastodon"),
@@ -27,6 +28,8 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         return new MastodonAccount(instanceUrl, token, client, account);
     }
 
+    private readonly watcherMap = new Map<PostTimelineType, WsEvents>();
+    private readonly authorMap = new Map<string, PostAuthor>();
     private readonly token: GetTokenData;
     private readonly instanceUrl: string;
     private readonly client: mastodon.Client;
@@ -59,12 +62,69 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         return this.account.avatar;
     }
 
-    public getTimeline(data: TimelineData): MastodonTimeline {
-        if (data.type !== "mastodon") {
-            throw new Error(`Invalid timeline data type: ${data.type}`);
+    public async *getTimelinePosts(type: PostTimelineType, limit: number) {
+        let maxId: string | undefined;
+        const getItems = () => {
+            switch (type) {
+                case TimelineType.Home:
+                    return this.client.v1.timelines.listHome({ limit: limit, maxId });
+
+                case TimelineType.Local:
+                case TimelineType.Federated:
+                    return this.client.v1.timelines.listPublic({
+                        limit: limit,
+                        maxId,
+                        local: type === TimelineType.Local,
+                    });
+            }
+        };
+
+        while (true) {
+            const posts = await getItems();
+            if (posts.length === 0) {
+                break;
+            }
+
+            yield posts.map(post => this.composePost(post));
+            maxId = posts[posts.length - 1].id;
+        }
+    }
+
+    public async startWatch(type: TimelineType) {
+        const watcherType = type === TimelineType.Notifications ? TimelineType.Home : type;
+        if (this.watcherMap.has(watcherType)) {
+            return;
         }
 
-        return new MastodonTimeline(this, this.client, data);
+        const ws = await (() => {
+            switch (type) {
+                case TimelineType.Notifications:
+                case TimelineType.Home:
+                    return this.client.v1.stream.streamUser();
+
+                case TimelineType.Local:
+                    return this.client.v1.stream.streamCommunityTimeline();
+
+                case TimelineType.Federated:
+                    return this.client.v1.stream.streamPublicTimeline();
+            }
+        })();
+
+        ws.on("update", post => this.emit("new-post", watcherType, this.composePost(post)));
+        ws.on("status.update", post => this.emit("update-post", watcherType, this.composePost(post)));
+        ws.on("delete", id => this.emit("delete-post", watcherType, id));
+
+        this.watcherMap.set(watcherType, ws);
+    }
+    public async stopWatch(type: TimelineType) {
+        const watcherType = type === TimelineType.Notifications ? TimelineType.Home : type;
+        const ws = this.watcherMap.get(watcherType);
+        if (!ws) {
+            return;
+        }
+
+        await ws.disconnect();
+        this.watcherMap.delete(watcherType);
     }
 
     public serialize() {
@@ -72,6 +132,56 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
             serviceType: this.getServiceType(),
             instanceUrl: this.instanceUrl,
             token: this.token,
+        };
+    }
+
+    private composePost(post: mastodon.v1.Status): TimelinePost {
+        if (!post.account.url) {
+            throw new Error("Invalid post data");
+        }
+
+        const authorToCache = compact([post.account, post.reblog?.account]);
+        for (const author of authorToCache) {
+            if (!this.authorMap.has(author.id)) {
+                this.authorMap.set(author.id, {
+                    avatarUrl: author.avatarStatic,
+                    accountName: author.displayName || author.username,
+                    accountId: `@${author.acct}`,
+                });
+            }
+        }
+
+        const parsedUrl = new URL(post.account.url);
+        const target = post.reblog ?? post;
+        const originPostAuthor = post.inReplyToAccountId ? this.authorMap.get(post.inReplyToAccountId) : null;
+
+        return {
+            serviceType: this.getServiceType(),
+            id: target.id,
+            content: target.content,
+            instanceUrl: parsedUrl.hostname,
+            createdAt: dayjs(target.createdAt),
+            sensitive: target.sensitive,
+            originPostAuthor,
+            attachments: target.mediaAttachments.map(attachment => ({
+                type: attachment.type,
+                url: attachment.url,
+                previewUrl: attachment.previewUrl,
+                width: attachment.meta?.original?.width,
+                height: attachment.meta?.original?.height,
+            })),
+            author: {
+                avatarUrl: target.account.avatarStatic,
+                accountName: target.account.displayName || target.account.username,
+                accountId: `@${target.account.acct}`,
+            },
+            repostedBy: post.reblog
+                ? {
+                      avatarUrl: post.account.avatarStatic,
+                      accountName: post.account.displayName || post.account.username,
+                      accountId: `@${post.account.acct}`,
+                  }
+                : undefined,
         };
     }
 }

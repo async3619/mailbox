@@ -1,3 +1,5 @@
+import { PostTimelineType } from "@services/types";
+
 export enum ColumnSize {
     Small = "small",
     Medium = "medium",
@@ -20,17 +22,10 @@ export interface BaseColumnInstance {
     sensitiveBlurring: SensitiveBlurring;
 }
 
-export interface MastodonTimelineData {
-    type: "mastodon";
-    timelineType: "home" | "local" | "fed";
-}
-
-export type TimelineData = MastodonTimelineData;
-
 export interface TimelineColumnInstance extends BaseColumnInstance {
     type: "timeline";
     accountId: string;
-    data: TimelineData;
+    timelineType: PostTimelineType;
 }
 
 export type ColumnInstance = TimelineColumnInstance;
