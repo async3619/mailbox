@@ -1,5 +1,7 @@
 import styled from "@emotion/styled";
-import { SMALLER_COLUMN_WIDTH } from "@styles/constants";
+import { COLUMN_SIZE_MAP } from "@styles/constants";
+
+import { ColumnSize } from "@components/Column/types";
 
 export const Wrapper = styled.div`
     height: 100%;
@@ -7,8 +9,8 @@ export const Wrapper = styled.div`
     display: flex;
 `;
 
-export const Root = styled.div`
-    width: ${SMALLER_COLUMN_WIDTH}px;
+export const Root = styled.div<{ size: ColumnSize }>`
+    width: ${({ size }) => COLUMN_SIZE_MAP[size]}px;
     height: 100%;
 
     display: flex;

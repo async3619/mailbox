@@ -1,6 +1,13 @@
+export enum ColumnSize {
+    Small = "small",
+    Medium = "medium",
+    Large = "large",
+}
+
 export interface BaseColumnInstance {
     id: string;
     title: string;
+    size: ColumnSize;
 }
 
 interface MastodonTimelineData {

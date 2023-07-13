@@ -1,5 +1,6 @@
 import React from "react";
 import { mergeRefs } from "react-merge-refs";
+import useMeasure from "react-use-measure";
 import Scrollbars from "rc-scrollbars";
 
 import { IconButton } from "ui";
@@ -29,9 +30,7 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
     const [scrollbars, setScrollbars] = React.useState<Scrollbars | null>(null);
     const [settingsOpen, setSettingsOpen] = React.useState(false);
     const setColumnNode = useColumnNodeSetter(id);
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-        id,
-    });
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
 
     const handleScroll = React.useCallback(
         (event: React.UIEvent<HTMLElement>) => {
@@ -50,13 +49,14 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
     }, [setNodeRef, setColumnNode]);
 
     const style = {
-        transform: CSS.Transform.toString(transform),
+        transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
         transition,
     };
 
     return (
         <Wrapper style={{ ...style, zIndex: isDragging ? 1000 : 0 }}>
             <Root
+                size={instance.size}
                 ref={ref}
                 style={{
                     borderTopRightRadius: settingsOpen ? "0" : undefined,
@@ -87,7 +87,7 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
                     </Scrollbars>
                 </Content>
             </Root>
-            <ColumnSidebar open={settingsOpen} />
+            <ColumnSidebar open={settingsOpen} instance={instance} />
         </Wrapper>
     );
 };
