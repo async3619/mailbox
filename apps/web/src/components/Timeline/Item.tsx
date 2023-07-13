@@ -109,6 +109,7 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
                             textOverflow="ellipsis"
                             whiteSpace="nowrap"
                             color="text.secondary"
+                            fontSize="0.8rem"
                         >
                             {createdAt.fromNow(true)}
                         </Typography>
