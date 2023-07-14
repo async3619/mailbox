@@ -81,6 +81,10 @@ export class TimelineSubscription extends React.PureComponent<TimelineSubscripti
     };
 
     private handleNewPost: AccountEventMap["new-post"] = (type, post) => {
+        if (type !== this.props.type) {
+            return;
+        }
+
         this.setState(prevStates => {
             const { items } = prevStates;
             if (items.find(item => item.id === post.id)) {
