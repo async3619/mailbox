@@ -44,7 +44,7 @@ export const Root = styled(ButtonBase, {
         visibility: ${({ blur }) => (blur ? "visible" : "hidden")};
 
         background: rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(12px);
+        backdrop-filter: blur(48px);
     }
 `;
 
