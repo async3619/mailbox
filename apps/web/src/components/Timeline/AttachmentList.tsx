@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Grid } from "@mui/material";
-import { TimelineItem } from "@services/base/timeline";
+import { TimelinePost } from "@services/types";
 
 import { useMedia } from "@components/Media";
 import { AttachmentView } from "@components/Timeline/AttachmentView";
@@ -10,8 +10,8 @@ import { useColumn } from "@components/Column/context";
 import { Root } from "@components/Timeline/AttachmentList.styles";
 
 export interface AttachmentListProps {
-    post: TimelineItem;
-    attachments: TimelineItem["attachments"];
+    post: TimelinePost;
+    attachments: TimelinePost["attachments"];
 }
 
 export function AttachmentList({ post, attachments }: AttachmentListProps) {

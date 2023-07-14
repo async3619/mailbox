@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PostAttachment } from "@services/base/timeline";
+import { PostAttachment } from "@services/types";
 
 interface MediaContextValues {
     openMediaViewer(attachments: PostAttachment[], index?: number): void;

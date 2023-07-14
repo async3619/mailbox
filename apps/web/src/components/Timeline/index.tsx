@@ -4,13 +4,13 @@ import React from "react";
 import useMeasure from "react-use-measure";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
-import { TimelineItem } from "@services/base/timeline";
+import { TimelinePost } from "@services/types";
 
 import { TimelineItemView } from "@components/Timeline/Item";
 import { CacheRenderer, Content, Root } from "@components/Timeline/index.styles";
 
 export interface TimelineProps {
-    items: TimelineItem[];
+    items: TimelinePost[];
     scrollElement?: HTMLElement | null;
 }
 
@@ -18,8 +18,8 @@ export function Timeline({ items, scrollElement }: TimelineProps) {
     const [measureRef, { width }] = useMeasure();
     const heightMap = React.useRef<Record<string, number>>({});
     const lastHeight = React.useRef<number>(0);
-    const [cachedItems, setCachedItems] = React.useState<TimelineItem[]>(items);
-    const [itemsToMeasure, setItemsToMeasure] = React.useState<TimelineItem[]>([]);
+    const [cachedItems, setCachedItems] = React.useState<TimelinePost[]>(items);
+    const [itemsToMeasure, setItemsToMeasure] = React.useState<TimelinePost[]>([]);
     const virtualizer = useVirtualizer({
         estimateSize: idx => heightMap.current[cachedItems[idx].id] ?? 200,
         getScrollElement: () => scrollElement ?? null,
@@ -53,7 +53,7 @@ export function Timeline({ items, scrollElement }: TimelineProps) {
         setItemsToMeasure(newItems);
     }, [items, cachedItems]);
 
-    const handleHeightMeasured = React.useCallback((h: number, item: TimelineItem) => {
+    const handleHeightMeasured = React.useCallback((h: number, item: TimelinePost) => {
         heightMap.current[item.id] = h;
 
         setItemsToMeasure(prev => prev.filter(i => i.id !== item.id));

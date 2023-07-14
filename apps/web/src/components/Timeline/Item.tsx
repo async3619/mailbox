@@ -10,7 +10,7 @@ import { Box, Typography } from "@mui/material";
 import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
 import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded";
 
-import { TimelineItem } from "@services/base/timeline";
+import { TimelinePost } from "@services/types";
 
 import { AttachmentList } from "@components/Timeline/AttachmentList";
 import { EmojiText } from "@components/EmojiText";
@@ -39,7 +39,7 @@ dayjs.updateLocale("en", {
 });
 
 export interface TimelineItemProps {
-    item: TimelineItem;
+    item: TimelinePost;
     onHeightChange?: (height: number) => void;
 }
 
