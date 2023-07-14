@@ -1,7 +1,9 @@
+import _ from "lodash";
+
 import React from "react";
+import Measure, { ContentRect } from "react-measure";
 import { createPortal } from "react-dom";
 import useMeasure from "react-use-measure";
-import _ from "lodash";
 
 import { useVirtualizer } from "@tanstack/react-virtual";
 
@@ -15,6 +17,11 @@ export interface VirtualizedListProps<T> {
     scrollElement?: HTMLElement | null;
 }
 
+interface MeasureItemHolder<T> {
+    measuredItems: T[];
+    itemsToMeasure: T[];
+}
+
 export function VirtualizedList<T>({
     items,
     defaultHeight,
@@ -24,61 +31,116 @@ export function VirtualizedList<T>({
 }: VirtualizedListProps<T>) {
     const heightCache = React.useRef<Record<string, number>>({});
     const [rootRef, { width }] = useMeasure();
-    const [measureRef, { height: measuredHeight }] = useMeasure();
-    const [itemsToMeasure, setItemsToMeasure] = React.useState<T[]>([]);
-    const [cachedItems, setCachedItems] = React.useState<T[]>(items);
-    const virtualizer = useVirtualizer({
-        estimateSize: index => heightCache.current[getItemKey(cachedItems[index])] ?? defaultHeight,
-        getScrollElement: () => scrollElement ?? null,
-        count: cachedItems.length,
-        getItemKey: index => getItemKey(cachedItems[index]),
+    const lastMeasuredItemCount = React.useRef<number>(0);
+    const [{ itemsToMeasure, measuredItems }, setItemHolder] = React.useState<MeasureItemHolder<T>>({
+        measuredItems: [],
+        itemsToMeasure: [],
     });
-
-    React.useEffect(() => {
-        if (!cachedItems.length) {
-            setCachedItems(items);
-            return;
-        }
-
-        const itemIds = items.map(getItemKey);
-        const cachedItemIds = cachedItems.map(getItemKey);
-        if (_.isEqual(itemIds, cachedItemIds)) {
-            return;
-        }
-
-        const newItems = _.differenceBy(items, cachedItems, getItemKey);
-        const deletedItems = _.differenceBy(cachedItems, items, getItemKey);
-        const deletedItemsMap = _.chain(deletedItems).keyBy(getItemKey).mapValues().value();
-
-        setItemsToMeasure([...newItems]);
-        setCachedItems(items => items.filter(item => !deletedItemsMap[getItemKey(item)]));
-    }, [items, cachedItems, getItemKey]);
-
-    React.useEffect(() => {
-        if (!itemsToMeasure.length || !measuredHeight) {
-            return;
-        }
-
-        heightCache.current[getItemKey(itemsToMeasure[0])] = measuredHeight;
-        setItemsToMeasure(items => items.slice(1));
-        setCachedItems(items => [itemsToMeasure[0], ...items]);
-    }, [getItemKey, itemsToMeasure, measuredHeight]);
+    const virtualizer = useVirtualizer({
+        estimateSize: index => heightCache.current[getItemKey(measuredItems[index])] ?? defaultHeight,
+        getScrollElement: () => scrollElement ?? null,
+        count: measuredItems.length,
+        getItemKey: index => getItemKey(measuredItems[index]),
+    });
 
     const virtualizedItems = virtualizer.getVirtualItems();
     const totalSize = virtualizer.getTotalSize();
+
+    React.useEffect(() => {
+        if (!measuredItems.length) {
+            setItemHolder(prev => ({ ...prev, measuredItems: items }));
+            return;
+        }
+
+        const oldItems = _.uniqBy([...measuredItems, ...itemsToMeasure], getItemKey);
+        const newItems = _.differenceBy(items, oldItems, getItemKey);
+        if (newItems.length === 0) {
+            return;
+        }
+
+        const deletedItems = _.differenceBy(measuredItems, items, getItemKey);
+        const deletedItemIds = deletedItems.map(getItemKey);
+        const deletedItemMap = _.keyBy(deletedItemIds);
+
+        setItemHolder(prev => ({
+            ...prev,
+            itemsToMeasure: [...prev.itemsToMeasure, ...newItems],
+            measuredItems:
+                deletedItemIds.length > 0
+                    ? prev.measuredItems.filter(item => !deletedItemMap[getItemKey(item)])
+                    : prev.measuredItems,
+        }));
+    }, [measuredItems, items, getItemKey, itemsToMeasure]);
+
+    const handleResize = React.useCallback(
+        (item: T, data: ContentRect) => {
+            if (!data.bounds) {
+                return;
+            }
+
+            const { height } = data.bounds;
+            const itemId = getItemKey(item);
+            if (heightCache.current[itemId] === height) {
+                return;
+            }
+
+            heightCache.current[itemId] = height;
+
+            setItemHolder(prev => ({
+                itemsToMeasure: prev.itemsToMeasure.filter(i => getItemKey(i) !== itemId),
+                measuredItems: [item, ...prev.measuredItems],
+            }));
+        },
+        [getItemKey],
+    );
+
+    React.useEffect(() => {
+        if (lastMeasuredItemCount.current > measuredItems.length) {
+            lastMeasuredItemCount.current = measuredItems.length;
+            return;
+        }
+
+        if (lastMeasuredItemCount.current === measuredItems.length || !scrollElement?.scrollTop) {
+            return;
+        }
+
+        const newItemCount = measuredItems.length - lastMeasuredItemCount.current;
+        if (newItemCount === 0) {
+            return;
+        }
+
+        if (lastMeasuredItemCount.current === 0) {
+            lastMeasuredItemCount.current = measuredItems.length;
+            return;
+        }
+
+        const newItems = measuredItems.slice(0, newItemCount);
+        const newItemsHeight = _.chain(newItems)
+            .map(item => heightCache.current[getItemKey(item)] ?? defaultHeight)
+            .sum()
+            .value();
+
+        virtualizer.scrollBy(newItemsHeight);
+
+        lastMeasuredItemCount.current = measuredItems.length;
+    }, [defaultHeight, getItemKey, measuredItems, scrollElement, virtualizer]);
 
     return (
         <Root ref={rootRef} style={{ height: totalSize }}>
             {createPortal(
                 <MeasureRoot style={{ width }}>
-                    {itemsToMeasure.length > 0 && <div ref={measureRef}>{children(itemsToMeasure[0])}</div>}
+                    {itemsToMeasure.length > 0 && (
+                        <Measure bounds onResize={data => handleResize(itemsToMeasure[0], data)}>
+                            {({ measureRef }) => <div ref={measureRef}>{children(itemsToMeasure[0])}</div>}
+                        </Measure>
+                    )}
                 </MeasureRoot>,
                 document.body,
             )}
             <Content style={{ transform: `translateY(${virtualizedItems[0]?.start ?? 0}px)` }}>
                 {virtualizedItems.map(item => (
                     <div key={item.key} data-index={item.index} ref={virtualizer.measureElement}>
-                        {children(cachedItems[item.index])}
+                        {children(measuredItems[item.index])}
                     </div>
                 ))}
             </Content>

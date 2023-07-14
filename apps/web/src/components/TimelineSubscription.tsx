@@ -3,6 +3,7 @@ import React from "react";
 import { PostTimelineType, TimelinePost } from "@services/types";
 import { AccountEventMap, BaseAccount } from "@services/base/account";
 import { Nullable } from "@utils/types";
+import _ from "lodash";
 
 const DEFAULT_MAX_COUNT = 50;
 
@@ -91,7 +92,7 @@ export class TimelineSubscription extends React.PureComponent<TimelineSubscripti
                 return prevStates;
             }
 
-            const newItems = [post, ...items];
+            const newItems = _.uniqBy([post, ...items], item => item.id);
             if (this.props.shouldTrim) {
                 newItems.splice(this.props.maxCount ?? DEFAULT_MAX_COUNT);
             }
