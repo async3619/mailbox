@@ -31,8 +31,9 @@ export abstract class BaseAccount<
     public abstract getAvatarUrl(): string;
 
     public abstract getTimelinePosts(
-        type: Exclude<TimelineType, TimelineType.Notifications>,
+        type: PostTimelineType,
         count: number,
+        after?: TimelinePost["id"],
     ): AsyncIterableIterator<TimelinePost[]>;
 
     public abstract startWatch(type: TimelineType): Promise<void>;

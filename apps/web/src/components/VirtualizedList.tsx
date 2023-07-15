@@ -7,6 +7,7 @@ import useMeasure from "react-use-measure";
 
 import { useVirtualizer } from "@tanstack/react-virtual";
 
+import { IntersectionLoader } from "@components/IntersectionLoader";
 import { Content, MeasureRoot, Root } from "@components/VirtualizedList.styles";
 
 export interface VirtualizedListProps<T> {
@@ -15,6 +16,7 @@ export interface VirtualizedListProps<T> {
     getItemKey: (item: T) => string;
     defaultHeight: number;
     scrollElement?: HTMLElement | null;
+    onLoadMore?(lastItem: T): Promise<T[]>;
 }
 
 interface MeasureItemHolder<T> {
@@ -28,7 +30,9 @@ export function VirtualizedList<T>({
     scrollElement,
     getItemKey,
     children,
+    onLoadMore,
 }: VirtualizedListProps<T>) {
+    const [loading, setLoading] = React.useState<boolean>(false);
     const heightCache = React.useRef<Record<string, number>>({});
     const [rootRef, { width }] = useMeasure();
     const lastMeasuredItemCount = React.useRef<number>(0);
@@ -37,10 +41,13 @@ export function VirtualizedList<T>({
         itemsToMeasure: [],
     });
     const virtualizer = useVirtualizer({
-        estimateSize: index => heightCache.current[getItemKey(measuredItems[index])] ?? defaultHeight,
+        estimateSize: index =>
+            measuredItems[index]
+                ? heightCache.current[getItemKey(measuredItems[index])] ?? defaultHeight
+                : defaultHeight,
         getScrollElement: () => scrollElement ?? null,
-        count: measuredItems.length,
-        getItemKey: index => getItemKey(measuredItems[index]),
+        count: measuredItems.length + (onLoadMore ? 1 : 0),
+        getItemKey: index => (measuredItems[index] ? getItemKey(measuredItems[index]) : "loader"),
     });
 
     const virtualizedItems = virtualizer.getVirtualItems();
@@ -72,28 +79,6 @@ export function VirtualizedList<T>({
         }));
     }, [measuredItems, items, getItemKey, itemsToMeasure]);
 
-    const handleResize = React.useCallback(
-        (item: T, data: ContentRect) => {
-            if (!data.bounds) {
-                return;
-            }
-
-            const { height } = data.bounds;
-            const itemId = getItemKey(item);
-            if (heightCache.current[itemId] === height) {
-                return;
-            }
-
-            heightCache.current[itemId] = height;
-
-            setItemHolder(prev => ({
-                itemsToMeasure: prev.itemsToMeasure.filter(i => getItemKey(i) !== itemId),
-                measuredItems: [item, ...prev.measuredItems],
-            }));
-        },
-        [getItemKey],
-    );
-
     React.useEffect(() => {
         if (lastMeasuredItemCount.current > measuredItems.length) {
             lastMeasuredItemCount.current = measuredItems.length;
@@ -116,7 +101,8 @@ export function VirtualizedList<T>({
 
         const newItems = measuredItems.slice(0, newItemCount);
         const newItemsHeight = _.chain(newItems)
-            .map(item => heightCache.current[getItemKey(item)] ?? defaultHeight)
+            .filter(item => getItemKey(item) in heightCache.current)
+            .map(item => heightCache.current[getItemKey(item)])
             .sum()
             .value();
 
@@ -124,6 +110,42 @@ export function VirtualizedList<T>({
 
         lastMeasuredItemCount.current = measuredItems.length;
     }, [defaultHeight, getItemKey, measuredItems, scrollElement, virtualizer]);
+
+    const handleResize = React.useCallback(
+        (item: T, data: ContentRect) => {
+            if (!data.bounds) {
+                return;
+            }
+
+            const { height } = data.bounds;
+            const itemId = getItemKey(item);
+            if (heightCache.current[itemId] === height) {
+                return;
+            }
+
+            heightCache.current[itemId] = height;
+
+            setItemHolder(prev => ({
+                itemsToMeasure: prev.itemsToMeasure.filter(i => getItemKey(i) !== itemId),
+                measuredItems: [item, ...prev.measuredItems],
+            }));
+        },
+        [getItemKey],
+    );
+
+    const handleLoadMore = React.useCallback(() => {
+        if (!onLoadMore || !measuredItems.length || loading) {
+            return;
+        }
+
+        setLoading(true);
+
+        onLoadMore(measuredItems[measuredItems.length - 1])
+            .then(newItems => {
+                setItemHolder(prev => ({ ...prev, measuredItems: [...prev.measuredItems, ...newItems] }));
+            })
+            .finally(() => setLoading(false));
+    }, [onLoadMore, measuredItems, loading]);
 
     return (
         <Root ref={rootRef} style={{ height: totalSize }}>
@@ -138,11 +160,26 @@ export function VirtualizedList<T>({
                 document.body,
             )}
             <Content style={{ transform: `translateY(${virtualizedItems[0]?.start ?? 0}px)` }}>
-                {virtualizedItems.map(item => (
-                    <div key={item.key} data-index={item.index} ref={virtualizer.measureElement}>
-                        {children(measuredItems[item.index])}
-                    </div>
-                ))}
+                {virtualizedItems.map(item => {
+                    if (item.index === measuredItems.length) {
+                        let children: React.ReactNode = null;
+                        if (measuredItems.length > 0) {
+                            children = <IntersectionLoader onLoadMore={handleLoadMore} />;
+                        }
+
+                        return (
+                            <div key={item.key} data-index={item.index} ref={virtualizer.measureElement}>
+                                {children}
+                            </div>
+                        );
+                    }
+
+                    return (
+                        <div key={item.key} data-index={item.index} ref={virtualizer.measureElement}>
+                            {children(measuredItems[item.index])}
+                        </div>
+                    );
+                })}
             </Content>
         </Root>
     );

@@ -1,18 +1,23 @@
+import _ from "lodash";
 import React from "react";
 
 import { PostTimelineType, TimelinePost } from "@services/types";
 import { AccountEventMap, BaseAccount } from "@services/base/account";
-import { Nullable } from "@utils/types";
-import _ from "lodash";
+import { AsyncFn, Nullable } from "@utils/types";
 
-const DEFAULT_MAX_COUNT = 50;
+const DEFAULT_MAX_COUNT = 20;
 
 export interface TimelineSubscriptionProps {
     type: PostTimelineType;
-    children: (items: TimelinePost[], loading: boolean) => React.ReactNode;
+    children: (
+        items: TimelinePost[],
+        loading: boolean,
+        loadMore?: AsyncFn<[TimelinePost], TimelinePost[]>,
+    ) => React.ReactNode;
     account: Nullable<BaseAccount<string>>;
     maxCount?: number;
     shouldTrim?: boolean;
+    loadMore?: boolean;
 }
 export interface TimelineSubscriptionStates {
     items: TimelinePost[];
@@ -81,6 +86,28 @@ export class TimelineSubscription extends React.PureComponent<TimelineSubscripti
         account.removeEventListener("update-post", this.handleUpdatePost);
     };
 
+    private handleLoadMore = async (lastPost: TimelinePost) => {
+        const { account, type, maxCount = DEFAULT_MAX_COUNT } = this.props;
+        if (!account) {
+            throw new Error("Account is not available");
+        }
+
+        this.setState({ loading: true });
+
+        const result: TimelinePost[] = [];
+        const iterator = account.getTimelinePosts(type, maxCount, lastPost.id);
+        for await (const posts of iterator) {
+            result.push(...posts);
+            if (result.length >= maxCount) {
+                break;
+            }
+        }
+
+        result.splice(maxCount);
+        this.setState({ loading: false });
+
+        return result;
+    };
     private handleNewPost: AccountEventMap["new-post"] = (type, post) => {
         if (type !== this.props.type) {
             return;
@@ -130,8 +157,9 @@ export class TimelineSubscription extends React.PureComponent<TimelineSubscripti
     };
 
     public render() {
+        const { loadMore } = this.props;
         const { items, loading } = this.state;
 
-        return <>{this.props.children(items, loading)}</>;
+        return <>{this.props.children(items, loading, loadMore ? this.handleLoadMore : undefined)}</>;
     }
 }

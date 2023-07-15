@@ -62,17 +62,17 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         return this.account.avatar;
     }
 
-    public async *getTimelinePosts(type: PostTimelineType, limit: number) {
-        let maxId: string | undefined;
+    public async *getTimelinePosts(type: PostTimelineType, limit: number, after?: TimelinePost["id"]) {
+        let maxId: string | undefined = after;
         const getItems = () => {
             switch (type) {
                 case TimelineType.Home:
-                    return this.client.v1.timelines.listHome({ limit: limit, maxId });
+                    return this.client.v1.timelines.listHome({ limit, maxId });
 
                 case TimelineType.Local:
                 case TimelineType.Federated:
                     return this.client.v1.timelines.listPublic({
-                        limit: limit,
+                        limit,
                         maxId,
                         local: type === TimelineType.Local,
                     });
@@ -157,7 +157,7 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
 
         return {
             serviceType: this.getServiceType(),
-            id: target.id,
+            id: post.id,
             content: target.content,
             instanceUrl: parsedUrl.hostname,
             createdAt: dayjs(target.createdAt),
