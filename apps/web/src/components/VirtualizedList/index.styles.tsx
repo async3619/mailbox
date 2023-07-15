@@ -20,13 +20,3 @@ export const Content = styled.div`
     top: 0;
     left: 0;
 `;
-
-export const MeasureRoot = styled.div`
-    position: fixed;
-    top: 0;
-    right: 0;
-
-    pointer-events: none;
-    visibility: hidden;
-    opacity: 0;
-`;
