@@ -128,18 +128,10 @@ export class TimelineSubscription extends React.PureComponent<TimelineSubscripti
         });
     };
     private handleDeletePost: AccountEventMap["delete-post"] = (type, postId) => {
-        this.setState(prevStates => {
-            const { items } = prevStates;
-            const index = items.findIndex(item => item.id === postId);
-            if (index === -1) {
-                return prevStates;
-            }
-
-            const newItems = [...items];
-            newItems.splice(index, 1);
-
-            return { ...prevStates, items: newItems };
-        });
+        this.setState(prevStates => ({
+            ...prevStates,
+            items: prevStates.items.filter(item => item.id !== postId),
+        }));
     };
     private handleUpdatePost: AccountEventMap["update-post"] = (type, post) => {
         this.setState(prevStates => {

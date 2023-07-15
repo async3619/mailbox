@@ -80,6 +80,34 @@ export function VirtualizedList<T>({
     }, [measuredItems, items, getItemKey, itemsToMeasure]);
 
     React.useEffect(() => {
+        const oldItems = _.uniqBy([...measuredItems, ...itemsToMeasure], getItemKey);
+        if (oldItems.length <= items.length) {
+            return;
+        }
+
+        const oldItemIds = _.chain(measuredItems)
+            .concat(itemsToMeasure)
+            .map(getItemKey)
+            .uniq()
+            .map(id => ({ id }))
+            .value();
+
+        const newItemIds = _.chain(items)
+            .map(getItemKey)
+            .uniq()
+            .map(id => ({ id }))
+            .value();
+
+        const deletedItemIds = _.chain(oldItemIds).differenceBy(newItemIds, "id").map("id").uniq().keyBy().value();
+
+        setItemHolder(prev => ({
+            ...prev,
+            measuredItems: prev.measuredItems.filter(item => !(getItemKey(item) in deletedItemIds)),
+            itemsToMeasure: prev.itemsToMeasure.filter(item => !(getItemKey(item) in deletedItemIds)),
+        }));
+    }, [measuredItems, items, itemsToMeasure, getItemKey]);
+
+    React.useEffect(() => {
         if (lastMeasuredItemCount.current > measuredItems.length) {
             lastMeasuredItemCount.current = measuredItems.length;
             return;
