@@ -48,7 +48,7 @@ export function composeNotifications(items: NotificationItem[]): NotificationIte
 
     return composedNotifications.map(items => ({
         ...items[0],
-        id: items.at(-1)?.id ?? items[0].id,
-        users: _.uniqBy(items.map(item => item.users).flat(), "accountId"),
+        id: items[0].id,
+        users: _.chain(items).map("users").flatten().uniqBy("accountId").value(),
     }));
 }

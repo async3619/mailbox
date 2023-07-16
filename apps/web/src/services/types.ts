@@ -42,6 +42,7 @@ export interface BaseNotificationItem {
     id: string;
     createdAt: dayjs.Dayjs;
     users: PostAuthor[];
+    lastId?: string;
 }
 
 export interface PostNotificationItem extends BaseNotificationItem {

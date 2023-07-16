@@ -3,6 +3,8 @@ import React from "react";
 
 import { NotificationItem, PostTimelineType, TimelinePost, TimelineType } from "@services/types";
 import { AccountEventMap, BaseAccount } from "@services/base/account";
+import { composeNotifications } from "@services/utils";
+
 import { AsyncFn, Nullable } from "@utils/types";
 
 const DEFAULT_MAX_COUNT = 20;
@@ -182,7 +184,7 @@ export class TimelineSubscription extends React.PureComponent<SubscriptionProps,
                 newItems.splice(this.props.maxCount ?? DEFAULT_MAX_COUNT);
             }
 
-            return { ...prevStates, items: newItems };
+            return { ...prevStates, items: composeNotifications(newItems as NotificationItem[]) };
         });
     };
 

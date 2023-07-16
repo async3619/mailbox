@@ -99,18 +99,18 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
     }
     public async *getNotificationItems(limit: number, after?: TimelinePost["id"]) {
         let maxId: string | undefined = after;
-        const items: NotificationItem[] = [];
         while (true) {
             const data = await this.client.v1.notifications.list({ limit, maxId });
-            if (data.length < limit) {
+            if (data.length === 0) {
                 break;
             }
 
             const items = data.map(item => this.composeNotification(item));
             let composedItems = composeNotifications(items);
             while (composedItems.length <= limit) {
-                const lastItemId = items[items.length - 1].id;
-                const partialData = await this.client.v1.notifications.list({ limit, maxId: lastItemId });
+                const lastItem = items[items.length - 1];
+                const lastId = lastItem.lastId ?? lastItem.id;
+                const partialData = await this.client.v1.notifications.list({ limit, maxId: lastId });
                 if (partialData.length === 0) {
                     break;
                 }
@@ -128,10 +128,6 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
             yield composedItems;
 
             maxId = data[data.length - 1].id;
-        }
-
-        if (items.length > 0) {
-            yield items;
         }
     }
 
