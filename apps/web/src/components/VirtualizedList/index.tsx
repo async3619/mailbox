@@ -111,7 +111,7 @@ export function VirtualizedList<T>({
             return;
         }
 
-        scrollElement?.scrollBy(0, Math.ceil(addedHeightSum));
+        scrollElement?.scrollBy(0, Math.round(addedHeightSum));
         setAddedHeights([]);
     }, [addedHeights, scrollElement]);
 
