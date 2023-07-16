@@ -13,6 +13,7 @@ import {
     TimelinePost,
     TimelineType,
 } from "@services/types";
+import { composeNotifications } from "@services/utils";
 
 const SERIALIZED_MASTODON_ACCOUNT = z.object({
     serviceType: z.literal("mastodon"),
@@ -98,14 +99,39 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
     }
     public async *getNotificationItems(limit: number, after?: TimelinePost["id"]) {
         let maxId: string | undefined = after;
+        const items: NotificationItem[] = [];
         while (true) {
-            const items = await this.client.v1.notifications.list({ limit, maxId });
-            if (items.length === 0) {
+            const data = await this.client.v1.notifications.list({ limit, maxId });
+            if (data.length < limit) {
                 break;
             }
 
-            yield items.map(item => this.composeNotification(item));
-            maxId = items[items.length - 1].id;
+            const items = data.map(item => this.composeNotification(item));
+            let composedItems = composeNotifications(items);
+            while (composedItems.length <= limit) {
+                const lastItemId = items[items.length - 1].id;
+                const partialData = await this.client.v1.notifications.list({ limit, maxId: lastItemId });
+                if (partialData.length === 0) {
+                    break;
+                }
+
+                const partialItems = partialData.map(item => this.composeNotification(item));
+                const partialComposedItems = composeNotifications(partialItems);
+
+                composedItems.push(...partialComposedItems);
+            }
+
+            if (composedItems.length > limit) {
+                composedItems = composedItems.slice(0, limit);
+            }
+
+            yield composedItems;
+
+            maxId = data[data.length - 1].id;
+        }
+
+        if (items.length > 0) {
+            yield items;
         }
     }
 
@@ -212,7 +238,7 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         const base: BaseNotificationItem = {
             id: item.id,
             createdAt: dayjs(item.createdAt),
-            user: this.composeUser(item.account),
+            users: [this.composeUser(item.account)],
         };
 
         if (item.type === "favourite" || item.type === "reblog" || item.type === "mention" || item.type === "poll") {

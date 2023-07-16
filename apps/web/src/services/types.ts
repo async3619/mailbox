@@ -41,7 +41,7 @@ export interface TimelinePost {
 export interface BaseNotificationItem {
     id: string;
     createdAt: dayjs.Dayjs;
-    user: PostAuthor;
+    users: PostAuthor[];
 }
 
 export interface PostNotificationItem extends BaseNotificationItem {

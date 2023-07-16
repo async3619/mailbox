@@ -18,7 +18,7 @@ export interface NotificationViewProps {
 }
 
 export function NotificationView({ notification }: NotificationViewProps) {
-    const { user } = notification;
+    const { users } = notification;
     if (notification.type === "mention") {
         const { post } = notification;
 
@@ -34,14 +34,18 @@ export function NotificationView({ notification }: NotificationViewProps) {
     let helperText: string | null = null;
     let helperContent: string | null = null;
     let helperIcon: React.ReactNode = null;
+    let helperTextFormat = "%s";
+    if (users.length > 1) {
+        helperTextFormat = `%s and ${users.length - 1} others`;
+    }
 
     switch (notification.type) {
         case "follow":
-            helperText = `%s followed you`;
+            helperText = `${helperTextFormat} followed you`;
             break;
 
         case "favourite":
-            helperText = `%s liked your post`;
+            helperText = `${helperTextFormat} liked your post`;
             helperContent = notification.post?.content ?? null;
             helperIcon = (
                 <Box color="rgb(249, 24, 128)">
@@ -51,7 +55,7 @@ export function NotificationView({ notification }: NotificationViewProps) {
             break;
 
         case "reblog":
-            helperText = `%s reposted your post`;
+            helperText = `${helperTextFormat} reposted your post`;
             helperContent = notification.post?.content ?? null;
             helperIcon = (
                 <Box color="rgb(29, 155, 240)">
@@ -66,9 +70,9 @@ export function NotificationView({ notification }: NotificationViewProps) {
             break;
     }
 
-    const helperTextContent = reactStringReplace(helperText, "%s", () => (
-        <AccountLink user={user}>
-            <EmojiText instanceUrl={user.instanceUrl}>{user.accountName}</EmojiText>
+    const helperTextContent = reactStringReplace(helperText, "%s", (match, index) => (
+        <AccountLink key={index} user={users[0]}>
+            <EmojiText instanceUrl={users[0].instanceUrl}>{users[0].accountName}</EmojiText>
         </AccountLink>
     ));
 
@@ -77,7 +81,9 @@ export function NotificationView({ notification }: NotificationViewProps) {
             <Box display="flex" alignItems="center">
                 {helperIcon && <Box mr={1.5}>{helperIcon}</Box>}
                 <ProfileList>
-                    <Avatar src={user.avatarUrl} size="small" />
+                    {users.map(user => {
+                        return <Avatar key={user.accountId} src={user.avatarUrl} size="small" sx={{ mr: 0.5 }} />;
+                    })}
                 </ProfileList>
             </Box>
             <Box>
