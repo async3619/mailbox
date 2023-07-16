@@ -2,11 +2,12 @@ import React from "react";
 
 import { Avatar, List, ListItem } from "ui";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
+import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 
 import { BaseAccount } from "@services/base/account";
 import { PostTimelineType, TimelineType } from "@services/types";
@@ -28,7 +29,7 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
     }
 
     const { addColumns } = useColumns();
-    const handleClick = React.useCallback(
+    const addTimeline = React.useCallback(
         (title: string, timelineType: PostTimelineType) => {
             addColumns({
                 type: "timeline",
@@ -38,6 +39,22 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
                 sensitiveBlurring: SensitiveBlurring.WithBlur,
                 imagePreviewSize: ImagePreviewSize.Rectangle,
                 timelineType,
+            });
+
+            rest.close();
+        },
+        [account, addColumns, rest],
+    );
+
+    const addNotification = React.useCallback(
+        (title: string) => {
+            addColumns({
+                type: "notification",
+                title,
+                accountId: account.getUniqueId(),
+                size: ColumnSize.Small,
+                sensitiveBlurring: SensitiveBlurring.WithBlur,
+                imagePreviewSize: ImagePreviewSize.Rectangle,
             });
 
             rest.close();
@@ -71,29 +88,41 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
     return (
         <BaseDrawerMenu header={headerContent} {...rest}>
             <Root>
-                <List>
-                    <ListItem
-                        startIcon={<HomeRoundedIcon fontSize="small" />}
-                        endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                        onClick={() => handleClick("Home", TimelineType.Home)}
-                    >
-                        Home
-                    </ListItem>
-                    <ListItem
-                        startIcon={<PeopleAltRoundedIcon fontSize="small" />}
-                        endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                        onClick={() => handleClick("Local Timeline", TimelineType.Local)}
-                    >
-                        Local Timeline
-                    </ListItem>
-                    <ListItem
-                        startIcon={<PublicRoundedIcon fontSize="small" />}
-                        endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                        onClick={() => handleClick("Federated Timeline", TimelineType.Federated)}
-                    >
-                        Federated Timeline
-                    </ListItem>
-                </List>
+                <Stack spacing={1}>
+                    <List>
+                        <ListItem
+                            startIcon={<HomeRoundedIcon fontSize="small" />}
+                            endIcon={<ChevronRightRoundedIcon fontSize="small" />}
+                            onClick={() => addTimeline("Home", TimelineType.Home)}
+                        >
+                            Home
+                        </ListItem>
+                        <ListItem
+                            startIcon={<PeopleAltRoundedIcon fontSize="small" />}
+                            endIcon={<ChevronRightRoundedIcon fontSize="small" />}
+                            onClick={() => addTimeline("Local Timeline", TimelineType.Local)}
+                        >
+                            Local Timeline
+                        </ListItem>
+                        <ListItem
+                            startIcon={<PublicRoundedIcon fontSize="small" />}
+                            endIcon={<ChevronRightRoundedIcon fontSize="small" />}
+                            onClick={() => addTimeline("Federated Timeline", TimelineType.Federated)}
+                        >
+                            Federated Timeline
+                        </ListItem>
+                    </List>
+                    <Divider />
+                    <List>
+                        <ListItem
+                            startIcon={<NotificationsRoundedIcon fontSize="small" />}
+                            endIcon={<ChevronRightRoundedIcon fontSize="small" />}
+                            onClick={() => addNotification("Notifications")}
+                        >
+                            Notifications
+                        </ListItem>
+                    </List>
+                </Stack>
             </Root>
         </BaseDrawerMenu>
     );

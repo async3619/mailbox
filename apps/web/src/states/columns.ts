@@ -1,13 +1,10 @@
 import shortid from "shortid";
-import { atom, useRecoilState } from "recoil";
+import { atom, RecoilEnv, useRecoilState } from "recoil";
 import React from "react";
-import { RecoilEnv } from "recoil";
 
-import { ColumnInstance } from "@components/Column/types";
+import { ColumnInstance, RawColumnInstance } from "@components/Column/types";
 
 import { persistAtom } from "@states/index";
-
-export type ColumnUpdater = ((prev: ColumnInstance) => ColumnInstance) | Partial<ColumnInstance>;
 
 RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
 
@@ -24,18 +21,23 @@ export const columnNodeState = atom<Record<ColumnInstance["id"], HTMLElement>>({
 export function useColumns() {
     const [columns, setColumns] = useRecoilState(columnState);
     const addColumns = React.useCallback(
-        (...newColumns: Omit<ColumnInstance, "id">[]) => {
+        (...newColumns: RawColumnInstance[]) => {
             setColumns(prev => [...prev, ...newColumns.map(c => ({ ...c, id: shortid() }))]);
         },
         [setColumns],
     );
 
     const updateColumn = React.useCallback(
-        (id: ColumnInstance["id"], updater: ColumnUpdater) => {
-            const updaterFn =
-                typeof updater === "function" ? updater : (prev: ColumnInstance) => ({ ...prev, ...updater });
+        (id: ColumnInstance["id"], data: Partial<Omit<RawColumnInstance, "type">>) => {
+            setColumns(prev => {
+                return prev.map(c => {
+                    if (c.id !== id) {
+                        return c;
+                    }
 
-            setColumns(prev => prev.map(c => (c.id === id ? updaterFn(c) : c)));
+                    return { ...c, ...data };
+                });
+            });
         },
         [setColumns],
     );

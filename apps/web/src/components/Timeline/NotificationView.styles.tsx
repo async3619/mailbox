@@ -1,22 +1,21 @@
 import styled from "@emotion/styled";
+import { UserLink } from "@components/UserLink";
 
-export const Root = styled.div<{ withoutPadding?: boolean }>`
-    margin: 0;
-    padding: ${({ theme, withoutPadding = false }) => theme.spacing(withoutPadding ? 0 : 1.5)};
+export const Root = styled.div`
+    width: 100%;
+
+    padding: ${({ theme }) => theme.spacing(1.5)};
     border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
 `;
 
-export const Header = styled.div`
-    min-width: 0;
-
-    margin-bottom: ${({ theme }) => theme.spacing(1.5)};
+export const ProfileList = styled.div`
+    margin-bottom: ${({ theme }) => theme.spacing(1)};
 
     display: flex;
-    align-items: center;
 `;
 
 export const Content = styled.div`
-    font-size: 0.85rem;
+    margin-top: ${({ theme }) => theme.spacing(1)} !important;
 
     p {
         margin: 0;
@@ -42,4 +41,9 @@ export const Content = styled.div`
             text-decoration: underline;
         }
     }
+`;
+
+export const AccountLink = styled(UserLink)`
+    color: inherit;
+    font-weight: 800;
 `;

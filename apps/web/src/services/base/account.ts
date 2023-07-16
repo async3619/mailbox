@@ -1,4 +1,4 @@
-import { PostTimelineType, TimelinePost, TimelineType } from "@services/types";
+import { NotificationItem, PostTimelineType, TimelinePost, TimelineType } from "@services/types";
 import { EventEmitter } from "@utils/events";
 
 export interface AccountEventMap {
@@ -7,6 +7,8 @@ export interface AccountEventMap {
     "new-post": (type: PostTimelineType, post: TimelinePost) => void;
     "update-post": (type: PostTimelineType, post: TimelinePost) => void;
     "delete-post": (type: PostTimelineType, postId: string) => void;
+
+    "new-notification": (item: NotificationItem) => void;
 }
 
 export abstract class BaseAccount<
@@ -30,6 +32,10 @@ export abstract class BaseAccount<
     public abstract getDisplayName(): string;
     public abstract getAvatarUrl(): string;
 
+    public abstract getNotificationItems(
+        count: number,
+        after?: NotificationItem["id"],
+    ): AsyncIterableIterator<NotificationItem[]>;
     public abstract getTimelinePosts(
         type: PostTimelineType,
         count: number,

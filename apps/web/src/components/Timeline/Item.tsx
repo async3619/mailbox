@@ -40,10 +40,11 @@ dayjs.updateLocale("en", {
 
 export interface TimelineItemProps {
     item: TimelinePost;
+    standalone?: boolean;
     onHeightChange?: (height: number) => void;
 }
 
-export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineItemProps) => {
+export const TimelineItemView = React.memo(({ item, onHeightChange, standalone }: TimelineItemProps) => {
     const [measureRef, { height }] = useMeasure();
     const { content, author, repostedBy, instanceUrl, createdAt, attachments, originPostAuthor } = item;
 
@@ -66,7 +67,7 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
     }
 
     return (
-        <Root ref={measureRef}>
+        <Root ref={measureRef} withoutPadding={standalone} style={{ border: standalone ? "0" : undefined }}>
             {helperTextContent && helperTextIcon && (
                 <Box mb={1.5} display="flex" fontSize="0.8rem" alignItems="center" color="text.secondary">
                     {helperTextIcon}

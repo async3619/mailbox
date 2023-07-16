@@ -21,6 +21,7 @@ export interface PostAuthor {
     avatarUrl: string;
     accountName: string;
     accountId: string;
+    instanceUrl: string;
 }
 
 export interface TimelinePost {
@@ -36,3 +37,19 @@ export interface TimelinePost {
     repostedBy?: PostAuthor;
     originPostAuthor?: Nullable<PostAuthor>;
 }
+
+export interface BaseNotificationItem {
+    id: string;
+    createdAt: dayjs.Dayjs;
+    user: PostAuthor;
+}
+
+export interface PostNotificationItem extends BaseNotificationItem {
+    type: "favourite" | "reblog" | "mention" | "poll";
+    post: TimelinePost;
+}
+export interface FollowNotificationItem extends BaseNotificationItem {
+    type: "follow";
+}
+
+export type NotificationItem = PostNotificationItem | FollowNotificationItem;

@@ -8,7 +8,7 @@ import { TimelineItemView } from "@components/Timeline/Item";
 export interface TimelineProps {
     items: TimelinePost[];
     scrollElement?: HTMLElement | null;
-    onLoadMore?(lastItem: TimelinePost): Promise<TimelinePost[]>;
+    onLoadMore?(lastItemId: string): Promise<TimelinePost[]>;
 }
 
 export function Timeline({ items, scrollElement, onLoadMore }: TimelineProps) {

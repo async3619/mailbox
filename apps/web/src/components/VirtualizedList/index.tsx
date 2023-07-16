@@ -15,7 +15,7 @@ export interface VirtualizedListProps<T> {
     getItemKey: (item: T) => string;
     defaultHeight: number;
     scrollElement?: HTMLElement | null;
-    onLoadMore?(lastItem: T): Promise<T[]>;
+    onLoadMore?(lastItemId: string): Promise<T[]>;
 }
 
 export function VirtualizedList<T>({
@@ -95,11 +95,11 @@ export function VirtualizedList<T>({
         setLoading(true);
 
         const lastItem = items[items.length - 1];
-        const newItems = await onLoadMore(lastItem);
+        const newItems = await onLoadMore(getItemKey(lastItem));
 
         setLoading(false);
         setItems(prevItems => [...prevItems, ...newItems]);
-    }, [items, loading, onLoadMore]);
+    }, [items, loading, onLoadMore, getItemKey]);
 
     React.useLayoutEffect(() => {
         if (!scrollElement?.scrollTop) {

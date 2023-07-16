@@ -28,4 +28,10 @@ export interface TimelineColumnInstance extends BaseColumnInstance {
     timelineType: PostTimelineType;
 }
 
-export type ColumnInstance = TimelineColumnInstance;
+export interface NotificationColumnInstance extends BaseColumnInstance {
+    type: "notification";
+    accountId: string;
+}
+
+export type ColumnInstance = TimelineColumnInstance | NotificationColumnInstance;
+export type RawColumnInstance = Omit<TimelineColumnInstance, "id"> | Omit<NotificationColumnInstance, "id">;

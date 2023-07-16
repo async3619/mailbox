@@ -5,7 +5,14 @@ import compact from "lodash/compact";
 
 import { AccountHydrator, BaseAccount } from "@services/base/account";
 import { GetTokenData } from "@services/mastodon/auth.types";
-import { PostAuthor, PostTimelineType, TimelinePost, TimelineType } from "@services/types";
+import {
+    BaseNotificationItem,
+    NotificationItem,
+    PostAuthor,
+    PostTimelineType,
+    TimelinePost,
+    TimelineType,
+} from "@services/types";
 
 const SERIALIZED_MASTODON_ACCOUNT = z.object({
     serviceType: z.literal("mastodon"),
@@ -89,6 +96,18 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
             maxId = posts[posts.length - 1].id;
         }
     }
+    public async *getNotificationItems(limit: number, after?: TimelinePost["id"]) {
+        let maxId: string | undefined = after;
+        while (true) {
+            const items = await this.client.v1.notifications.list({ limit, maxId });
+            if (items.length === 0) {
+                break;
+            }
+
+            yield items.map(item => this.composeNotification(item));
+            maxId = items[items.length - 1].id;
+        }
+    }
 
     public async startWatch(type: TimelineType) {
         const watcherType = type === TimelineType.Notifications ? TimelineType.Home : type;
@@ -135,6 +154,16 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         };
     }
 
+    private composeUser(user: mastodon.v1.Account): PostAuthor {
+        const instanceUrl = new URL(user.url).hostname;
+
+        return {
+            avatarUrl: user.avatarStatic,
+            accountName: user.displayName || user.username,
+            accountId: `@${user.acct}`,
+            instanceUrl,
+        };
+    }
     private composePost(post: mastodon.v1.Status): TimelinePost {
         if (!post.account.url) {
             throw new Error("Invalid post data");
@@ -143,11 +172,7 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         const authorToCache = compact([post.account, post.reblog?.account]);
         for (const author of authorToCache) {
             if (!this.authorMap.has(author.id)) {
-                this.authorMap.set(author.id, {
-                    avatarUrl: author.avatarStatic,
-                    accountName: author.displayName || author.username,
-                    accountId: `@${author.acct}`,
-                });
+                this.authorMap.set(author.id, this.composeUser(author));
             }
         }
 
@@ -174,15 +199,36 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
                 avatarUrl: target.account.avatarStatic,
                 accountName: target.account.displayName || target.account.username,
                 accountId: `@${target.account.acct}`,
+                instanceUrl: parsedUrl.hostname,
             },
-            repostedBy: post.reblog
-                ? {
-                      avatarUrl: post.account.avatarStatic,
-                      accountName: post.account.displayName || post.account.username,
-                      accountId: `@${post.account.acct}`,
-                  }
-                : undefined,
+            repostedBy: post.reblog ? this.composeUser(post.account) : undefined,
         };
+    }
+    private composeNotification(item: mastodon.v1.Notification): NotificationItem {
+        const base: BaseNotificationItem = {
+            id: item.id,
+            createdAt: dayjs(item.createdAt),
+            user: this.composeUser(item.account),
+        };
+
+        if (item.type === "favourite" || item.type === "reblog" || item.type === "mention" || item.type === "poll") {
+            if (!item.status) {
+                throw new Error("Invalid notification data: No status data found.");
+            }
+
+            return {
+                ...base,
+                type: item.type,
+                post: this.composePost(item.status),
+            };
+        } else if (item.type === "follow") {
+            return {
+                ...base,
+                type: item.type,
+            };
+        } else {
+            throw new Error(`Invalid notification type: ${item.type}`);
+        }
     }
 }
 
