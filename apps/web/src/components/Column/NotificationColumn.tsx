@@ -2,11 +2,12 @@ import React from "react";
 
 import { BaseColumn } from "@components/Column/Base";
 import { NotificationColumnInstance } from "@components/Column/types";
+import { NotificationView } from "@components/Timeline/NotificationView";
 import { TimelineSubscription } from "@components/TimelineSubscription";
+import { VirtualizedList } from "@components/VirtualizedList";
+
 import { TimelineType } from "@services/types";
 import { useAccount } from "@states/accounts";
-import { NotificationView } from "@components/Timeline/NotificationView";
-import { VirtualizedList } from "@components/VirtualizedList";
 
 export interface NotificationColumnProps {
     instance: NotificationColumnInstance;

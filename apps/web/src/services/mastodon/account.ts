@@ -133,6 +133,10 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         ws.on("status.update", post => this.emit("update-post", watcherType, this.composePost(post)));
         ws.on("delete", id => this.emit("delete-post", watcherType, id));
 
+        if (type === TimelineType.Notifications) {
+            ws.on("notification", item => this.emit("new-notification", this.composeNotification(item)));
+        }
+
         this.watcherMap.set(watcherType, ws);
     }
     public async stopWatch(type: TimelineType) {

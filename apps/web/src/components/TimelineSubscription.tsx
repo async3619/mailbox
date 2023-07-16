@@ -96,9 +96,13 @@ export class TimelineSubscription extends React.PureComponent<SubscriptionProps,
         });
     };
     private stopSubscription = async (account: BaseAccount<string>) => {
-        account.removeEventListener("new-post", this.handleNewPost);
-        account.removeEventListener("delete-post", this.handleDeletePost);
-        account.removeEventListener("update-post", this.handleUpdatePost);
+        if (this.props.type === TimelineType.Notifications) {
+            account.removeEventListener("new-notification", this.handleAddNotification);
+        } else {
+            account.removeEventListener("new-post", this.handleNewPost);
+            account.removeEventListener("delete-post", this.handleDeletePost);
+            account.removeEventListener("update-post", this.handleUpdatePost);
+        }
     };
 
     private handleLoadMore = async (lastId: string) => {
