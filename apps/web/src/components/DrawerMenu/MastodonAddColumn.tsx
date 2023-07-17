@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Avatar, List, ListItem } from "ui";
+import { List, ListItem } from "ui";
 
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
@@ -13,11 +13,10 @@ import { BaseAccount } from "@services/base/account";
 import { PostTimelineType, TimelineType } from "@services/types";
 
 import { useColumns } from "@states/columns";
-
-import { MastodonLogo } from "@components/Svg/Mastodon";
 import { ColumnSize, ImagePreviewSize, SensitiveBlurring } from "@components/Column/types";
 import { BaseDrawerMenu, BaseDrawerMenuProps } from "@components/DrawerMenu/Base";
-import { Header, Root } from "@components/DrawerMenu/MastodonAddColumn.styles";
+import { Root } from "@components/DrawerMenu/MastodonAddColumn.styles";
+import { AccountHeader } from "@components/AccountHeader";
 
 export interface AddColumnDrawerMenuProps extends BaseDrawerMenuProps {
     account: BaseAccount<string>;
@@ -62,28 +61,7 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
         [account, addColumns, rest],
     );
 
-    const headerContent = (
-        <Header>
-            <Avatar src={account.getAvatarUrl()} size="medium" sx={{ mr: 1, flex: "0 0 auto" }} />
-            <Box>
-                <Typography
-                    variant="h6"
-                    fontSize="1rem"
-                    fontWeight={800}
-                    whiteSpace="nowrap"
-                    overflow="hidden"
-                    lineHeight={1}
-                    textOverflow="ellipsis"
-                    sx={{ mb: 0.5 }}
-                >
-                    Add Column
-                </Typography>
-                <Typography variant="body2" fontSize="0.8rem" color="text.secondary">
-                    <MastodonLogo fontSize="inherit" /> {account.getDisplayName()}
-                </Typography>
-            </Box>
-        </Header>
-    );
+    const headerContent = <AccountHeader account={account} titleWeight={800} titleText="Add Column" />;
 
     return (
         <BaseDrawerMenu header={headerContent} {...rest}>
