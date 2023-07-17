@@ -103,27 +103,34 @@ export const BaseColumn = ({ instance, children, loading, onScroll, account }: C
                                     <Avatar size="small" src={account.getAvatarUrl()} />
                                 </Box>
                             )}
-                            <Box display="flex" flexDirection="column" justifyContent="center">
+                            <Box minWidth={0} display="flex" flexDirection="column" justifyContent="center">
                                 <Typography
                                     variant="h6"
                                     fontSize="0.95rem"
                                     fontWeight={600}
+                                    lineHeight={1}
                                     whiteSpace="nowrap"
                                     overflow="hidden"
-                                    lineHeight={1}
                                     textOverflow="ellipsis"
                                     sx={{ mb: account ? 0.5 : 0 }}
                                 >
                                     {title}
                                 </Typography>
                                 {account && (
-                                    <Typography variant="body2" fontSize="0.8rem" color="text.secondary">
+                                    <Typography
+                                        variant="body2"
+                                        fontSize="0.8rem"
+                                        color="text.secondary"
+                                        whiteSpace="nowrap"
+                                        overflow="hidden"
+                                        textOverflow="ellipsis"
+                                    >
                                         {headerLogo} {account.getDisplayName()}
                                     </Typography>
                                 )}
                             </Box>
                         </Title>
-                        <Stack direction="row" spacing={1} className="controls">
+                        <Stack direction="row" spacing={1} className="controls" flex="0 0 auto" ml={1.5}>
                             <IconButton
                                 size="small"
                                 tooltip="Delete Column"
