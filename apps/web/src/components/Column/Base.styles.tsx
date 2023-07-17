@@ -26,6 +26,8 @@ export const Root = styled.div<{ size: ColumnSize }>`
 `;
 
 export const Header = styled.div`
+    min-width: 0;
+    width: 100%;
     height: ${({ theme }) => theme.spacing(7)};
 
     padding: ${({ theme }) => theme.spacing(0, 1.5)};
@@ -52,6 +54,7 @@ export const Header = styled.div`
 `;
 
 export const Title = styled.div`
+    min-width: 0;
     height: 100%;
 
     display: flex;
@@ -64,7 +67,7 @@ export const Title = styled.div`
 `;
 
 export const Handle = styled.button`
-    margin-right: ${({ theme }) => theme.spacing(0.5)};
+    margin-right: ${({ theme }) => theme.spacing(1)};
     padding: ${({ theme }) => theme.spacing(0.75, 0.5)};
     border: 0;
     border-radius: 2px;

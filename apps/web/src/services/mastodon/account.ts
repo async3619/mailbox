@@ -69,6 +69,9 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
     public getAvatarUrl() {
         return this.account.avatar;
     }
+    public getInstanceUrl() {
+        return this.instanceUrl;
+    }
 
     public async *getTimelinePosts(type: PostTimelineType, limit: number, after?: TimelinePost["id"]) {
         let maxId: string | undefined = after;
