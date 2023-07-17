@@ -4,8 +4,10 @@ import { Avatar } from "ui";
 import { Box, SvgIconProps, Typography } from "@mui/material";
 
 import { BaseAccount } from "@services/base/account";
+import { MastodonAccount } from "@services/mastodon/account";
 
 import { MastodonLogo } from "@components/Svg/Mastodon";
+import { EmojiText } from "@components/EmojiText";
 import { Root } from "@components/AccountHeader.styles";
 
 export interface AccountHeaderProps {
@@ -26,6 +28,14 @@ export function AccountHeader({ account, titleText, avatarSize = "medium", title
         const ServiceIcon = SERVICE_TYPE_TO_ICON[serviceType];
         if (ServiceIcon) {
             headerLogo = <ServiceIcon fontSize="inherit" />;
+        }
+    }
+
+    let displayName: React.ReactNode = account?.getDisplayName() ?? null;
+    if (account instanceof MastodonAccount) {
+        const instanceUrl = account.getInstanceUrl();
+        if (instanceUrl) {
+            displayName = <EmojiText instanceUrl={instanceUrl}>{account.getDisplayName()}</EmojiText>;
         }
     }
 
@@ -58,7 +68,7 @@ export function AccountHeader({ account, titleText, avatarSize = "medium", title
                         overflow="hidden"
                         textOverflow="ellipsis"
                     >
-                        {headerLogo} {account.getDisplayName()}
+                        {headerLogo} {displayName}
                     </Typography>
                 )}
             </Box>
