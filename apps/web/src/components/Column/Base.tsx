@@ -4,7 +4,7 @@ import Scrollbars from "rc-scrollbars";
 
 import { Avatar, IconButton } from "ui";
 
-import { Box, LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, LinearProgress, Stack, SvgIconProps, Typography } from "@mui/material";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 
@@ -33,6 +33,10 @@ export interface ColumnProps {
 interface SidebarHolder {
     component: React.ComponentType<ColumnSidebarProps> | null;
 }
+
+const SERVICE_TYPE_TO_ICON: Record<string, React.ComponentType<SvgIconProps>> = {
+    mastodon: MastodonLogo,
+};
 
 export const BaseColumn = ({ instance, children, loading, onScroll, account }: ColumnProps) => {
     const { id, title } = instance;
@@ -71,6 +75,15 @@ export const BaseColumn = ({ instance, children, loading, onScroll, account }: C
         sidebarContent = <Component instance={instance} />;
     }
 
+    let headerLogo: React.ReactNode | null = null;
+    if (account) {
+        const serviceType = account.getServiceType();
+        const ServiceIcon = SERVICE_TYPE_TO_ICON[serviceType];
+        if (ServiceIcon) {
+            headerLogo = <ServiceIcon fontSize="inherit" />;
+        }
+    }
+
     return (
         <ColumnContext.Provider value={{ column: instance }}>
             <Wrapper style={{ ...style, zIndex: isDragging ? 1000 : 0 }}>
@@ -105,7 +118,7 @@ export const BaseColumn = ({ instance, children, loading, onScroll, account }: C
                                 </Typography>
                                 {account && (
                                     <Typography variant="body2" fontSize="0.8rem" color="text.secondary">
-                                        <MastodonLogo fontSize="inherit" /> {account.getDisplayName()}
+                                        {headerLogo} {account.getDisplayName()}
                                     </Typography>
                                 )}
                             </Box>
