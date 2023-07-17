@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PostAttachment } from "@services/base/timeline";
+import { PostAttachment } from "@services/types";
 
 import { Root } from "@components/Media/ViewerItem.styles";
 

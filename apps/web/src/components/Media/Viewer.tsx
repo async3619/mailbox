@@ -10,7 +10,7 @@ import FullscreenExitRoundedIcon from "@mui/icons-material/FullscreenExitRounded
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 
-import { PostAttachment } from "@services/base/timeline";
+import { PostAttachment } from "@services/types";
 
 import { MediaViewerItem } from "@components/Media/ViewerItem";
 import { Container, Content, Controls, Navigator, Root, SwiperRoot } from "@components/Media/Viewer.styles";

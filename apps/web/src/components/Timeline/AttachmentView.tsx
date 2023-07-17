@@ -3,7 +3,7 @@ import React from "react";
 import { Typography } from "@mui/material";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 
-import { TimelineItem } from "@services/base/timeline";
+import { TimelinePost } from "@services/types";
 
 import { useColumn } from "@components/Column/context";
 import { Label, Play, Root } from "@components/Timeline/AttachmentView.styles";
@@ -11,8 +11,8 @@ import { SensitiveBlurring } from "@components/Column/types";
 
 export interface AttachmentViewProps {
     onClick?: () => void;
-    post: TimelineItem;
-    attachment: TimelineItem["attachments"][0];
+    post: TimelinePost;
+    attachment: TimelinePost["attachments"][0];
     aspectRatio?: string | false;
     fullHeight?: boolean;
 }

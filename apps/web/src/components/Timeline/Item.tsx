@@ -7,8 +7,10 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 
 import { Box, Typography } from "@mui/material";
+import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
+import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded";
 
-import { TimelineItem } from "@services/base/timeline";
+import { TimelinePost } from "@services/types";
 
 import { AttachmentList } from "@components/Timeline/AttachmentList";
 import { EmojiText } from "@components/EmojiText";
@@ -37,13 +39,14 @@ dayjs.updateLocale("en", {
 });
 
 export interface TimelineItemProps {
-    item: TimelineItem;
+    item: TimelinePost;
+    standalone?: boolean;
     onHeightChange?: (height: number) => void;
 }
 
-export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineItemProps) => {
+export const TimelineItemView = React.memo(({ item, onHeightChange, standalone }: TimelineItemProps) => {
     const [measureRef, { height }] = useMeasure();
-    const { avatarUrl, content, accountName, accountId, instanceUrl, createdAt, attachments } = item;
+    const { content, author, repostedBy, instanceUrl, createdAt, attachments, originPostAuthor } = item;
 
     React.useEffect(() => {
         if (!height) {
@@ -53,10 +56,39 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
         onHeightChange?.(height);
     }, [onHeightChange, height]);
 
+    let helperTextIcon: React.ReactNode = null;
+    let helperTextContent: string | null = null;
+    if (repostedBy) {
+        helperTextIcon = <RepeatRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
+        helperTextContent = `${repostedBy.accountName} reposted`;
+    } else if (originPostAuthor) {
+        helperTextIcon = <ReplyRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
+        helperTextContent = `replied to ${originPostAuthor.accountName}`;
+    }
+
     return (
-        <Root ref={measureRef}>
+        <Root ref={measureRef} withoutPadding={standalone} style={{ border: standalone ? "0" : undefined }}>
+            {helperTextContent && helperTextIcon && (
+                <Box mb={1.5} display="flex" fontSize="0.8rem" alignItems="center" color="text.secondary">
+                    {helperTextIcon}
+                    <Typography
+                        variant="body2"
+                        component="div"
+                        fontSize="inherit"
+                        color="text.primary"
+                        sx={{ opacity: 0.6 }}
+                    >
+                        <EmojiText instanceUrl={instanceUrl}>{helperTextContent}</EmojiText>
+                    </Typography>
+                </Box>
+            )}
             <Header>
-                <Avatar size="small" src={avatarUrl} sx={{ flex: "0 0 auto" }} />
+                <Avatar
+                    size="medium"
+                    src={author.avatarUrl}
+                    secondarySrc={repostedBy?.avatarUrl}
+                    sx={{ flex: "0 0 auto" }}
+                />
                 <Box minWidth={0} display="flex" flex="1 1 auto">
                     <Box display="flex" flexDirection="column" flex="1 1 auto" ml={1} minWidth={0}>
                         <Typography
@@ -67,7 +99,7 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
                             textOverflow="ellipsis"
                             whiteSpace="nowrap"
                         >
-                            <EmojiText instanceUrl={instanceUrl}>{accountName}</EmojiText>
+                            <EmojiText instanceUrl={instanceUrl}>{author.accountName}</EmojiText>
                         </Typography>
                         <Typography
                             variant="body2"
@@ -78,7 +110,7 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
                             textOverflow="ellipsis"
                             whiteSpace="nowrap"
                         >
-                            {accountId}
+                            {author.accountId}
                         </Typography>
                     </Box>
                     <Box ml={1}>
@@ -89,6 +121,7 @@ export const TimelineItemView = React.memo(({ item, onHeightChange }: TimelineIt
                             textOverflow="ellipsis"
                             whiteSpace="nowrap"
                             color="text.secondary"
+                            fontSize="0.8rem"
                         >
                             {createdAt.fromNow(true)}
                         </Typography>

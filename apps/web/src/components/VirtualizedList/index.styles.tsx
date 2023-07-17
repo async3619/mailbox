@@ -12,3 +12,11 @@ export const Root = styled.div`
     overflow-x: hidden;
     overflow-y: hidden;
 `;
+
+export const Content = styled.div`
+    width: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+`;

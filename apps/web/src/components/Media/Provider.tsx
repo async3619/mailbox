@@ -1,8 +1,8 @@
 import React from "react";
 
-import { MediaContext } from "@components/Media";
+import { PostAttachment } from "@services/types";
 
-import { PostAttachment } from "@services/base/timeline";
+import { MediaContext } from "@components/Media";
 import { MediaViewer } from "@components/Media/Viewer";
 
 interface AttachmentStatus {

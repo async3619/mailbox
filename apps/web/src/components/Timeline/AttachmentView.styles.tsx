@@ -1,7 +1,9 @@
 import styled from "@emotion/styled";
 import { ButtonBase } from "@mui/material";
 
-export const Root = styled(ButtonBase)<{ blur: boolean }>`
+export const Root = styled(ButtonBase, {
+    shouldForwardProp: prop => prop !== "blur",
+})<{ blur: boolean }>`
     width: 100%;
 
     margin: 0;
@@ -42,7 +44,7 @@ export const Root = styled(ButtonBase)<{ blur: boolean }>`
         visibility: ${({ blur }) => (blur ? "visible" : "hidden")};
 
         background: rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(12px);
+        backdrop-filter: blur(48px);
     }
 `;
 
