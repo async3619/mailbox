@@ -2,9 +2,9 @@ import React from "react";
 import { mergeRefs } from "react-merge-refs";
 import Scrollbars from "rc-scrollbars";
 
-import { IconButton } from "ui";
+import { Avatar, IconButton } from "ui";
 
-import { LinearProgress, Stack, Typography } from "@mui/material";
+import { Box, LinearProgress, Stack, SvgIconProps, Typography } from "@mui/material";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 
@@ -12,26 +12,33 @@ import { useSortable } from "@dnd-kit/sortable";
 
 import { ColumnSidebarProps } from "@components/Column/Sidebar/Base";
 import { ColumnSettingsSidebar } from "@components/Column/Sidebar/Settings/Column";
-
+import { ColumnContext } from "@components/Column/context";
 import { ColumnInstance } from "@components/Column/types";
+import { MastodonLogo } from "@components/Svg/Mastodon";
 import { Content, Handle, Header, ProgressWrapper, Root, Title, Wrapper } from "@components/Column/Base.styles";
+
+import { BaseAccount } from "@services/base/account";
 
 import { useColumnNodeSetter, useColumns } from "@states/columns";
 import { Fn } from "@utils/types";
-import { ColumnContext } from "@components/Column/context";
 
 export interface ColumnProps {
     instance: ColumnInstance;
     children: React.ReactNode | Fn<[view: HTMLElement | null], React.ReactNode>;
     loading?: boolean;
     onScroll?: (offset: number) => void;
+    account?: BaseAccount<string>;
 }
 
 interface SidebarHolder {
     component: React.ComponentType<ColumnSidebarProps> | null;
 }
 
-export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProps) => {
+const SERVICE_TYPE_TO_ICON: Record<string, React.ComponentType<SvgIconProps>> = {
+    mastodon: MastodonLogo,
+};
+
+export const BaseColumn = ({ instance, children, loading, onScroll, account }: ColumnProps) => {
     const { id, title } = instance;
     const [scrollbars, setScrollbars] = React.useState<Scrollbars | null>(null);
     const setColumnNode = useColumnNodeSetter(id);
@@ -68,6 +75,15 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
         sidebarContent = <Component instance={instance} />;
     }
 
+    let headerLogo: React.ReactNode | null = null;
+    if (account) {
+        const serviceType = account.getServiceType();
+        const ServiceIcon = SERVICE_TYPE_TO_ICON[serviceType];
+        if (ServiceIcon) {
+            headerLogo = <ServiceIcon fontSize="inherit" />;
+        }
+    }
+
     return (
         <ColumnContext.Provider value={{ column: instance }}>
             <Wrapper style={{ ...style, zIndex: isDragging ? 1000 : 0 }}>
@@ -82,9 +98,30 @@ export const BaseColumn = ({ instance, children, loading, onScroll }: ColumnProp
                     <Header>
                         <Handle {...attributes} {...listeners} />
                         <Title role="button" onClick={handleTitleClick}>
-                            <Typography variant="h6" fontSize="1rem" fontWeight={600} lineHeight={1}>
-                                {title}
-                            </Typography>
+                            {account && (
+                                <Box mr={1}>
+                                    <Avatar size="small" src={account.getAvatarUrl()} />
+                                </Box>
+                            )}
+                            <Box display="flex" flexDirection="column" justifyContent="center">
+                                <Typography
+                                    variant="h6"
+                                    fontSize="0.95rem"
+                                    fontWeight={600}
+                                    whiteSpace="nowrap"
+                                    overflow="hidden"
+                                    lineHeight={1}
+                                    textOverflow="ellipsis"
+                                    sx={{ mb: account ? 0.5 : 0 }}
+                                >
+                                    {title}
+                                </Typography>
+                                {account && (
+                                    <Typography variant="body2" fontSize="0.8rem" color="text.secondary">
+                                        {headerLogo} {account.getDisplayName()}
+                                    </Typography>
+                                )}
+                            </Box>
                         </Title>
                         <Stack direction="row" spacing={1} className="controls">
                             <IconButton

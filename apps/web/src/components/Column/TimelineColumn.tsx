@@ -23,7 +23,7 @@ export function TimelineColumn({ instance }: TimelineColumnProps) {
     return (
         <TimelineSubscription loadMore type={timelineType} account={account} shouldTrim={scrollPosition === 0}>
             {(items, loading, loadMore) => (
-                <BaseColumn loading={loading} instance={instance} onScroll={setScrollPosition}>
+                <BaseColumn loading={loading} instance={instance} onScroll={setScrollPosition} account={account}>
                     {view => <Timeline items={items} scrollElement={view} onLoadMore={loadMore} />}
                 </BaseColumn>
             )}

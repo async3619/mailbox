@@ -30,7 +30,7 @@ export function NotificationColumn({ instance }: NotificationColumnProps) {
             shouldTrim={scrollPosition === 0}
         >
             {(items, loading, loadMore) => (
-                <BaseColumn loading={loading} instance={instance} onScroll={setScrollPosition}>
+                <BaseColumn loading={loading} instance={instance} onScroll={setScrollPosition} account={account}>
                     {view => (
                         <VirtualizedList
                             scrollElement={view}

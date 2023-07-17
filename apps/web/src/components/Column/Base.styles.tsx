@@ -60,6 +60,7 @@ export const Title = styled.div`
     flex: 1 1 auto;
 
     cursor: pointer;
+    user-select: none;
 `;
 
 export const Handle = styled.button`
