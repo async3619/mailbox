@@ -9,6 +9,7 @@ export function composeNotifications(items: NotificationItem[]): NotificationIte
         const item = items[i];
         const composedItems: NotificationItem[] = [item];
         if (item.type === "mention" || item.type === "poll") {
+            composedNotifications.push(composedItems);
             continue;
         }
 
