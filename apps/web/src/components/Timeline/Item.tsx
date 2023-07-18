@@ -16,7 +16,8 @@ import { AttachmentList } from "@components/Timeline/AttachmentList";
 import { EmojiText } from "@components/EmojiText";
 import { ContentRenderer } from "@components/ContentRenderer";
 
-import { Header, Root, SpoilerButton } from "@components/Timeline/Item.styles";
+import { Header, Root } from "@components/Timeline/Item.styles";
+import { PostContent } from "@components/Timeline/PostContent";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -50,7 +51,7 @@ export interface TimelineItemProps {
 export const TimelineItemView = React.memo(
     ({ item, onHeightChange, standalone, onSpoilerStatusChange, spoilerOpened }: TimelineItemProps) => {
         const [measureRef, { height }] = useMeasure();
-        const { content, author, repostedBy, instanceUrl, createdAt, attachments, originPostAuthor } = item;
+        const { author, repostedBy, instanceUrl, createdAt, attachments, originPostAuthor } = item;
 
         React.useEffect(() => {
             if (!height) {
@@ -60,10 +61,6 @@ export const TimelineItemView = React.memo(
             onHeightChange?.(height);
         }, [onHeightChange, height]);
 
-        const handleSpoilerButtonClick = React.useCallback(() => {
-            onSpoilerStatusChange(item, !spoilerOpened);
-        }, [onSpoilerStatusChange, item, spoilerOpened]);
-
         let helperTextIcon: React.ReactNode = null;
         let helperTextContent: string | null = null;
         if (repostedBy) {
@@ -72,13 +69,6 @@ export const TimelineItemView = React.memo(
         } else if (originPostAuthor) {
             helperTextIcon = <ReplyRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
             helperTextContent = `replied to ${originPostAuthor.accountName}`;
-        }
-
-        let contentBoxHeight: React.CSSProperties["maxHeight"];
-        if (item.spoilerText) {
-            contentBoxHeight = spoilerOpened ? "none" : "0";
-        } else {
-            contentBoxHeight = "none";
         }
 
         return (
@@ -147,25 +137,7 @@ export const TimelineItemView = React.memo(
                         </Box>
                     </Box>
                 </Header>
-                <Box>
-                    {item.spoilerText && (
-                        <Box>
-                            <Typography fontSize="0.85rem" display="inline-block">
-                                {item.spoilerText}
-                            </Typography>
-                            <SpoilerButton onClick={handleSpoilerButtonClick}>
-                                <Typography variant="caption" fontSize="0.85rem" lineHeight={1}>
-                                    {spoilerOpened ? "Hide" : "Show"}
-                                </Typography>
-                            </SpoilerButton>
-                        </Box>
-                    )}
-                    <Box overflow="hidden" style={{ maxHeight: contentBoxHeight }}>
-                        <Box pt={item.spoilerText ? 2 : 0}>
-                            <ContentRenderer instanceUrl={author.instanceUrl} content={content} />
-                        </Box>
-                    </Box>
-                </Box>
+                <PostContent item={item} spoilerOpened={spoilerOpened} onSpoilerStatusChange={onSpoilerStatusChange} />
                 {attachments.length > 0 && (
                     <Box mt={2}>
                         <AttachmentList post={item} attachments={attachments} />

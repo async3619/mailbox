@@ -13,12 +13,18 @@ import { TimelineItemView } from "@components/Timeline/Item";
 import { ContentRenderer } from "@components/ContentRenderer";
 
 import { AccountLink, ProfileList, Root } from "@components/Timeline/NotificationView.styles";
+import { PostContent } from "@components/Timeline/PostContent";
 
 export interface NotificationViewProps {
     notification: NotificationItem;
 }
 
 export function NotificationView({ notification }: NotificationViewProps) {
+    const [spoilerOpened, setSpoilerOpened] = React.useState(false);
+    const handleSpoilerStatusChange = React.useCallback((_: TimelinePost, opened: boolean) => {
+        setSpoilerOpened(opened);
+    }, []);
+
     const { users } = notification;
     if (notification.type === "mention") {
         const { post } = notification;
@@ -26,7 +32,12 @@ export function NotificationView({ notification }: NotificationViewProps) {
         return (
             <Root>
                 <Box flex="1 1 auto">
-                    <TimelineItemView standalone item={post} />
+                    <TimelineItemView
+                        standalone
+                        item={post}
+                        onSpoilerStatusChange={handleSpoilerStatusChange}
+                        spoilerOpened={spoilerOpened}
+                    />
                 </Box>
             </Root>
         );
@@ -95,7 +106,11 @@ export function NotificationView({ notification }: NotificationViewProps) {
                 </Typography>
                 {post && (
                     <Box mt={1.5} color="text.secondary">
-                        <ContentRenderer instanceUrl={post.author.instanceUrl} content={post.content} />
+                        <PostContent
+                            item={post}
+                            onSpoilerStatusChange={handleSpoilerStatusChange}
+                            spoilerOpened={spoilerOpened}
+                        />
                     </Box>
                 )}
             </Box>
