@@ -79,7 +79,9 @@ export const TimelineItemView = React.memo(({ item, onHeightChange, standalone }
                         color="text.primary"
                         sx={{ opacity: 0.6 }}
                     >
-                        <EmojiText instanceUrl={instanceUrl}>{helperTextContent}</EmojiText>
+                        <EmojiText size="small" instanceUrl={instanceUrl}>
+                            {helperTextContent}
+                        </EmojiText>
                     </Typography>
                 </Box>
             )}
@@ -100,7 +102,9 @@ export const TimelineItemView = React.memo(({ item, onHeightChange, standalone }
                             textOverflow="ellipsis"
                             whiteSpace="nowrap"
                         >
-                            <EmojiText instanceUrl={instanceUrl}>{author.accountName}</EmojiText>
+                            <EmojiText size="small" instanceUrl={instanceUrl}>
+                                {author.accountName}
+                            </EmojiText>
                         </Typography>
                         <Typography
                             variant="body2"

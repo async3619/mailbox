@@ -8,9 +8,12 @@ import { MisskeyInstance } from "@services/misskey/instance";
 
 import { Root } from "./EmojiText.styles";
 
+export type EmojiTextSize = "small" | "medium";
+
 export interface EmojiTextProps {
     instanceUrl?: string;
     children: string;
+    size?: EmojiTextSize;
 }
 
 type EmojiMap = {
@@ -21,7 +24,7 @@ type EmojiMap = {
 
 const EMOJI_MAP: EmojiMap = {};
 
-export const EmojiText = React.memo(({ children, instanceUrl }: EmojiTextProps) => {
+export const EmojiText = React.memo(({ children, instanceUrl, size = "medium" }: EmojiTextProps) => {
     const [, setLoaded] = React.useState(false);
     const instances = React.useMemo<[MastodonInstance | null, MisskeyInstance | null]>(() => {
         if (!instanceUrl) {
@@ -78,19 +81,19 @@ export const EmojiText = React.memo(({ children, instanceUrl }: EmojiTextProps) 
     const content = replace(children, /:(.+?):/g, (match, index) => {
         const emojis = EMOJI_MAP[instanceUrl];
         if (!emojis) {
-            return match;
+            return "⬚";
         }
 
         const emoji = emojis[match];
         if (!emoji) {
-            return match;
+            return "⬚";
         }
 
         // eslint-disable-next-line @next/next/no-img-element
         return <img alt={emoji.name} key={`${match}_${index}`} src={emoji.url} />;
     });
 
-    return <Root>{content}</Root>;
+    return <Root size={size}>{content}</Root>;
 });
 
 EmojiText.displayName = "EmojiText";

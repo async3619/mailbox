@@ -73,7 +73,9 @@ export function NotificationView({ notification }: NotificationViewProps) {
 
     const helperTextContent = reactStringReplace(helperText, "%s", (match, index) => (
         <AccountLink key={index} user={users[0]}>
-            <EmojiText instanceUrl={users[0].instanceUrl}>{users[0].accountName}</EmojiText>
+            <EmojiText size="small" instanceUrl={users[0].instanceUrl}>
+                {users[0].accountName}
+            </EmojiText>
         </AccountLink>
     ));
 
