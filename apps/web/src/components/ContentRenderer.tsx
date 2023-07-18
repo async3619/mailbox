@@ -43,11 +43,10 @@ export function ContentRenderer({ content, instanceUrl }: ContentRendererProps) 
 
     switch (content.type) {
         case "emoji":
-            console.log(instanceUrl, content.code);
             return <EmojiText instanceUrl={instanceUrl}>{`:${content.code}:`}</EmojiText>;
 
         case "text":
-            return content.text;
+            return <>{content.text}</>;
 
         case "break-line":
             return <br />;
