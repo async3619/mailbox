@@ -35,7 +35,11 @@ export function AccountHeader({ account, titleText, avatarSize = "medium", title
     if (account instanceof MastodonAccount) {
         const instanceUrl = account.getInstanceUrl();
         if (instanceUrl) {
-            displayName = <EmojiText instanceUrl={instanceUrl}>{account.getDisplayName()}</EmojiText>;
+            displayName = (
+                <EmojiText size="small" instanceUrl={instanceUrl}>
+                    {account.getDisplayName()}
+                </EmojiText>
+            );
         }
     }
 

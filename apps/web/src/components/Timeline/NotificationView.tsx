@@ -6,12 +6,13 @@ import { Box, Typography } from "@mui/material";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
 
-import { NotificationItem } from "@services/types";
+import { NotificationItem, TimelinePost } from "@services/types";
 
 import { EmojiText } from "@components/EmojiText";
 import { TimelineItemView } from "@components/Timeline/Item";
+import { ContentRenderer } from "@components/ContentRenderer";
 
-import { AccountLink, Content, ProfileList, Root } from "@components/Timeline/NotificationView.styles";
+import { AccountLink, ProfileList, Root } from "@components/Timeline/NotificationView.styles";
 
 export interface NotificationViewProps {
     notification: NotificationItem;
@@ -32,9 +33,9 @@ export function NotificationView({ notification }: NotificationViewProps) {
     }
 
     let helperText: string | null = null;
-    let helperContent: string | null = null;
     let helperIcon: React.ReactNode = null;
     let helperTextFormat = "%s";
+    let post: TimelinePost | null = null;
     if (users.length > 1) {
         helperTextFormat = `%s and ${users.length - 1} others`;
     }
@@ -46,7 +47,7 @@ export function NotificationView({ notification }: NotificationViewProps) {
 
         case "favourite":
             helperText = `${helperTextFormat} liked your post`;
-            helperContent = notification.post?.content ?? null;
+            post = notification.post;
             helperIcon = (
                 <Box color="rgb(249, 24, 128)">
                     <FavoriteRoundedIcon fontSize="small" />
@@ -56,7 +57,7 @@ export function NotificationView({ notification }: NotificationViewProps) {
 
         case "reblog":
             helperText = `${helperTextFormat} reposted your post`;
-            helperContent = notification.post?.content ?? null;
+            post = notification.post;
             helperIcon = (
                 <Box color="rgb(29, 155, 240)">
                     <RepeatRoundedIcon />
@@ -66,13 +67,15 @@ export function NotificationView({ notification }: NotificationViewProps) {
 
         case "poll":
             helperText = `Voted poll by %s is finished`;
-            helperContent = notification.post?.content ?? null;
+            post = notification.post;
             break;
     }
 
     const helperTextContent = reactStringReplace(helperText, "%s", (match, index) => (
         <AccountLink key={index} user={users[0]}>
-            <EmojiText instanceUrl={users[0].instanceUrl}>{users[0].accountName}</EmojiText>
+            <EmojiText size="small" instanceUrl={users[0].instanceUrl}>
+                {users[0].accountName}
+            </EmojiText>
         </AccountLink>
     ));
 
@@ -90,14 +93,10 @@ export function NotificationView({ notification }: NotificationViewProps) {
                 <Typography variant="body1" fontSize="0.875rem">
                     {helperTextContent}
                 </Typography>
-                {helperContent && (
-                    <Typography
-                        component={Content}
-                        variant="body2"
-                        fontSize="0.85rem"
-                        color="text.secondary"
-                        dangerouslySetInnerHTML={{ __html: helperContent }}
-                    />
+                {post && (
+                    <Box mt={1.5} color="text.secondary">
+                        <ContentRenderer instanceUrl={post.author.instanceUrl} content={post.content} />
+                    </Box>
                 )}
             </Box>
         </Root>
