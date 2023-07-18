@@ -7,7 +7,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
-        "target": "es2017",
+        "target": "ES2015",
         "sourceMap": true,
         "outDir": "./dist",
         "baseUrl": "./",
@@ -17,6 +17,15 @@
         "noImplicitAny": true,
         "strictBindCallApply": true,
         "forceConsistentCasingInFileNames": true,
-        "noFallthroughCasesInSwitch": true
+        "noFallthroughCasesInSwitch": true,
+        "strict": true,
+        "paths": {
+            "@emoji/*": ["src/emoji/*"]
+        },
+        "plugins": [
+            {
+                "transform": "typia/lib/transform"
+            }
+        ]
     }
 }

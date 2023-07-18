@@ -1,6 +1,6 @@
-import { MASTODON_TEMP_AUTH_KEY } from "@services/mastodon/constants";
+import { APIRouteMap, Fetcher, Route } from "fetcher";
 
-import { APIRouteMap, Fetcher, Route } from "@utils/fetcher";
+import { MASTODON_TEMP_AUTH_KEY } from "@services/mastodon/constants";
 
 import {
     CreateApplicationBody,

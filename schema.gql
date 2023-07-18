@@ -1,0 +1,24 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CustomEmoji {
+  id: Int!
+  instance: String!
+  code: String!
+  url: String!
+  staticUrl: String
+}
+
+type InstanceEmojis {
+  instance: String!
+  emojis: [CustomEmoji!]!
+}
+
+type Query {
+  emojis: [InstanceEmojis!]!
+}
+
+type Mutation {
+  invalidateEmojis(instanceUrls: [String!]!): Boolean!
+}

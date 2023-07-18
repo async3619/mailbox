@@ -1,5 +1,6 @@
+import { APIRouteMap, Fetcher, Route } from "fetcher";
+
 import { BaseInstance, EmojiItem } from "@services/base/instance";
-import { APIRouteMap, Fetcher, Route } from "@utils/fetcher";
 
 interface MisskeyAPIRoutes extends APIRouteMap {
     "/api/emojis": Route<

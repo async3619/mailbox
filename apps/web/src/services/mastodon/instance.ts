@@ -1,16 +1,6 @@
-import { APIRouteMap, Fetcher, Route } from "@utils/fetcher";
-import { BaseInstance } from "@services/base/instance";
+import { APIRouteMap, Fetcher, Route } from "fetcher";
 
-interface MastodonAPIRoutes extends APIRouteMap {
-    "/api/v1/custom_emojis": Route<
-        never,
-        Array<{
-            shortcode: string;
-            url: string;
-            static_url: string;
-        }>
-    >;
-}
+import { BaseInstance } from "@services/base/instance";
 
 export class MastodonInstance extends BaseInstance {
     private static readonly instanceCache: Record<string, MastodonInstance> = {};
