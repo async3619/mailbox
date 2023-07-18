@@ -1,16 +1,22 @@
 {
     "name": "content-parser",
     "version": "0.0.0",
-    "main": "./index.ts",
-    "types": "./index.ts",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
     "license": "MIT",
     "scripts": {
         "lint": "eslint \"**/*.ts*\"",
-        "generate:component": "turbo gen react-component"
+        "generate:component": "turbo gen react-component",
+        "test": "jest",
+        "coverage": "jest --coverage"
     },
     "devDependencies": {
+        "@types/jest": "^29.5.3",
         "eslint": "^8.44.0",
         "eslint-config-custom": "*",
+        "jest": "^29.6.1",
+        "jest-environment-jsdom": "^29.6.1",
+        "ts-jest": "^29.1.1",
         "tsconfig": "*",
         "typescript": "^4.5.2"
     }

@@ -1,7 +1,5 @@
 import { PostContentItem } from "./types";
 
-export * from "./types";
-
 function parseNode(node: Node): PostContentItem | Array<PostContentItem> {
     if (node.nodeType === Node.TEXT_NODE) {
         const { textContent } = node;
@@ -16,11 +14,11 @@ function parseNode(node: Node): PostContentItem | Array<PostContentItem> {
             for (const emoji of emojis) {
                 const startIndex = content.indexOf(emoji[0]);
                 const endIndex = startIndex + emoji[0].length;
-                if (startIndex <= 0) {
-                    continue;
+                const preContent = content.slice(0, startIndex);
+                if (preContent.length > 0) {
+                    result.push({ type: "text", text: preContent });
                 }
 
-                result.push({ type: "text", text: content.slice(0, startIndex) });
                 result.push({ type: "emoji", code: emoji[1] });
 
                 content = content.slice(endIndex);

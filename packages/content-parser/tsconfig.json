@@ -2,6 +2,7 @@
     "extends": "tsconfig/react-library.json",
     "compilerOptions": {
         "downlevelIteration": true,
+        "isolatedModules": false,
         "lib": ["dom.iterable", "dom", "es5", "es6"]
     },
     "include": ["."],
