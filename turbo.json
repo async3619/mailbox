@@ -1,7 +1,15 @@
 {
     "$schema": "https://turbo.build/schema.json",
     "globalDependencies": ["**/.env.*local"],
-    "globalEnv": ["MAILBOX_DB_HOST", "MAILBOX_DB_PORT", "MAILBOX_DB_USER", "MAILBOX_DB_PASSWORD", "NODE_ENV"],
+    "globalEnv": [
+        "MAILBOX_DB_HOST",
+        "MAILBOX_DB_PORT",
+        "MAILBOX_DB_USER",
+        "MAILBOX_DB_PASSWORD",
+        "NODE_ENV",
+        "SERV_GRAPHQL_URI",
+        "GRAPHQL_URI"
+    ],
     "pipeline": {
         "build": {
             "dependsOn": ["^build"],
