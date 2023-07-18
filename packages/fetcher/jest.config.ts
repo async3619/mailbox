@@ -13,6 +13,7 @@ const jestConfig: JestConfigWithTsJest = {
     roots: ["<rootDir>"],
     modulePaths: ["."], // <-- This will be set to 'baseUrl' value
     coveragePathIgnorePatterns: ["<rootDir>/src/fixtures/", "<rootDir>/src/index.ts"],
+    passWithNoTests: true,
 };
 
 module.exports = jestConfig;
