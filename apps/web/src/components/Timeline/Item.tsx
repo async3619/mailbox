@@ -149,8 +149,10 @@ export const TimelineItemView = React.memo(
                 </Header>
                 <Box>
                     {item.spoilerText && (
-                        <Box display="flex" alignItems="baseline">
-                            <Typography fontSize="0.85rem">{item.spoilerText}</Typography>
+                        <Box>
+                            <Typography fontSize="0.85rem" display="inline-block">
+                                {item.spoilerText}
+                            </Typography>
                             <SpoilerButton onClick={handleSpoilerButtonClick}>
                                 <Typography variant="caption" fontSize="0.85rem" lineHeight={1}>
                                     {spoilerOpened ? "Hide" : "Show"}

@@ -23,6 +23,8 @@ export const SpoilerButton = styled.button`
     border: 0;
     border-radius: 4px;
 
+    display: inline-block;
+
     color: ${({ theme }) => theme.palette.text.primary};
     background: ${({ theme }) => theme.palette.divider};
 
