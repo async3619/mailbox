@@ -42,7 +42,7 @@ export function PostContent({ item, spoilerOpened, onSpoilerStatusChange }: Post
                     </SpoilerButton>
                 </Box>
             )}
-            <Box overflow="hidden" style={{ maxHeight: contentBoxHeight }}>
+            <Box overflow="hidden" style={{ maxHeight: contentBoxHeight }} data-testid="content-wrapper">
                 <Box pt={item.spoilerText ? 2 : 0}>
                     <ContentRenderer instanceUrl={author.instanceUrl} content={content} />
                 </Box>
