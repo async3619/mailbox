@@ -16,7 +16,7 @@ import { AttachmentList } from "@components/Timeline/AttachmentList";
 import { EmojiText } from "@components/EmojiText";
 import { ContentRenderer } from "@components/ContentRenderer";
 
-import { Header, Root } from "@components/Timeline/Item.styles";
+import { Header, Root, SpoilerButton } from "@components/Timeline/Item.styles";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -43,106 +43,135 @@ export interface TimelineItemProps {
     item: TimelinePost;
     standalone?: boolean;
     onHeightChange?: (height: number) => void;
+    onSpoilerStatusChange: (item: TimelinePost, spoilerOpened: boolean) => void;
+    spoilerOpened: boolean;
 }
 
-export const TimelineItemView = React.memo(({ item, onHeightChange, standalone }: TimelineItemProps) => {
-    const [measureRef, { height }] = useMeasure();
-    const { content, author, repostedBy, instanceUrl, createdAt, attachments, originPostAuthor } = item;
+export const TimelineItemView = React.memo(
+    ({ item, onHeightChange, standalone, onSpoilerStatusChange, spoilerOpened }: TimelineItemProps) => {
+        const [measureRef, { height }] = useMeasure();
+        const { content, author, repostedBy, instanceUrl, createdAt, attachments, originPostAuthor } = item;
 
-    React.useEffect(() => {
-        if (!height) {
-            return;
+        React.useEffect(() => {
+            if (!height) {
+                return;
+            }
+
+            onHeightChange?.(height);
+        }, [onHeightChange, height]);
+
+        const handleSpoilerButtonClick = React.useCallback(() => {
+            onSpoilerStatusChange(item, !spoilerOpened);
+        }, [onSpoilerStatusChange, item, spoilerOpened]);
+
+        let helperTextIcon: React.ReactNode = null;
+        let helperTextContent: string | null = null;
+        if (repostedBy) {
+            helperTextIcon = <RepeatRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
+            helperTextContent = `${repostedBy.accountName} reposted`;
+        } else if (originPostAuthor) {
+            helperTextIcon = <ReplyRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
+            helperTextContent = `replied to ${originPostAuthor.accountName}`;
         }
 
-        onHeightChange?.(height);
-    }, [onHeightChange, height]);
+        let contentBoxHeight: React.CSSProperties["maxHeight"];
+        if (item.spoilerText) {
+            contentBoxHeight = spoilerOpened ? "none" : "0";
+        } else {
+            contentBoxHeight = "none";
+        }
 
-    let helperTextIcon: React.ReactNode = null;
-    let helperTextContent: string | null = null;
-    if (repostedBy) {
-        helperTextIcon = <RepeatRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
-        helperTextContent = `${repostedBy.accountName} reposted`;
-    } else if (originPostAuthor) {
-        helperTextIcon = <ReplyRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
-        helperTextContent = `replied to ${originPostAuthor.accountName}`;
-    }
-
-    return (
-        <Root ref={measureRef} withoutPadding={standalone} style={{ border: standalone ? "0" : undefined }}>
-            {helperTextContent && helperTextIcon && (
-                <Box mb={1.5} display="flex" fontSize="0.8rem" alignItems="center" color="text.secondary">
-                    {helperTextIcon}
-                    <Typography
-                        variant="body2"
-                        component="div"
-                        fontSize="inherit"
-                        color="text.primary"
-                        sx={{ opacity: 0.6 }}
-                    >
-                        <EmojiText size="small" instanceUrl={instanceUrl}>
-                            {helperTextContent}
-                        </EmojiText>
-                    </Typography>
-                </Box>
-            )}
-            <Header>
-                <Avatar
-                    size="medium"
-                    src={author.avatarUrl}
-                    secondarySrc={repostedBy?.avatarUrl}
-                    sx={{ flex: "0 0 auto" }}
-                />
-                <Box minWidth={0} display="flex" flex="1 1 auto">
-                    <Box display="flex" flexDirection="column" flex="1 1 auto" ml={1} minWidth={0}>
+        return (
+            <Root ref={measureRef} withoutPadding={standalone} style={{ border: standalone ? "0" : undefined }}>
+                {helperTextContent && helperTextIcon && (
+                    <Box mb={1.5} display="flex" fontSize="0.8rem" alignItems="center" color="text.secondary">
+                        {helperTextIcon}
                         <Typography
                             variant="body2"
                             component="div"
-                            fontWeight={800}
-                            overflow="hidden"
-                            textOverflow="ellipsis"
-                            whiteSpace="nowrap"
+                            fontSize="inherit"
+                            color="text.primary"
+                            sx={{ opacity: 0.6 }}
                         >
                             <EmojiText size="small" instanceUrl={instanceUrl}>
-                                {author.accountName}
+                                {helperTextContent}
                             </EmojiText>
                         </Typography>
-                        <Typography
-                            variant="body2"
-                            component="div"
-                            color="text.secondary"
-                            fontSize="0.8rem"
-                            overflow="hidden"
-                            textOverflow="ellipsis"
-                            whiteSpace="nowrap"
-                        >
-                            {author.accountId}
-                        </Typography>
                     </Box>
-                    <Box ml={1}>
-                        <Typography
-                            variant="body2"
-                            component="div"
-                            overflow="hidden"
-                            textOverflow="ellipsis"
-                            whiteSpace="nowrap"
-                            color="text.secondary"
-                            fontSize="0.8rem"
-                        >
-                            {createdAt.fromNow(true)}
-                        </Typography>
+                )}
+                <Header>
+                    <Avatar
+                        size="medium"
+                        src={author.avatarUrl}
+                        secondarySrc={repostedBy?.avatarUrl}
+                        sx={{ flex: "0 0 auto" }}
+                    />
+                    <Box minWidth={0} display="flex" flex="1 1 auto">
+                        <Box display="flex" flexDirection="column" flex="1 1 auto" ml={1} minWidth={0}>
+                            <Typography
+                                variant="body2"
+                                component="div"
+                                fontWeight={800}
+                                overflow="hidden"
+                                textOverflow="ellipsis"
+                                whiteSpace="nowrap"
+                            >
+                                <EmojiText size="small" instanceUrl={instanceUrl}>
+                                    {author.accountName}
+                                </EmojiText>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                component="div"
+                                color="text.secondary"
+                                fontSize="0.8rem"
+                                overflow="hidden"
+                                textOverflow="ellipsis"
+                                whiteSpace="nowrap"
+                            >
+                                {author.accountId}
+                            </Typography>
+                        </Box>
+                        <Box ml={1}>
+                            <Typography
+                                variant="body2"
+                                component="div"
+                                overflow="hidden"
+                                textOverflow="ellipsis"
+                                whiteSpace="nowrap"
+                                color="text.secondary"
+                                fontSize="0.8rem"
+                            >
+                                {createdAt.fromNow(true)}
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Header>
+                <Box>
+                    {item.spoilerText && (
+                        <Box display="flex" alignItems="baseline">
+                            <Typography fontSize="0.85rem">{item.spoilerText}</Typography>
+                            <SpoilerButton onClick={handleSpoilerButtonClick}>
+                                <Typography variant="caption" fontSize="0.85rem" lineHeight={1}>
+                                    {spoilerOpened ? "Hide" : "Show"}
+                                </Typography>
+                            </SpoilerButton>
+                        </Box>
+                    )}
+                    <Box overflow="hidden" style={{ maxHeight: contentBoxHeight }}>
+                        <Box pt={item.spoilerText ? 2 : 0}>
+                            <ContentRenderer instanceUrl={author.instanceUrl} content={content} />
+                        </Box>
                     </Box>
                 </Box>
-            </Header>
-            <Box>
-                <ContentRenderer instanceUrl={author.instanceUrl} content={content} />
-            </Box>
-            {attachments.length > 0 && (
-                <Box mt={2}>
-                    <AttachmentList post={item} attachments={attachments} />
-                </Box>
-            )}
-        </Root>
-    );
-});
+                {attachments.length > 0 && (
+                    <Box mt={2}>
+                        <AttachmentList post={item} attachments={attachments} />
+                    </Box>
+                )}
+            </Root>
+        );
+    },
+);
 
 TimelineItemView.displayName = "TimelineItemView";

@@ -14,3 +14,17 @@ export const Header = styled.div`
     display: flex;
     align-items: center;
 `;
+
+export const SpoilerButton = styled.button`
+    min-width: ${({ theme }) => theme.spacing(5.75)};
+
+    margin-left: ${({ theme }) => theme.spacing(1)};
+    padding: ${({ theme }) => theme.spacing(0.5, 0.5)};
+    border: 0;
+    border-radius: 4px;
+
+    color: ${({ theme }) => theme.palette.text.primary};
+    background: ${({ theme }) => theme.palette.divider};
+
+    cursor: pointer;
+`;

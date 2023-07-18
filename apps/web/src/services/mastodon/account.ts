@@ -232,6 +232,7 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
                 instanceUrl: parsedUrl.hostname,
             },
             repostedBy: post.reblog ? this.composeUser(post.account) : undefined,
+            spoilerText: target.spoilerText,
         };
     }
     private composeNotification(item: mastodon.v1.Notification): NotificationItem {

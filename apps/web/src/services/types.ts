@@ -32,12 +32,13 @@ export interface TimelinePost {
     title?: string;
     content: PostContentItem[];
     author: PostAuthor;
-    instanceUrl?: string;
     createdAt: dayjs.Dayjs;
     sensitive: boolean;
     attachments: PostAttachment[];
+    instanceUrl?: string;
     repostedBy?: PostAuthor;
     originPostAuthor?: Nullable<PostAuthor>;
+    spoilerText?: string;
 }
 
 export interface BaseNotificationItem {

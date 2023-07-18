@@ -47,7 +47,7 @@ export function ContentRenderer({ content, instanceUrl }: ContentRendererProps) 
             return <EmojiText instanceUrl={instanceUrl}>{`:${content.code}:`}</EmojiText>;
 
         case "text":
-            return content.text;
+            return <>{content.text}</>;
 
         case "break-line":
             return <br />;

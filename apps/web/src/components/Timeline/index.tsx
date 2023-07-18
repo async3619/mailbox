@@ -12,6 +12,14 @@ export interface TimelineProps {
 }
 
 export function Timeline({ items, scrollElement, onLoadMore }: TimelineProps) {
+    const [spoilerOpenedState, setSpoilerOpenedState] = React.useState<Record<string, boolean>>({});
+    const handleSpoilerStatusChange = React.useCallback((post: TimelinePost, opened: boolean) => {
+        setSpoilerOpenedState(state => ({
+            ...state,
+            [post.id]: opened,
+        }));
+    }, []);
+
     return (
         <VirtualizedList
             items={items}
@@ -20,7 +28,13 @@ export function Timeline({ items, scrollElement, onLoadMore }: TimelineProps) {
             scrollElement={scrollElement}
             onLoadMore={onLoadMore}
         >
-            {item => <TimelineItemView item={item} />}
+            {item => (
+                <TimelineItemView
+                    item={item}
+                    onSpoilerStatusChange={handleSpoilerStatusChange}
+                    spoilerOpened={spoilerOpenedState[item.id]}
+                />
+            )}
         </VirtualizedList>
     );
 }
