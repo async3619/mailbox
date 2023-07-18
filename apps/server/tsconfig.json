@@ -18,6 +18,7 @@
         "strictBindCallApply": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
+        "resolveJsonModule": true,
         "strict": true,
         "paths": {
             "@emoji/*": ["src/emoji/*"]
