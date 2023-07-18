@@ -10,7 +10,6 @@ import { NotificationItem, TimelinePost } from "@services/types";
 
 import { EmojiText } from "@components/EmojiText";
 import { TimelineItemView } from "@components/Timeline/Item";
-import { ContentRenderer } from "@components/ContentRenderer";
 
 import { AccountLink, ProfileList, Root } from "@components/Timeline/NotificationView.styles";
 import { PostContent } from "@components/Timeline/PostContent";

@@ -14,7 +14,6 @@ import { TimelinePost } from "@services/types";
 
 import { AttachmentList } from "@components/Timeline/AttachmentList";
 import { EmojiText } from "@components/EmojiText";
-import { ContentRenderer } from "@components/ContentRenderer";
 
 import { Header, Root } from "@components/Timeline/Item.styles";
 import { PostContent } from "@components/Timeline/PostContent";

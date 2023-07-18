@@ -27,9 +27,12 @@ const MOCKED_ITEM: TimelinePost = {
     serviceType: "mastodon",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noop = () => {};
+
 describe("<PostContent />", () => {
     it("should render post content properly", async () => {
-        render(<PostContent spoilerOpened={false} onSpoilerStatusChange={() => {}} item={MOCKED_ITEM} />);
+        render(<PostContent spoilerOpened={false} onSpoilerStatusChange={noop} item={MOCKED_ITEM} />);
 
         const content = await screen.findByText("Hello, world!");
 
@@ -41,7 +44,7 @@ describe("<PostContent />", () => {
             <ThemeProvider theme={createTheme()}>
                 <PostContent
                     spoilerOpened={false}
-                    onSpoilerStatusChange={() => {}}
+                    onSpoilerStatusChange={noop}
                     item={{ ...MOCKED_ITEM, spoilerText: "Spoiler!" }}
                 />
             </ThemeProvider>,
@@ -62,7 +65,7 @@ describe("<PostContent />", () => {
             <ThemeProvider theme={createTheme()}>
                 <PostContent
                     spoilerOpened
-                    onSpoilerStatusChange={() => {}}
+                    onSpoilerStatusChange={noop}
                     item={{ ...MOCKED_ITEM, spoilerText: "Spoiler!" }}
                 />
             </ThemeProvider>,
