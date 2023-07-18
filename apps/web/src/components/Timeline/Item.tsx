@@ -14,8 +14,9 @@ import { TimelinePost } from "@services/types";
 
 import { AttachmentList } from "@components/Timeline/AttachmentList";
 import { EmojiText } from "@components/EmojiText";
+import { ContentRenderer } from "@components/ContentRenderer";
 
-import { Content, Header, Root } from "@components/Timeline/Item.styles";
+import { Header, Root } from "@components/Timeline/Item.styles";
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -128,7 +129,9 @@ export const TimelineItemView = React.memo(({ item, onHeightChange, standalone }
                     </Box>
                 </Box>
             </Header>
-            <Content dangerouslySetInnerHTML={{ __html: content }} />
+            <Box>
+                <ContentRenderer instanceUrl={author.instanceUrl} content={content} />
+            </Box>
             {attachments.length > 0 && (
                 <Box mt={2}>
                     <AttachmentList post={item} attachments={attachments} />

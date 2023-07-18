@@ -2,9 +2,11 @@ import { z } from "zod";
 import { login, mastodon, WsEvents } from "masto";
 import dayjs from "dayjs";
 import compact from "lodash/compact";
+import { parsePostContent } from "content-parser";
 
 import { AccountHydrator, BaseAccount } from "@services/base/account";
 import { GetTokenData } from "@services/mastodon/auth.types";
+import { composeNotifications } from "@services/utils";
 import {
     BaseNotificationItem,
     NotificationItem,
@@ -13,7 +15,6 @@ import {
     TimelinePost,
     TimelineType,
 } from "@services/types";
-import { composeNotifications } from "@services/utils";
 
 const SERIALIZED_MASTODON_ACCOUNT = z.object({
     serviceType: z.literal("mastodon"),
@@ -212,7 +213,7 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         return {
             serviceType: this.getServiceType(),
             id: post.id,
-            content: target.content,
+            content: parsePostContent(target.content),
             instanceUrl: parsedUrl.hostname,
             createdAt: dayjs(target.createdAt),
             sensitive: target.sensitive,

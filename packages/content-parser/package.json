@@ -1,0 +1,17 @@
+{
+    "name": "content-parser",
+    "version": "0.0.0",
+    "main": "./index.ts",
+    "types": "./index.ts",
+    "license": "MIT",
+    "scripts": {
+        "lint": "eslint \"**/*.ts*\"",
+        "generate:component": "turbo gen react-component"
+    },
+    "devDependencies": {
+        "eslint": "^8.44.0",
+        "eslint-config-custom": "*",
+        "tsconfig": "*",
+        "typescript": "^4.5.2"
+    }
+}

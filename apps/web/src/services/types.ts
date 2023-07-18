@@ -1,5 +1,7 @@
-import { Nullable } from "@utils/types";
 import dayjs from "dayjs";
+import { PostContentItem } from "content-parser";
+
+import { Nullable } from "@utils/types";
 
 export enum TimelineType {
     Home = "home",
@@ -28,7 +30,7 @@ export interface TimelinePost {
     serviceType: string;
     id: string;
     title?: string;
-    content: string;
+    content: PostContentItem[];
     author: PostAuthor;
     instanceUrl?: string;
     createdAt: dayjs.Dayjs;
