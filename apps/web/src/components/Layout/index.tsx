@@ -8,8 +8,11 @@ import { MediaProvider } from "@components/Media/Provider";
 import { DrawerMenuProvider } from "@components/DrawerMenu/Provider";
 import { Navigator } from "@components/Layout/Navigator";
 import { LayoutContext } from "@components/Layout/context";
+import { useEmojis } from "@components/Emoji/context";
+import { useSplash } from "@components/Splash";
 import { GlobalStyles } from "@components/Layout/index.styles";
 
+import { HydrationStatus, useHydrateAccounts } from "@states/accounts";
 import { DRAWER_WIDTH } from "@styles/constants";
 
 export interface LayoutProps {
@@ -18,6 +21,17 @@ export interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
     const [scrollBarRef, setScrollBarRef] = React.useState<Scrollbars | null>(null);
+    const splash = useSplash();
+    const { hydrationStatus } = useHydrateAccounts();
+    const emojis = useEmojis();
+
+    React.useEffect(() => {
+        if (hydrationStatus !== HydrationStatus.Done || emojis.loading) {
+            return;
+        }
+
+        splash.hide();
+    }, [splash, hydrationStatus, emojis]);
 
     return (
         <LayoutContext.Provider value={{ scroller: scrollBarRef }}>

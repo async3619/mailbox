@@ -7,7 +7,7 @@ import { BaseAccount } from "@services/base/account";
 import { MastodonAccount } from "@services/mastodon/account";
 
 import { MastodonLogo } from "@components/Svg/Mastodon";
-import { EmojiText } from "@components/EmojiText";
+import { EmojiText } from "@components/Emoji/Text";
 import { Root } from "@components/AccountHeader.styles";
 
 export interface AccountHeaderProps {

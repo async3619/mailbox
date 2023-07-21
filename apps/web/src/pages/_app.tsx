@@ -9,6 +9,7 @@ import { ThemeProvider } from "@mui/material";
 
 import { Splash } from "@components/Splash";
 import { DialogProvider } from "@components/Dialog/Provider";
+import { EmojiProvider } from "@components/Emoji/Provider";
 
 import { theme } from "@styles/theme";
 
@@ -31,10 +32,12 @@ export default function App({ Component, pageProps }: AppProps<PageProps>) {
                 <RecoilRoot>
                     <ThemeProvider theme={theme}>
                         <DialogProvider>
-                            <SnackbarProvider />
-                            <Splash>
-                                <Component {...pageProps} />
-                            </Splash>
+                            <EmojiProvider client={apolloClient}>
+                                <SnackbarProvider />
+                                <Splash>
+                                    <Component {...pageProps} />
+                                </Splash>
+                            </EmojiProvider>
                         </DialogProvider>
                     </ThemeProvider>
                 </RecoilRoot>

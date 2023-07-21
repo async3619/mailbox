@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { EmojiTextSize } from "@components/EmojiText";
+import { EmojiTextSize } from "@components/Emoji/Text";
 
 export const Root = styled.span<{ size: EmojiTextSize }>`
     margin: 0;

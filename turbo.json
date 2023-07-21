@@ -12,17 +12,20 @@
     ],
     "pipeline": {
         "build": {
-            "dependsOn": ["^build"],
+            "dependsOn": ["web#codegen", "^build"],
             "outputs": [".next/**", "!.next/cache/**", "dist/**"]
         },
         "lint": {},
         "dev": {
             "cache": false,
             "persistent": true,
-            "dependsOn": ["fetcher#build"]
+            "dependsOn": ["web#codegen", "fetcher#build"]
         },
         "test": {
-            "dependsOn": ["^build"]
+            "dependsOn": ["web#codegen", "^build"]
+        },
+        "codegen": {
+            "cache": false
         }
     }
 }

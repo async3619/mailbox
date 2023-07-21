@@ -1,7 +1,7 @@
 import React from "react";
 import replace from "react-string-replace";
 
-import { Root } from "@components/EmojiText.styles";
+import { Root } from "@components/Emoji/Text.styles";
 
 export type EmojiTextSize = "small" | "medium";
 

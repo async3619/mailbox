@@ -7,7 +7,8 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "test": "jest"
+        "test": "jest",
+        "codegen": "graphql-codegen --config codegen.yml"
     },
     "dependencies": {
         "@apollo/client": "^3.7.17",
@@ -24,6 +25,7 @@
         "@tanstack/react-virtual": "^3.0.0-beta.54",
         "apollo-link-logger": "^2.0.1",
         "dayjs": "^1.11.9",
+        "fetcher": "*",
         "graphql": "^16.7.1",
         "is-url": "^1.2.4",
         "isomorphic-unfetch": "^4.0.2",
@@ -48,12 +50,17 @@
         "shortid": "^2.2.16",
         "swiper": "^10.0.4",
         "ui": "*",
-        "fetcher": "*",
         "utility-types": "^3.10.0",
         "yup": "^1.2.0",
         "zod": "^3.21.4"
     },
     "devDependencies": {
+        "@graphql-codegen/cli": "^4.0.1",
+        "@graphql-codegen/introspection": "^4.0.0",
+        "@graphql-codegen/typescript": "^4.0.1",
+        "@graphql-codegen/typescript-graphql-files-modules": "^2.2.1",
+        "@graphql-codegen/typescript-operations": "^4.0.1",
+        "@graphql-codegen/typescript-react-apollo": "^3.3.7",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^14.0.0",
         "@types/is-url": "^1.2.30",

@@ -4,8 +4,9 @@ import { enqueueSnackbar } from "notistack";
 import { ColumnContainer } from "@components/Column/Container";
 import { Layout } from "@components/Layout";
 import { useDialog } from "@components/Dialog";
+import { useSplash } from "@components/Splash";
 
-import { HydrationStatus, useAccounts, useHydrateAccounts } from "@states/accounts";
+import { useAccounts } from "@states/accounts";
 import { useColumns } from "@states/columns";
 
 import { MastodonAuth } from "@services/mastodon/auth";
@@ -24,10 +25,10 @@ export default function Index(props: IndexProps) {
     const { addAccount, accounts } = useAccounts();
     const { showBackdrop, hideBackdrop } = useDialog();
     const { columns, setColumns } = useColumns();
-    const { hydrationStatus } = useHydrateAccounts();
+    const splash = useSplash();
 
     React.useEffect(() => {
-        if (!code.current || hydrationStatus !== HydrationStatus.Done) {
+        if (!code.current || !splash.hidden) {
             return;
         }
 
@@ -73,7 +74,7 @@ export default function Index(props: IndexProps) {
                     variant: "error",
                 });
             });
-    }, [addAccount, hideBackdrop, showBackdrop, accounts, hydrationStatus]);
+    }, [addAccount, hideBackdrop, showBackdrop, accounts, splash]);
 
     return (
         <Layout>

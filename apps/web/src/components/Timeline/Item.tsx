@@ -13,7 +13,7 @@ import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded";
 import { TimelinePost } from "@services/types";
 
 import { AttachmentList } from "@components/Timeline/AttachmentList";
-import { EmojiText } from "@components/EmojiText";
+import { EmojiText } from "@components/Emoji/Text";
 
 import { Header, Root } from "@components/Timeline/Item.styles";
 import { PostContent } from "@components/Timeline/PostContent";

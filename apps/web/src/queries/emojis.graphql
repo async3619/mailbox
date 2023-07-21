@@ -1,0 +1,11 @@
+query emojis {
+    emojis {
+        instance
+        emojis {
+            id
+            url
+            staticUrl
+            code
+        }
+    }
+}

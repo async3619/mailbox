@@ -2,8 +2,6 @@ import React from "react";
 import { atom, useRecoilState } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
-import { useSplash } from "@components/Splash";
-
 import { AccountHydrator, BaseAccount } from "@services/base/account";
 import { hydrateAccount } from "@services/index";
 
@@ -76,10 +74,8 @@ export function useAccount(id: string) {
 export function useHydrateAccounts() {
     const [{ hydrators }, setAccountData] = useRecoilState(accountState);
     const [hydrationStatus, setHydrationStatus] = React.useState<HydrationStatus>(HydrationStatus.Prepare);
-    const splash = useSplash();
     const hydrate = React.useCallback(async () => {
         if (hydrators.length === 0) {
-            splash.hide();
             setHydrationStatus(HydrationStatus.Done);
             return;
         }
@@ -99,9 +95,8 @@ export function useHydrateAccounts() {
             };
         });
 
-        splash.hide();
         setHydrationStatus(HydrationStatus.Done);
-    }, [splash, hydrators, hydrationStatus, setAccountData]);
+    }, [hydrators, hydrationStatus, setAccountData]);
 
     React.useEffect(() => {
         hydrate();
