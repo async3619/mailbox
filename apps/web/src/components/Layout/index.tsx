@@ -8,7 +8,7 @@ import { MediaProvider } from "@components/Media/Provider";
 import { DrawerMenuProvider } from "@components/DrawerMenu/Provider";
 import { Navigator } from "@components/Layout/Navigator";
 import { LayoutContext } from "@components/Layout/context";
-import { useEmojis } from "@components/Emoji/context";
+import { useEmojiManager } from "@components/Emoji/context";
 import { useSplash } from "@components/Splash";
 import { GlobalStyles } from "@components/Layout/index.styles";
 
@@ -23,7 +23,7 @@ export function Layout({ children }: LayoutProps) {
     const [scrollBarRef, setScrollBarRef] = React.useState<Scrollbars | null>(null);
     const splash = useSplash();
     const { hydrationStatus } = useHydrateAccounts();
-    const emojis = useEmojis();
+    const emojis = useEmojiManager();
 
     React.useEffect(() => {
         if (hydrationStatus !== HydrationStatus.Done || emojis.loading) {
