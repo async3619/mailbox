@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { Repository } from "typeorm";
-import { APIRouteMap, Fetcher, Route } from "fetcher";
+import { Fetcher } from "fetcher";
 import { is } from "typia";
 
 import { Injectable } from "@nestjs/common";
@@ -9,17 +9,13 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { CustomEmoji } from "@emoji/models/custom-emoji.model";
 import { InstanceEmojis } from "@emoji/models/instance-emojis.dto";
 
-export type MastodonEmojiData = Array<{ shortcode: string; url: string; static_url: string }>;
-export interface MisskeyEmojiData {
-    emojis: Array<{ name: string; category: string | null; url: string }>;
-}
-
-interface MastodonAPIRoutes extends APIRouteMap {
-    "/api/v1/custom_emojis": Route<never, MastodonEmojiData>;
-}
-interface MisskeyAPIRoutes extends APIRouteMap {
-    "/api/emojis": Route<Record<string, never>, MisskeyEmojiData>;
-}
+import {
+    MastodonAPIRoutes,
+    MastodonEmojiData,
+    MisskeyAPIRoutes,
+    MisskeyEmojiData,
+    MisskeyMetaData,
+} from "@utils/types";
 
 @Injectable()
 export class EmojiService {
@@ -52,27 +48,37 @@ export class EmojiService {
 
     private async getMisskeyCustomEmojis(instanceUrl: string): Promise<CustomEmoji[]> {
         const misskeyFetcher = new Fetcher<MisskeyAPIRoutes>(`https://${instanceUrl}`);
-        const emojis: CustomEmoji[] = [];
-        const rawEmojiData = await misskeyFetcher.fetchJson("/api/emojis", {
+        const rawEmojis: MisskeyEmojiData["emojis"] = [];
+        const metadata = await misskeyFetcher.fetchJson("/api/meta", {
             method: "POST",
-            body: {},
         });
 
-        if (!is<MisskeyEmojiData>(rawEmojiData)) {
-            throw new Error("API endpoint returned invalid Misskey Emoji API response");
+        if (!is<MisskeyMetaData>(metadata)) {
+            throw new Error("API endpoint returned invalid Misskey Meta API response");
         }
 
-        for (const item of rawEmojiData.emojis) {
-            const emoji = this.customEmojiRepository.create({
+        if (metadata.emojis) {
+            rawEmojis.push(...metadata.emojis);
+        } else {
+            const rawEmojiData = await misskeyFetcher.fetchJson("/api/emojis", {
+                method: "POST",
+                body: {},
+            });
+
+            if (!is<MisskeyEmojiData>(rawEmojiData)) {
+                throw new Error("API endpoint returned invalid Misskey Emoji API response");
+            }
+
+            rawEmojis.push(...rawEmojiData.emojis);
+        }
+
+        return rawEmojis.map(item => {
+            return this.customEmojiRepository.create({
                 code: item.name,
                 url: item.url,
                 instance: instanceUrl,
             });
-
-            emojis.push(emoji);
-        }
-
-        return emojis;
+        });
     }
 
     private async invalidateEmojiFromInstance(instanceUrl: string) {

@@ -21,7 +21,8 @@
         "resolveJsonModule": true,
         "strict": true,
         "paths": {
-            "@emoji/*": ["src/emoji/*"]
+            "@emoji/*": ["src/emoji/*"],
+            "@utils/*": ["src/utils/*"]
         },
         "plugins": [
             {
