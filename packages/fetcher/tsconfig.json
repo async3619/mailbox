@@ -5,8 +5,8 @@
         "downlevelIteration": true,
         "isolatedModules": false,
         "lib": ["dom", "es5", "es6"],
-        "noEmit": true,
+        "noEmit": true
     },
     "include": ["src"],
-    "exclude": ["dist", "build", "node_modules"]
+    "exclude": ["dist", "build", "node_modules", "**/*.spec.ts"]
 }

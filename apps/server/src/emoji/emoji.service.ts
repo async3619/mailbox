@@ -19,6 +19,8 @@ import {
 
 @Injectable()
 export class EmojiService {
+    private readonly invalidationPromises: Record<string, Promise<boolean>> = {};
+
     public constructor(
         @InjectRepository(CustomEmoji) private readonly customEmojiRepository: Repository<CustomEmoji>,
     ) {}
@@ -26,7 +28,10 @@ export class EmojiService {
     private async getMastodonCustomEmojis(instanceUrl: string): Promise<CustomEmoji[]> {
         const mastodonFetcher = new Fetcher<MastodonAPIRoutes>(`https://${instanceUrl}`);
         const emojis: CustomEmoji[] = [];
-        const rawEmojiData = await mastodonFetcher.fetchJson("/api/v1/custom_emojis");
+        const rawEmojiData = await mastodonFetcher.fetchJson("/api/v1/custom_emojis", {
+            method: "GET",
+            throwOnHttpCodes: [404],
+        });
 
         if (!is<MastodonEmojiData>(rawEmojiData)) {
             throw new Error("API endpoint returned invalid Mastodon Emoji API response");
@@ -53,6 +58,7 @@ export class EmojiService {
         try {
             const metadata = await misskeyFetcher.fetchJson("/api/meta", {
                 method: "POST",
+                throwOnHttpCodes: [404],
             });
 
             if (!is<MisskeyMetaData>(metadata)) {
@@ -65,6 +71,7 @@ export class EmojiService {
         } catch {
             const rawEmojiData = await misskeyFetcher.fetchJson("/api/emojis", {
                 method: "POST",
+                throwOnHttpCodes: [404],
                 body: {},
             });
 
@@ -119,8 +126,23 @@ export class EmojiService {
     }
 
     public async invalidateEmojis(instanceUrls: string[]) {
-        await Promise.all(instanceUrls.map(instanceUrl => this.invalidateEmojiFromInstance(instanceUrl)));
+        const promises: Array<Promise<boolean>> = [];
+        for (const instanceUrl of instanceUrls) {
+            let promise: Promise<boolean>;
+            if (instanceUrl in this.invalidationPromises) {
+                promise = this.invalidationPromises[instanceUrl];
+            } else {
+                promise = this.invalidateEmojiFromInstance(instanceUrl).then(() => {
+                    delete this.invalidationPromises[instanceUrl];
+                    return true;
+                });
+            }
 
+            promises.push(promise);
+            this.invalidationPromises[instanceUrl] = promise;
+        }
+
+        await Promise.all(promises);
         return true;
     }
 
