@@ -19,6 +19,8 @@ import {
 
 @Injectable()
 export class EmojiService {
+    private readonly invalidationPromises: Record<string, Promise<boolean>> = {};
+
     public constructor(
         @InjectRepository(CustomEmoji) private readonly customEmojiRepository: Repository<CustomEmoji>,
     ) {}
@@ -85,6 +87,8 @@ export class EmojiService {
     }
 
     private async invalidateEmojiFromInstance(instanceUrl: string) {
+        console.log(`Invalidating emojis from ${instanceUrl}`);
+
         const emojiFunctions = [
             this.getMastodonCustomEmojis.bind(this, instanceUrl),
             this.getMisskeyCustomEmojis.bind(this, instanceUrl),
@@ -119,8 +123,23 @@ export class EmojiService {
     }
 
     public async invalidateEmojis(instanceUrls: string[]) {
-        await Promise.all(instanceUrls.map(instanceUrl => this.invalidateEmojiFromInstance(instanceUrl)));
+        const promises: Array<Promise<boolean>> = [];
+        for (const instanceUrl of instanceUrls) {
+            let promise: Promise<boolean>;
+            if (instanceUrl in this.invalidationPromises) {
+                promise = this.invalidationPromises[instanceUrl];
+            } else {
+                promise = this.invalidateEmojiFromInstance(instanceUrl).then(() => {
+                    delete this.invalidationPromises[instanceUrl];
+                    return true;
+                });
+            }
 
+            promises.push(promise);
+            this.invalidationPromises[instanceUrl] = promise;
+        }
+
+        await Promise.all(promises);
         return true;
     }
 
