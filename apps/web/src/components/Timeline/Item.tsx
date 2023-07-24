@@ -50,7 +50,7 @@ export interface TimelineItemProps {
 export const TimelineItemView = React.memo(
     ({ item, onHeightChange, standalone, onSpoilerStatusChange, spoilerOpened }: TimelineItemProps) => {
         const [measureRef, { height }] = useMeasure();
-        const { author, repostedBy, instanceUrl, createdAt, attachments, originPostAuthor } = item;
+        const { author, repostedBy, createdAt, attachments, originPostAuthor } = item;
 
         React.useEffect(() => {
             if (!height) {
@@ -62,17 +62,20 @@ export const TimelineItemView = React.memo(
 
         let helperTextIcon: React.ReactNode = null;
         let helperTextContent: string | null = null;
+        let helperTextInstanceUrl: string | null = null;
         if (repostedBy) {
             helperTextIcon = <RepeatRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
             helperTextContent = `${repostedBy.accountName} reposted`;
+            helperTextInstanceUrl = repostedBy.instanceUrl;
         } else if (originPostAuthor) {
             helperTextIcon = <ReplyRoundedIcon fontSize="small" sx={{ mr: 1 }} />;
             helperTextContent = `replied to ${originPostAuthor.accountName}`;
+            helperTextInstanceUrl = originPostAuthor.instanceUrl;
         }
 
         return (
             <Root ref={measureRef} withoutPadding={standalone} style={{ border: standalone ? "0" : undefined }}>
-                {helperTextContent && helperTextIcon && (
+                {helperTextContent && helperTextIcon && helperTextInstanceUrl && (
                     <Box mb={1.5} display="flex" fontSize="0.8rem" alignItems="center" color="text.secondary">
                         {helperTextIcon}
                         <Typography
@@ -82,7 +85,7 @@ export const TimelineItemView = React.memo(
                             color="text.primary"
                             sx={{ opacity: 0.6 }}
                         >
-                            <EmojiText size="small" instanceUrl={instanceUrl}>
+                            <EmojiText size="small" instanceUrl={helperTextInstanceUrl}>
                                 {helperTextContent}
                             </EmojiText>
                         </Typography>
@@ -105,7 +108,7 @@ export const TimelineItemView = React.memo(
                                 textOverflow="ellipsis"
                                 whiteSpace="nowrap"
                             >
-                                <EmojiText size="small" instanceUrl={instanceUrl}>
+                                <EmojiText size="small" instanceUrl={author.instanceUrl}>
                                     {author.accountName}
                                 </EmojiText>
                             </Typography>
