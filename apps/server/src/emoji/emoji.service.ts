@@ -87,8 +87,6 @@ export class EmojiService {
     }
 
     private async invalidateEmojiFromInstance(instanceUrl: string) {
-        console.log(`Invalidating emojis from ${instanceUrl}`);
-
         const emojiFunctions = [
             this.getMastodonCustomEmojis.bind(this, instanceUrl),
             this.getMisskeyCustomEmojis.bind(this, instanceUrl),
