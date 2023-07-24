@@ -5,6 +5,7 @@ import { Root } from "@components/Emoji/Text.styles";
 import { useEmojiManager } from "@components/Emoji/context";
 
 import { CustomEmojiItem, Dictionary } from "@utils/types";
+import { CUSTOM_EMOJI_REGEX } from "@services/mastodon/constants";
 
 export type EmojiTextSize = "small" | "medium";
 
@@ -38,7 +39,7 @@ export const EmojiText = React.memo(({ children, instanceUrl, size = "medium" }:
         return <Root size={size}>{children}</Root>;
     }
 
-    const content = replace(children, /:(.+?):/g, (match, index) => {
+    const content = replace(children, CUSTOM_EMOJI_REGEX, (match, index) => {
         const targetEmoji = targetEmojis[match];
         if (!targetEmoji) {
             return "⬚";

@@ -6,6 +6,8 @@ import { executeInvalidateEmojis, queryEmojis } from "@apollo/queries";
 
 import { EmojiContext } from "@components/Emoji/context";
 
+import { CUSTOM_EMOJI_REGEX } from "@services/mastodon/constants";
+
 import { CustomEmojiItem, Dictionary } from "@utils/types";
 import { BatchProcessor } from "@utils/batch";
 
@@ -86,7 +88,7 @@ export class EmojiProvider extends React.Component<EmojiProviderProps, EmojiProv
         emojiMap ??= this.state.emojiMap ?? {};
 
         const result: Dictionary<CustomEmojiItem> = {};
-        const matchedItems = [...text.matchAll(/:(.+?):/g)];
+        const matchedItems = [...text.matchAll(CUSTOM_EMOJI_REGEX)];
         for (const [, code] of matchedItems) {
             const matchedItem = emojiMap?.[instanceUrl]?.[code];
             if (!matchedItem) {
