@@ -49,17 +49,20 @@ export class EmojiService {
     private async getMisskeyCustomEmojis(instanceUrl: string): Promise<CustomEmoji[]> {
         const misskeyFetcher = new Fetcher<MisskeyAPIRoutes>(`https://${instanceUrl}`);
         const rawEmojis: MisskeyEmojiData["emojis"] = [];
-        const metadata = await misskeyFetcher.fetchJson("/api/meta", {
-            method: "POST",
-        });
 
-        if (!is<MisskeyMetaData>(metadata)) {
-            throw new Error("API endpoint returned invalid Misskey Meta API response");
-        }
+        try {
+            const metadata = await misskeyFetcher.fetchJson("/api/meta", {
+                method: "POST",
+            });
 
-        if (metadata.emojis) {
-            rawEmojis.push(...metadata.emojis);
-        } else {
+            if (!is<MisskeyMetaData>(metadata)) {
+                throw new Error("API endpoint returned invalid Misskey Meta API response");
+            }
+
+            if (metadata.emojis) {
+                rawEmojis.push(...metadata.emojis);
+            }
+        } catch {
             const rawEmojiData = await misskeyFetcher.fetchJson("/api/emojis", {
                 method: "POST",
                 body: {},
@@ -106,7 +109,7 @@ export class EmojiService {
                 console.error(error);
             }
 
-            throw new Error("Given instance url is not a valid Mastodon or Misskey instance");
+            throw new Error(`Given instance url is not a valid Mastodon or Misskey instance: ${instanceUrl}`);
         }
 
         await this.customEmojiRepository.delete({ instance: instanceUrl });
