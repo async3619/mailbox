@@ -9,7 +9,7 @@ const jestConfig: JestConfigWithTsJest = {
     },
     collectCoverageFrom: ["./src/**/*.ts"],
     coverageDirectory: "./coverage",
-    testEnvironment: "jsdom",
+    testEnvironment: "node",
     roots: ["<rootDir>"],
     modulePaths: ["."], // <-- This will be set to 'baseUrl' value
     coveragePathIgnorePatterns: ["<rootDir>/src/fixtures/", "<rootDir>/src/index.ts"],

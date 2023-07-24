@@ -19,13 +19,21 @@ export interface FetchOptions<TRoute extends Route<unknown, unknown, unknown>> {
 }
 
 export class Fetcher<APIRoutes extends APIRouteMap> {
+    private readonly fetcher: typeof fetch = fetch;
+
     public constructor(private readonly baseUrl: string) {}
 
     public async fetch<RouteName extends KeyOf<APIRoutes>>(
         path: RouteName,
         options?: FetchOptions<APIRoutes[RouteName]>,
     ): Promise<Response> {
-        const { method = "GET", retryCount = 5, retryDelay = 200, throwOnHttpCodes = [] } = options ?? {};
+        const {
+            method = "GET",
+            retryCount = 5,
+            retryDelay = 200,
+            throwOnHttpCodes = [],
+            ignoreHTTPError = false,
+        } = options ?? {};
         const url = `${this.baseUrl}${path}`;
 
         try {
@@ -43,8 +51,8 @@ export class Fetcher<APIRoutes extends APIRouteMap> {
                 }
             }
 
-            const response = await fetch(url, { method, headers, body });
-            if (!response.ok && !options?.ignoreHTTPError) {
+            const response = await this.fetcher(url, { method, headers, body });
+            if (!response.ok && !ignoreHTTPError) {
                 throw new HttpError(response.status, response.statusText);
             }
 
@@ -65,7 +73,7 @@ export class Fetcher<APIRoutes extends APIRouteMap> {
                 console.warn(`Retrying fetch to '${url}' due to error: ${message}`);
 
                 return this.fetch(path, {
-                    ...(options ?? {}),
+                    ...options,
                     method,
                     retryCount: retryCount - 1,
                 });
