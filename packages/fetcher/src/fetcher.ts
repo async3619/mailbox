@@ -1,5 +1,6 @@
 import { KeyOf } from "./types";
 import { getErrorMessage } from "./utils";
+import { HttpError } from "./errors";
 
 export type Method = "GET" | "POST" | "PUT" | "DELETE";
 export type APIRouteMap = Record<string, Route<unknown, unknown, unknown>>;
@@ -14,6 +15,7 @@ export interface FetchOptions<TRoute extends Route<unknown, unknown, unknown>> {
     bodyType?: "json" | "form";
     retryCount?: number;
     retryDelay?: number;
+    throwOnHttpCodes?: number[];
 }
 
 export class Fetcher<APIRoutes extends APIRouteMap> {
@@ -23,7 +25,7 @@ export class Fetcher<APIRoutes extends APIRouteMap> {
         path: RouteName,
         options?: FetchOptions<APIRoutes[RouteName]>,
     ): Promise<Response> {
-        const { method = "GET", retryCount = 5, retryDelay = 200 } = options ?? {};
+        const { method = "GET", retryCount = 5, retryDelay = 200, throwOnHttpCodes = [] } = options ?? {};
         const url = `${this.baseUrl}${path}`;
 
         try {
@@ -43,11 +45,17 @@ export class Fetcher<APIRoutes extends APIRouteMap> {
 
             const response = await fetch(url, { method, headers, body });
             if (!response.ok && !options?.ignoreHTTPError) {
-                throw new Error(`${response.status} ${response.statusText}`);
+                throw new HttpError(response.status, response.statusText);
             }
 
             return response;
         } catch (e) {
+            if (e instanceof HttpError) {
+                if (throwOnHttpCodes.includes(e.status)) {
+                    throw e;
+                }
+            }
+
             const message = getErrorMessage(e);
             if (retryCount > 0) {
                 if (retryDelay > 0) {
