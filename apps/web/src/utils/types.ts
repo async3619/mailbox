@@ -1,3 +1,5 @@
+import { EmojisQuery } from "@apollo/queries";
+
 export type Fn<TArgs, TReturn> = TArgs extends unknown[]
     ? (...args: TArgs) => TReturn
     : TArgs extends void
@@ -11,5 +13,8 @@ export type AsyncFn<TArgs, TReturn> = TArgs extends unknown[]
     : (args: TArgs) => Promise<TReturn>;
 
 export type Nullable<T> = T | null | undefined;
-export type KeyOf<T> = Exclude<keyof T, number | symbol>;
 export type Resolved<T> = T extends Promise<infer U> ? U : T;
+
+export type Dictionary<T> = Record<string, T>;
+
+export type CustomEmojiItem = EmojisQuery["emojis"][0]["emojis"][0];

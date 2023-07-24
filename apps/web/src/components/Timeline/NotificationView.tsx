@@ -8,7 +8,7 @@ import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
 
 import { NotificationItem, TimelinePost } from "@services/types";
 
-import { EmojiText } from "@components/EmojiText";
+import { EmojiText } from "@components/Emoji/Text";
 import { TimelineItemView } from "@components/Timeline/Item";
 
 import { AccountLink, ProfileList, Root } from "@components/Timeline/NotificationView.styles";

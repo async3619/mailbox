@@ -51,13 +51,7 @@ describe("<PostContent />", () => {
         );
 
         const contentWrapper = screen.queryByTestId("content-wrapper");
-        if (!contentWrapper) {
-            throw new Error("Content not found");
-        }
-
-        expect(contentWrapper).toHaveStyle({
-            maxHeight: "0",
-        });
+        expect(contentWrapper).not.toBeInTheDocument();
     });
 
     it("should show post content if opening spoiler flag has set", function () {
@@ -72,13 +66,7 @@ describe("<PostContent />", () => {
         );
 
         const contentWrapper = screen.queryByTestId("content-wrapper");
-        if (!contentWrapper) {
-            throw new Error("Content not found");
-        }
-
-        expect(contentWrapper).toHaveStyle({
-            maxHeight: "none",
-        });
+        expect(contentWrapper).toBeInTheDocument();
     });
 
     it("should call onSpoilerStatusChange callback when spoiler button has clicked", () => {

@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+    mysql:
+        image: mysql:8
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: mailbox
+            MYSQL_USER: mailbox
+            MYSQL_PASSWORD: mailbox
+            MYSQL_DATABASE: mailbox
+            TZ: Asia/Seoul
+        volumes:
+            - mailbox-db:/var/lib/mysql
+        ports:
+            - "5002:3306"
+
+volumes:
+    mailbox-db:

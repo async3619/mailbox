@@ -1,18 +1,31 @@
 {
     "$schema": "https://turbo.build/schema.json",
     "globalDependencies": ["**/.env.*local"],
+    "globalEnv": [
+        "MAILBOX_DB_HOST",
+        "MAILBOX_DB_PORT",
+        "MAILBOX_DB_USER",
+        "MAILBOX_DB_PASSWORD",
+        "NODE_ENV",
+        "SERV_GRAPHQL_URI",
+        "GRAPHQL_URI"
+    ],
     "pipeline": {
         "build": {
-            "dependsOn": ["^build"],
+            "dependsOn": ["web#codegen", "^build"],
             "outputs": [".next/**", "!.next/cache/**", "dist/**"]
         },
         "lint": {},
         "dev": {
             "cache": false,
-            "persistent": true
+            "persistent": true,
+            "dependsOn": ["web#codegen", "fetcher#build"]
         },
         "test": {
-            "dependsOn": ["^build"]
+            "dependsOn": ["web#codegen", "^build"]
+        },
+        "codegen": {
+            "cache": false
         }
     }
 }

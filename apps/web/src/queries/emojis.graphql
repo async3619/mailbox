@@ -1,0 +1,15 @@
+query emojis {
+    emojis {
+        instance
+        emojis {
+            id
+            url
+            staticUrl
+            code
+        }
+    }
+}
+
+mutation invalidateEmojis($instanceUrls: [String!]!) {
+    invalidateEmojis(instanceUrls: $instanceUrls)
+}

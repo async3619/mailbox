@@ -7,6 +7,7 @@ import { CircularProgress } from "@mui/material";
 
 export interface SplashContextValue {
     hide(): void;
+    hidden: boolean;
 }
 
 export const SplashContext = React.createContext<SplashContextValue | null>(null);
@@ -16,7 +17,7 @@ export function Splash({ children }: React.PropsWithChildren) {
     const hide = React.useCallback(() => setVisibility(false), []);
 
     return (
-        <SplashContext.Provider value={{ hide }}>
+        <SplashContext.Provider value={{ hide, hidden: !visibility }}>
             <Root hidden={!visibility}>
                 <LogoSvg fontSize="inherit" />
                 <CircularProgress size={24} sx={{ mt: 2 }} />

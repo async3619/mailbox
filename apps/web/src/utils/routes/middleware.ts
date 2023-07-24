@@ -1,9 +1,14 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult, PreviewData } from "next";
 import { ParsedUrlQuery } from "querystring";
 
+import { createClient } from "@apollo/createClient";
+
+import { getApiUrl } from "@utils/getApiUrl";
 import { PageProps } from "@utils/routes/types";
 
-interface RouteMiddlewareClientOptions {}
+interface RouteMiddlewareClientOptions {
+    client: ReturnType<typeof createClient>;
+}
 
 interface RouteMiddlewareOptions {
     title?: string;
@@ -21,9 +26,13 @@ export type RouteMiddlewareClient<
 export function installRouteMiddleware<T extends PageProps>(options: RouteMiddlewareOptions = {}) {
     const { title } = options;
 
-    return (origin?: RouteMiddlewareClient<Omit<T, "title"> & { title?: string }>): GetServerSideProps<T> => {
+    return (origin: RouteMiddlewareClient<Omit<T, "title" | "apiUrl"> & { title?: string }>): GetServerSideProps<T> => {
         return async context => {
-            const data = (await origin?.(context, {})) ?? { props: { title: null } };
+            const apiUrl = getApiUrl();
+            if (!apiUrl) throw new Error("No API URL found");
+
+            const apolloClient = createClient({ headers: context.req.headers, url: apiUrl.server });
+            const data = await origin(context, { client: apolloClient });
 
             if ("props" in data) {
                 const props = await data.props;
@@ -32,6 +41,7 @@ export function installRouteMiddleware<T extends PageProps>(options: RouteMiddle
                     props: {
                         ...data.props,
                         title: title ?? props.title ?? null,
+                        apiUrl: apiUrl.client ?? "",
                     } as T,
                 };
             }

@@ -22,3 +22,5 @@ export function isMastodonTempAuthData(data: unknown): data is MastodonTempAuthD
         return false;
     }
 }
+
+export const CUSTOM_EMOJI_REGEX = /:([a-zA-Z0-9_]+?):/g;

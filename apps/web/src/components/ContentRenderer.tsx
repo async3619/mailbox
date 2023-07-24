@@ -3,7 +3,7 @@ import React from "react";
 import { PostContentItem } from "content-parser";
 import { Link, Paragraph, Root, Span } from "@components/ContentRenderer.styles";
 import { Typography } from "@mui/material";
-import { EmojiText } from "@components/EmojiText";
+import { EmojiText } from "@components/Emoji/Text";
 
 export interface ContentRendererProps {
     content: Array<PostContentItem> | PostContentItem;

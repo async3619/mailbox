@@ -21,11 +21,11 @@ export function PostContent({ item, spoilerOpened, onSpoilerStatusChange }: Post
         onSpoilerStatusChange(item, !spoilerOpened);
     }, [onSpoilerStatusChange, item, spoilerOpened]);
 
-    let contentBoxHeight: React.CSSProperties["maxHeight"];
+    let shouldShowContent: boolean;
     if (item.spoilerText) {
-        contentBoxHeight = spoilerOpened ? "none" : "0";
+        shouldShowContent = spoilerOpened;
     } else {
-        contentBoxHeight = "none";
+        shouldShowContent = true;
     }
 
     return (
@@ -42,11 +42,13 @@ export function PostContent({ item, spoilerOpened, onSpoilerStatusChange }: Post
                     </SpoilerButton>
                 </Box>
             )}
-            <Box overflow="hidden" style={{ maxHeight: contentBoxHeight }} data-testid="content-wrapper">
-                <Box pt={item.spoilerText ? 2 : 0}>
-                    <ContentRenderer instanceUrl={author.instanceUrl} content={content} />
+            {shouldShowContent && (
+                <Box data-testid="content-wrapper">
+                    <Box pt={item.spoilerText ? 2 : 0}>
+                        <ContentRenderer instanceUrl={author.instanceUrl} content={content} />
+                    </Box>
                 </Box>
-            </Box>
+            )}
         </Root>
     );
 }

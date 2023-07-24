@@ -225,12 +225,7 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
                 width: attachment.meta?.original?.width,
                 height: attachment.meta?.original?.height,
             })),
-            author: {
-                avatarUrl: target.account.avatarStatic,
-                accountName: target.account.displayName || target.account.username,
-                accountId: `@${target.account.acct}`,
-                instanceUrl: parsedUrl.hostname,
-            },
+            author: this.composeUser(target.account),
             repostedBy: post.reblog ? this.composeUser(post.account) : undefined,
             spoilerText: target.spoilerText,
         };

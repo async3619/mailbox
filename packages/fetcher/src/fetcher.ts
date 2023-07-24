@@ -1,10 +1,10 @@
-import { KeyOf } from "@utils/types";
+import { KeyOf } from "./types";
 
 export type Method = "GET" | "POST" | "PUT" | "DELETE";
 export type APIRouteMap = Record<string, Route<unknown, unknown, unknown>>;
 export type Route<TBody, TData, TQuery = never> = [body: TBody, data: TData, query: TQuery];
 
-interface FetchOptions<TRoute extends Route<unknown, unknown, unknown>> {
+export interface FetchOptions<TRoute extends Route<unknown, unknown, unknown>> {
     method: Method;
     headers?: Record<string, string>;
     ignoreHTTPError?: boolean;
