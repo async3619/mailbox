@@ -9,3 +9,7 @@ query emojis {
         }
     }
 }
+
+mutation invalidateEmojis($instanceUrls: [String!]!) {
+    invalidateEmojis(instanceUrls: $instanceUrls)
+}

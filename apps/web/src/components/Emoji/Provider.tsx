@@ -2,11 +2,14 @@ import _ from "lodash";
 import React from "react";
 
 import { ApolloClient } from "@apollo/client";
-import { queryEmojis } from "@apollo/queries";
+import { executeInvalidateEmojis, queryEmojis } from "@apollo/queries";
 
 import { EmojiContext } from "@components/Emoji/context";
 
-import { CustomEmojiItem, Dictionary, Nullable } from "@utils/types";
+import { CustomEmojiItem, Dictionary } from "@utils/types";
+import { BatchProcessor } from "@utils/batch";
+
+type EmojiMap = Dictionary<Dictionary<CustomEmojiItem>>;
 
 export interface EmojiProviderProps {
     children: React.ReactNode;
@@ -14,11 +17,15 @@ export interface EmojiProviderProps {
 }
 
 export interface EmojiProviderStates {
-    emojiMap: Dictionary<Dictionary<CustomEmojiItem>> | null;
+    emojiMap: EmojiMap | null;
     loading: boolean;
 }
 
 export class EmojiProvider extends React.Component<EmojiProviderProps, EmojiProviderStates> {
+    private readonly emojiInvalidator = new BatchProcessor(this.invalidateEmojis.bind(this), {
+        timeout: 1000,
+    });
+
     public state: EmojiProviderStates = {
         emojiMap: null,
         loading: false,
@@ -31,8 +38,8 @@ export class EmojiProvider extends React.Component<EmojiProviderProps, EmojiProv
             return;
         }
 
-        const emojis = await queryEmojis(client);
-        const newEmojiMap: Dictionary<Dictionary<CustomEmojiItem>> = {};
+        const emojis = await queryEmojis(client, { fetchPolicy: "no-cache" });
+        const newEmojiMap: EmojiMap = {};
         for (const { instance, emojis: emojiItems } of emojis.data.emojis) {
             newEmojiMap[instance] = _.chain(emojiItems).keyBy("code").mapValues().value();
         }
@@ -43,24 +50,62 @@ export class EmojiProvider extends React.Component<EmojiProviderProps, EmojiProv
         });
     }
 
-    private getEmoji = (instanceUrl: Nullable<string>, code: string) => {
-        const { emojiMap, loading } = this.state;
-        if (loading || !instanceUrl || !emojiMap) {
-            return null;
+    private async invalidateEmojis(instanceUrls: string[]): Promise<EmojiMap> {
+        instanceUrls = _.uniq(instanceUrls);
+        console.debug("Requesting invalidation of emoji cache of: ", instanceUrls);
+
+        await executeInvalidateEmojis(this.props.client, {
+            variables: { instanceUrls },
+        });
+
+        const emojis = await queryEmojis(this.props.client, { fetchPolicy: "no-cache" });
+        const newEmojiMap: EmojiMap = {};
+        for (const { instance, emojis: emojiItems } of emojis.data.emojis) {
+            newEmojiMap[instance] = _.chain(emojiItems).keyBy("code").mapValues().value();
         }
 
-        const emojis = emojiMap[instanceUrl];
-        if (!emojis?.[code]) {
-            return null;
+        this.setState(prevState => ({
+            emojiMap: {
+                ...prevState.emojiMap,
+                ...newEmojiMap,
+            },
+        }));
+
+        return {
+            ...this.state.emojiMap,
+            ...newEmojiMap,
+        };
+    }
+
+    private parseEmojis = async (
+        instanceUrl: string,
+        text: string,
+        emojiMap?: EmojiMap,
+        invalidate = true,
+    ): Promise<Dictionary<CustomEmojiItem>> => {
+        emojiMap ??= this.state.emojiMap ?? {};
+
+        const result: Dictionary<CustomEmojiItem> = {};
+        const matchedItems = [...text.matchAll(/:(.+?):/g)];
+        for (const [, code] of matchedItems) {
+            const matchedItem = emojiMap?.[instanceUrl]?.[code];
+            if (!matchedItem) {
+                continue;
+            }
+
+            result[code] = matchedItem;
         }
 
-        return emojis[code];
-    };
-    private parseEmojis = (instanceUrl: Nullable<string>, text: string) => {
-        const result: Dictionary<Nullable<CustomEmojiItem>> = {};
-        const matches = text.matchAll(/:(.+?):/g);
-        for (const [, code] of matches) {
-            result[code] = this.getEmoji(instanceUrl, code);
+        const codes = matchedItems.map(([, code]) => code);
+        if (codes.length <= 0) {
+            return result;
+        }
+
+        const missingCodes = _.difference(codes, Object.keys(result));
+        if (missingCodes.length > 0 && invalidate) {
+            const newEmojiMap = await this.emojiInvalidator.call(instanceUrl);
+
+            return this.parseEmojis(instanceUrl, text, newEmojiMap, false);
         }
 
         return result;
@@ -70,10 +115,6 @@ export class EmojiProvider extends React.Component<EmojiProviderProps, EmojiProv
         const { children } = this.props;
         const { loading } = this.state;
 
-        return (
-            <EmojiContext.Provider value={{ loading, getEmoji: this.getEmoji, parseEmojis: this.parseEmojis }}>
-                {children}
-            </EmojiContext.Provider>
-        );
+        return <EmojiContext.Provider value={{ loading, parse: this.parseEmojis }}>{children}</EmojiContext.Provider>;
     }
 }

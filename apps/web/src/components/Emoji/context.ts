@@ -1,10 +1,9 @@
 import React from "react";
-import { CustomEmojiItem, Dictionary, Nullable } from "@utils/types";
+import { CustomEmojiItem, Dictionary } from "@utils/types";
 
 export interface EmojiContextValue {
     loading: boolean;
-    getEmoji(instanceUrl: Nullable<string>, emoji: string): Nullable<CustomEmojiItem>;
-    parseEmojis(instanceUrl: Nullable<string>, text: string): Dictionary<Nullable<CustomEmojiItem>>;
+    parse(instanceUrl: string, text: string): Promise<Dictionary<CustomEmojiItem>>;
 }
 
 export const EmojiContext = React.createContext<EmojiContextValue | null>(null);

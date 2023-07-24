@@ -4,7 +4,7 @@ import replace from "react-string-replace";
 import { Root } from "@components/Emoji/Text.styles";
 import { useEmojiManager } from "@components/Emoji/context";
 
-import { CustomEmojiItem, Dictionary, Nullable } from "@utils/types";
+import { CustomEmojiItem, Dictionary } from "@utils/types";
 
 export type EmojiTextSize = "small" | "medium";
 
@@ -15,16 +15,24 @@ export interface EmojiTextProps {
 }
 
 export const EmojiText = React.memo(({ children, instanceUrl, size = "medium" }: EmojiTextProps) => {
-    const emojiManager = useEmojiManager();
-    const [targetEmojis, setTargetEmojis] = React.useState<Dictionary<Nullable<CustomEmojiItem>>>({});
+    const { parse } = useEmojiManager();
+    const loading = React.useRef(false);
+    const [loaded, setLoaded] = React.useState(false);
+    const [targetEmojis, setTargetEmojis] = React.useState<Dictionary<CustomEmojiItem>>({});
 
     React.useEffect(() => {
-        if (!instanceUrl || !emojiManager || emojiManager.loading) {
+        if (!instanceUrl || loading.current || loaded) {
             return;
         }
 
-        setTargetEmojis(emojiManager.parseEmojis(instanceUrl, children));
-    }, [instanceUrl, emojiManager, children]);
+        loading.current = true;
+
+        parse(instanceUrl, children).then(result => {
+            setLoaded(true);
+            setTargetEmojis(result);
+            loading.current = false;
+        });
+    }, [instanceUrl, children, parse, loaded]);
 
     if (!instanceUrl) {
         return <Root size={size}>{children}</Root>;
