@@ -15,8 +15,7 @@
     "license": "MIT",
     "scripts": {
         "lint": "eslint \"**/*.ts*\"",
-        "test": "jest",
-        "coverage": "jest --coverage",
+        "test": "jest --coverage",
         "build": "microbundle",
         "dev": "microbundle watch"
     },

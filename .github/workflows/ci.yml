@@ -57,6 +57,14 @@ jobs:
             - name: Test
               run: yarn test
 
+            - name: Merge coverage reports
+              run: yarn merge-coverage
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v3
+              env:
+                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
             - uses: sarisia/actions-status-discord@v1
               if: always()
               with:
