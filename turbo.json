@@ -31,6 +31,9 @@
         },
         "merge-coverage": {
             "cache": false
+        },
+        "prepare": {
+            "cache": false
         }
     }
 }
