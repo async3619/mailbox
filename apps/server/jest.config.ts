@@ -11,6 +11,7 @@ const jestConfig: JestConfigWithTsJest = {
     transform: {
         "^.+\\.(t|j)s$": "ts-jest",
     },
+    collectCoverage: true,
     collectCoverageFrom: [
         "./src/**/*.(t|j)s",
         "!./src/main.ts",

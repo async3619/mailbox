@@ -7,6 +7,7 @@ const jestConfig: JestConfigWithTsJest = {
     transform: {
         "^.+\\.(t|j)s$": "ts-jest",
     },
+    collectCoverage: true,
     collectCoverageFrom: ["./src/**/*.ts"],
     coverageDirectory: "./coverage",
     testEnvironment: "node",
