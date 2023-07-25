@@ -8,7 +8,7 @@ describe("Fetcher class", () => {
         fetcher = new Fetcher("https://example.com");
         fetchFn = jest.fn().mockImplementation(() => Promise.resolve(new Response()));
 
-        Object.defineProperty(fetcher, "fetcher", {
+        Object.defineProperty(Fetcher, "fetcher", {
             get: () => fetchFn,
         });
 
