@@ -10,7 +10,7 @@ const jestConfig: JestConfigWithTsJest = {
     transform: {
         "^.+\\.(t|j)s$": "ts-jest",
     },
-    collectCoverageFrom: ["./src/**/*.(t|j)s", "!./src/main.ts", "!./src/**/!(data-source|data-source-core).module.ts"],
+    collectCoverageFrom: ["./src/**/*.(t|j)s", "!./src/main.ts", "!./src/migrations/*.ts"],
     coverageDirectory: "./coverage",
     testEnvironment: "node",
     roots: ["<rootDir>"],
