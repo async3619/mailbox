@@ -25,7 +25,7 @@ export class EmojiService {
         @InjectRepository(CustomEmoji) private readonly customEmojiRepository: Repository<CustomEmoji>,
     ) {}
 
-    private async getMastodonCustomEmojis(instanceUrl: string): Promise<CustomEmoji[]> {
+    public async getMastodonCustomEmojis(instanceUrl: string): Promise<CustomEmoji[]> {
         const mastodonFetcher = new Fetcher<MastodonAPIRoutes>(`https://${instanceUrl}`);
         const emojis: CustomEmoji[] = [];
         const rawEmojiData = await mastodonFetcher.fetchJson("/api/v1/custom_emojis", {
@@ -51,7 +51,7 @@ export class EmojiService {
         return emojis;
     }
 
-    private async getMisskeyCustomEmojis(instanceUrl: string): Promise<CustomEmoji[]> {
+    public async getMisskeyCustomEmojis(instanceUrl: string): Promise<CustomEmoji[]> {
         const misskeyFetcher = new Fetcher<MisskeyAPIRoutes>(`https://${instanceUrl}`);
         const rawEmojis: MisskeyEmojiData["emojis"] = [];
 
@@ -98,15 +98,11 @@ export class EmojiService {
         ];
 
         let emojis: CustomEmoji[] | null = null;
-        const errors: Error[] = [];
+        const errors: Array<unknown> = [];
         for (const getEmojis of emojiFunctions) {
             try {
                 emojis = await getEmojis();
             } catch (e) {
-                if (!(e instanceof Error)) {
-                    throw e;
-                }
-
                 errors.push(e);
             }
         }
