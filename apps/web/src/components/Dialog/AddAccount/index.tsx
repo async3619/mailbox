@@ -1,6 +1,6 @@
 import React from "react";
 
-import { BaseDialog, BaseDialogProps } from "ui/dialogs";
+import { BaseDialog, BaseDialogProps } from "ui";
 
 import { Typography } from "@mui/material";
 

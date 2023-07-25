@@ -1,6 +1,6 @@
 import React from "react";
 import shortid from "shortid";
-import { BaseDialogProps } from "ui/dialogs";
+import { BaseDialogProps } from "ui";
 
 import { Backdrop, CircularProgress } from "@mui/material";
 

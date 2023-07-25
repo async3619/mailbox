@@ -1,6 +1,6 @@
 import React from "react";
 
-import { BaseDialogProps } from "ui/dialogs";
+import { BaseDialogProps } from "ui";
 
 type Props<TProps extends BaseDialogProps> = Omit<TProps, keyof BaseDialogProps> extends Record<string, never>
     ? []
