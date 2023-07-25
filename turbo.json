@@ -22,9 +22,14 @@
             "dependsOn": ["web#codegen", "fetcher#build"]
         },
         "test": {
-            "dependsOn": ["web#codegen", "^build"]
+            "dependsOn": ["web#codegen"],
+            "cache": false,
+            "outputs": ["coverage/**"]
         },
         "codegen": {
+            "cache": false
+        },
+        "merge-coverage": {
             "cache": false
         }
     }
