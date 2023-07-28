@@ -24,6 +24,7 @@
         "typescript": "^4.5.2"
     },
     "dependencies": {
+        "fetcher": "*",
         "dayjs": "^1.11.9",
         "lodash": "^4.17.21",
         "masto": "^5.11.3",
