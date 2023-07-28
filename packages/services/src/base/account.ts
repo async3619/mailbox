@@ -1,5 +1,5 @@
-import { NotificationItem, PostTimelineType, TimelinePost, TimelineType } from "@services/types";
-import { EventEmitter } from "@utils/events";
+import { NotificationItem, PostTimelineType, TimelinePost, TimelineType } from "../types";
+import { EventEmitter } from "../utils";
 
 export interface AccountEventMap {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

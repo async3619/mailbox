@@ -1,9 +1,9 @@
 import _ from "lodash";
 import React from "react";
 
-import { NotificationItem, PostTimelineType, TimelinePost, TimelineType } from "@services/types";
-import { AccountEventMap, BaseAccount } from "@services/base/account";
-import { composeNotifications } from "@services/utils";
+import { NotificationItem, PostTimelineType, TimelinePost, TimelineType } from "services";
+import { AccountEventMap, BaseAccount } from "services";
+import { composeNotifications } from "services";
 
 import { AsyncFn, Nullable } from "@utils/types";
 

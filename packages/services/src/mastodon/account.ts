@@ -4,9 +4,9 @@ import dayjs from "dayjs";
 import compact from "lodash/compact";
 import { parsePostContent } from "content-parser";
 
-import { AccountHydrator, BaseAccount } from "@services/base/account";
-import { GetTokenData } from "@services/mastodon/auth.types";
-import { composeNotifications } from "@services/utils";
+import { AccountHydrator, BaseAccount } from "../base";
+import { GetTokenData } from "./auth.types";
+import { composeNotifications } from "../utils";
 import {
     BaseNotificationItem,
     NotificationItem,
@@ -14,7 +14,7 @@ import {
     PostTimelineType,
     TimelinePost,
     TimelineType,
-} from "@services/types";
+} from "../types";
 
 const SERIALIZED_MASTODON_ACCOUNT = z.object({
     serviceType: z.literal("mastodon"),

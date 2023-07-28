@@ -1,5 +1,5 @@
-import { MastodonAccountHydrator } from "@services/mastodon/account";
-import { AccountHydrator, BaseAccount } from "@services/base/account";
+import { MastodonAccountHydrator } from "./mastodon";
+import { AccountHydrator, BaseAccount } from "./base";
 
 const hydrators = [MastodonAccountHydrator];
 

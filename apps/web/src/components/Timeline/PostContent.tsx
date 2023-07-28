@@ -2,7 +2,7 @@ import React from "react";
 
 import { Box, Typography } from "@mui/material";
 
-import { TimelinePost } from "@services/types";
+import { TimelinePost } from "services";
 
 import { ContentRenderer } from "@components/ContentRenderer";
 import { Root, SpoilerButton } from "@components/Timeline/PostContent.styles";

@@ -3,8 +3,8 @@ import { Avatar } from "ui";
 
 import { Box, SvgIconProps, Typography } from "@mui/material";
 
-import { BaseAccount } from "@services/base/account";
-import { MastodonAccount } from "@services/mastodon/account";
+import { BaseAccount } from "services";
+import { MastodonAccount } from "services";
 
 import { MastodonLogo } from "@components/Svg/Mastodon";
 import { EmojiText } from "@components/Emoji/Text";

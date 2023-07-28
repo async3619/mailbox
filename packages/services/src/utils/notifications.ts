@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-import { NotificationItem } from "@services/types";
+import { NotificationItem } from "../types";
 
 export function composeNotifications(items: NotificationItem[]): NotificationItem[] {
     const excludeIndices: number[] = [];

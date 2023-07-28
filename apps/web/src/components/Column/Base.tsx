@@ -16,7 +16,7 @@ import { ColumnInstance } from "@components/Column/types";
 import { AccountHeader } from "@components/AccountHeader";
 import { Content, Handle, Header, ProgressWrapper, Root, Title, Wrapper } from "@components/Column/Base.styles";
 
-import { BaseAccount } from "@services/base/account";
+import { BaseAccount } from "services";
 
 import { useColumnNodeSetter, useColumns } from "@states/columns";
 import { mergeRefs } from "@utils/merge-refs";

@@ -1,5 +1,6 @@
-import { BaseAccount } from "@services/base/account";
-import { NotificationItem, TimelinePost, TimelineType } from "@services/types";
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { BaseAccount } from "services";
+import { NotificationItem, TimelinePost, TimelineType } from "services";
 
 export class TestAccount extends BaseAccount<string> {
     public constructor(private readonly userId = "__TEST__", serviceType = "test") {

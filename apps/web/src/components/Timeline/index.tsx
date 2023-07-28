@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TimelinePost } from "@services/types";
+import { TimelinePost } from "services";
 
 import { VirtualizedList } from "@components/VirtualizedList";
 import { TimelineItemView } from "@components/Timeline/Item";

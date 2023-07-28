@@ -5,7 +5,7 @@ import { Root } from "@components/Emoji/Text.styles";
 import { useEmojiManager } from "@components/Emoji/context";
 
 import { CustomEmojiItem, Dictionary } from "@utils/types";
-import { CUSTOM_EMOJI_REGEX } from "@services/mastodon/constants";
+import { CUSTOM_EMOJI_REGEX } from "services";
 
 export type EmojiTextSize = "small" | "medium";
 

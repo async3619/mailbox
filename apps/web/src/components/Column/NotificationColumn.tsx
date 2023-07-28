@@ -6,7 +6,7 @@ import { NotificationView } from "@components/Timeline/NotificationView";
 import { TimelineSubscription } from "@components/TimelineSubscription";
 import { VirtualizedList } from "@components/VirtualizedList";
 
-import { TimelineType } from "@services/types";
+import { TimelineType } from "services";
 import { useAccount } from "@states/accounts";
 
 export interface NotificationColumnProps {

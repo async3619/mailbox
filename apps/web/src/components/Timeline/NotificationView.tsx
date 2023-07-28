@@ -2,11 +2,11 @@ import React from "react";
 import reactStringReplace from "react-string-replace";
 import { Avatar } from "ui";
 
+import { NotificationItem, TimelinePost } from "services";
+
 import { Box, Typography } from "@mui/material";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
-
-import { NotificationItem, TimelinePost } from "@services/types";
 
 import { EmojiText } from "@components/Emoji/Text";
 import { TimelineItemView } from "@components/Timeline/Item";

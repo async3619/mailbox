@@ -5,7 +5,7 @@ import { theme } from "@styles/theme";
 import { BaseColumn } from "@components/Column/Base";
 import { AttachmentList } from "@components/Timeline/AttachmentList";
 import { MediaProvider } from "@components/Media/Provider";
-import { PostAttachment } from "@services/types";
+import { PostAttachment } from "services";
 
 import { MOCK_ATTACHMENT, MOCK_COLUMN, MOCK_TIMELINE_POST } from "../../../__tests__/fixture";
 

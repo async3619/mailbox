@@ -9,7 +9,6 @@
             "@components/*": ["./src/components/*"],
             "@styles/*": ["./src/styles/*"],
             "@states/*": ["./src/states/*"],
-            "@services/*": ["./src/services/*"],
             "@api/*": ["./src/api/*"],
             "@queries": ["./src/queries/index.tsx"]
         }

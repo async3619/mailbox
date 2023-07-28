@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 
 import { PostContent } from "@components/Timeline/PostContent";
 
-import { TimelinePost } from "@services/types";
+import { TimelinePost } from "services";
 import { createTheme, ThemeProvider } from "@mui/material";
 
 const MOCKED_ITEM: TimelinePost = {

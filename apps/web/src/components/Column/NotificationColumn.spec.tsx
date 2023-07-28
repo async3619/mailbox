@@ -4,7 +4,7 @@ import { RecoilRoot } from "recoil";
 import { createTheme, ThemeProvider } from "@mui/material";
 
 import { accountState } from "@states/accounts";
-import { BaseAccount } from "@services/base/account";
+import { BaseAccount } from "services";
 
 import { NotificationColumn } from "@components/Column/NotificationColumn";
 import { NotificationColumnInstance } from "@components/Column/types";

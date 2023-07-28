@@ -4,6 +4,7 @@
         "target": "es6",
         "downlevelIteration": true,
         "isolatedModules": false,
+        "esModuleInterop": true,
         "lib": ["dom", "es5", "es6"],
         "noEmit": true
     },

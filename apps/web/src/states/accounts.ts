@@ -2,8 +2,8 @@ import React from "react";
 import { atom, useRecoilState } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
-import { AccountHydrator, BaseAccount } from "@services/base/account";
-import { hydrateAccount } from "@services/index";
+import { AccountHydrator, BaseAccount } from "services";
+import { hydrateAccount } from "services";
 
 export enum HydrationStatus {
     Prepare,

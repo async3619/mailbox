@@ -3,7 +3,7 @@ import React from "react";
 import { Typography } from "@mui/material";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 
-import { TimelinePost } from "@services/types";
+import { TimelinePost } from "services";
 
 import { useColumn } from "@components/Column/context";
 import { BlurOverlay, Label, Play, Root } from "@components/Timeline/AttachmentView.styles";

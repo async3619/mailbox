@@ -1,14 +1,7 @@
 import { APIRouteMap, Fetcher, Route } from "fetcher";
 
-import { MASTODON_TEMP_AUTH_KEY } from "@services/mastodon/constants";
-
-import {
-    CreateApplicationBody,
-    CreateApplicationData,
-    GetTokenBody,
-    GetTokenData,
-    GetTokenQuery,
-} from "@services/mastodon/auth.types";
+import { MASTODON_TEMP_AUTH_KEY } from "./constants";
+import { CreateApplicationBody, CreateApplicationData, GetTokenBody, GetTokenData, GetTokenQuery } from "./auth.types";
 
 interface MastodonAPIRoutes extends APIRouteMap {
     "/api/v1/apps": Route<CreateApplicationBody, CreateApplicationData>;

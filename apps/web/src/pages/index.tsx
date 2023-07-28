@@ -9,9 +9,9 @@ import { useSplash } from "@components/Splash";
 import { useAccounts } from "@states/accounts";
 import { useColumns } from "@states/columns";
 
-import { MastodonAuth } from "@services/mastodon/auth";
-import { isMastodonTempAuthData, MASTODON_TEMP_AUTH_KEY } from "@services/mastodon/constants";
-import { MastodonAccount } from "@services/mastodon/account";
+import { MastodonAuth } from "services";
+import { isMastodonTempAuthData, MASTODON_TEMP_AUTH_KEY } from "services";
+import { MastodonAccount } from "services";
 
 import { installRouteMiddleware } from "@utils/routes/middleware";
 import { PageProps } from "@utils/routes/types";

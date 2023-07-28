@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PostAttachment } from "@services/types";
+import { PostAttachment } from "services";
 
 import { MediaContext } from "@components/Media";
 import { MediaViewer } from "@components/Media/Viewer";
