@@ -8,7 +8,7 @@ describe("<MediaViewer />", () => {
     it("should render MediaViewer properly", () => {
         render(
             <ThemeProvider theme={theme}>
-                <MediaViewer open attachments={[]} index={0} onClose={() => {}} onClosed={() => {}} />
+                <MediaViewer open attachments={[]} index={0} onClose={jest.fn()} onClosed={jest.fn()} />
             </ThemeProvider>,
         );
 

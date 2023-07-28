@@ -13,7 +13,7 @@ describe("Fetcher class", () => {
         });
 
         // prevent console.warn from being called
-        jest.spyOn(console, "warn").mockImplementation(() => {});
+        jest.spyOn(console, "warn").mockImplementation(jest.fn());
     });
 
     it("should be instantiable", () => {

@@ -9,8 +9,8 @@ describe("<MediaViewerItem />", () => {
     let playStub: jest.SpyInstance;
 
     beforeEach(() => {
-        pauseStub = jest.spyOn(window.HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
-        playStub = jest.spyOn(window.HTMLMediaElement.prototype, "play").mockImplementation(async () => {});
+        pauseStub = jest.spyOn(window.HTMLMediaElement.prototype, "pause").mockImplementation(jest.fn());
+        playStub = jest.spyOn(window.HTMLMediaElement.prototype, "play").mockImplementation(jest.fn());
     });
 
     afterEach(() => {

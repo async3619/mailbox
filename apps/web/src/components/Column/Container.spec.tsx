@@ -35,7 +35,7 @@ function WheelTestComponent({ scrollLeftFn, getScrollLeftFn }: WheelTestComponen
                 }}
             >
                 <ThemeProvider theme={createTheme()}>
-                    <ColumnContainer columns={columns} setColumns={() => {}} />
+                    <ColumnContainer columns={columns} setColumns={jest.fn()} />
                 </ThemeProvider>
             </LayoutContext.Provider>
         </RecoilRoot>
@@ -48,7 +48,7 @@ describe("<ColumnContainer />", () => {
             <RecoilRoot>
                 <LayoutContext.Provider value={{ scroller: null }}>
                     <ThemeProvider theme={createTheme()}>
-                        <ColumnContainer columns={[{ id: "1" }] as ColumnInstance[]} setColumns={() => {}} />
+                        <ColumnContainer columns={[{ id: "1" }] as ColumnInstance[]} setColumns={jest.fn()} />
                     </ThemeProvider>
                 </LayoutContext.Provider>
             </RecoilRoot>,
@@ -65,7 +65,7 @@ describe("<ColumnContainer />", () => {
             <RecoilRoot>
                 <LayoutContext.Provider value={{ scroller: null }}>
                     <ThemeProvider theme={createTheme()}>
-                        <ColumnContainer columns={columns} setColumns={() => {}} />
+                        <ColumnContainer columns={columns} setColumns={jest.fn()} />
                     </ThemeProvider>
                 </LayoutContext.Provider>
             </RecoilRoot>,

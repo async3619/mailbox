@@ -10,7 +10,7 @@ describe("<AddAccountDialog />", () => {
     it("should render AddAccountDialog properly", () => {
         render(
             <ThemeProvider theme={theme}>
-                <AddAccountDialog onClose={() => {}} onClosed={() => {}} open={true} />
+                <AddAccountDialog onClose={jest.fn()} onClosed={jest.fn()} open={true} />
             </ThemeProvider>,
         );
 

@@ -6,7 +6,7 @@ describe("useDialog()", () => {
     let consoleError: jest.SpyInstance;
 
     beforeAll(() => {
-        consoleError = jest.spyOn(console, "error").mockImplementation(() => {});
+        consoleError = jest.spyOn(console, "error").mockImplementation(jest.fn());
     });
 
     afterAll(() => {

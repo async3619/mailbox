@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen } from "@testing-library/react";
 
 import { ContentRenderer } from "./ContentRenderer";
@@ -8,7 +9,7 @@ describe("<ContentRenderer />", () => {
     let consoleError: jest.SpyInstance;
 
     beforeAll(() => {
-        consoleError = jest.spyOn(console, "error").mockImplementation(() => {});
+        consoleError = jest.spyOn(console, "error").mockImplementation(jest.fn());
     });
 
     afterAll(() => {

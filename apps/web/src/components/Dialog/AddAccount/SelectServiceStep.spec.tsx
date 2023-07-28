@@ -9,7 +9,7 @@ describe("<SelectServiceStep />", () => {
     it("should render SelectServiceStep properly", () => {
         render(
             <ThemeProvider theme={theme}>
-                <SelectServiceStep step={ADD_ACCOUNT_STEP} moveNext={() => {}} />
+                <SelectServiceStep step={ADD_ACCOUNT_STEP} moveNext={jest.fn()} />
             </ThemeProvider>,
         );
 

@@ -6,7 +6,7 @@ import { mockAllIsIntersecting } from "react-intersection-observer/test-utils";
 
 describe("<IntersectionLoader />", () => {
     it("should render IntersectionLoader properly", () => {
-        render(<IntersectionLoader onLoadMore={() => {}} />);
+        render(<IntersectionLoader onLoadMore={jest.fn()} />);
 
         const root = screen.getByTestId("intersection-loader");
         expect(root).toBeInTheDocument();

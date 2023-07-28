@@ -81,7 +81,7 @@ describe("<Stepper />", () => {
     });
 
     it("should throw error when next step is not found", () => {
-        const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+        const errorSpy = jest.spyOn(console, "error").mockImplementation(jest.fn());
         const MOCK_STEP: Step = {
             type: "normal-step",
             component: props => <MockStep {...props} id="1" />,

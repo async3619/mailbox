@@ -13,7 +13,7 @@ describe("<MastodonLoginStep />", () => {
     it("should render MastodonLoginStep properly", () => {
         const { container } = render(
             <ThemeProvider theme={theme}>
-                <MastodonLoginStep step={step} moveNext={() => {}} />
+                <MastodonLoginStep step={step} moveNext={jest.fn()} />
             </ThemeProvider>,
         );
 
