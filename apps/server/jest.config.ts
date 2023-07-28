@@ -4,13 +4,21 @@ import { pathsToModuleNameMapper } from "ts-jest";
 import { compilerOptions } from "./tsconfig.json";
 
 const jestConfig: JestConfigWithTsJest = {
+    preset: "ts-jest",
     moduleFileExtensions: ["js", "json", "ts"],
     rootDir: ".",
     testRegex: ".*\\.spec\\.ts$",
     transform: {
         "^.+\\.(t|j)s$": "ts-jest",
     },
-    collectCoverageFrom: ["./src/**/*.(t|j)s", "!./src/main.ts", "!./src/**/!(data-source|data-source-core).module.ts"],
+    collectCoverage: true,
+    collectCoverageFrom: [
+        "./src/**/*.(t|j)s",
+        "!./src/main.ts",
+        "!./src/migrations/*.ts",
+        "!./src/**/*.module.ts",
+        "!./src/**/*.(entity|model|dto|interface).ts",
+    ],
     coverageDirectory: "./coverage",
     testEnvironment: "node",
     roots: ["<rootDir>"],

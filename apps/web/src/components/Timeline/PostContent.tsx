@@ -35,7 +35,7 @@ export function PostContent({ item, spoilerOpened, onSpoilerStatusChange }: Post
                     <Typography fontSize="0.85rem" display="inline-block">
                         {item.spoilerText}
                     </Typography>
-                    <SpoilerButton onClick={handleSpoilerButtonClick}>
+                    <SpoilerButton onClick={handleSpoilerButtonClick} data-testid="spoiler-button">
                         <Typography variant="caption" fontSize="0.85rem" lineHeight={1}>
                             {spoilerOpened ? "Hide" : "Show"}
                         </Typography>

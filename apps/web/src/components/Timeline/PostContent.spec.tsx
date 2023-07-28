@@ -28,7 +28,7 @@ const MOCKED_ITEM: TimelinePost = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = () => {};
+const noop = jest.fn();
 
 describe("<PostContent />", () => {
     it("should render post content properly", async () => {

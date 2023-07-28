@@ -6,6 +6,7 @@
         "lint": "turbo run lint",
         "test": "turbo run test --cache-dir=.turbo",
         "codegen": "turbo run codegen",
+        "prepare": "turbo run prepare",
         "format": "prettier --write \"**/*.{ts,tsx,md}\"",
         "merge-coverage": "turbo run merge-coverage"
     },

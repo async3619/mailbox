@@ -1,4 +1,4 @@
-import { EmojisQuery } from "@apollo/queries";
+import { EmojisQuery } from "@queries";
 
 export type Fn<TArgs, TReturn> = TArgs extends unknown[]
     ? (...args: TArgs) => TReturn

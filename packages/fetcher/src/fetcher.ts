@@ -19,7 +19,7 @@ export interface FetchOptions<TRoute extends Route<unknown, unknown, unknown>> {
 }
 
 export class Fetcher<APIRoutes extends APIRouteMap> {
-    private readonly fetcher: typeof fetch = fetch;
+    private static readonly fetcher: typeof fetch = fetch;
 
     public constructor(private readonly baseUrl: string) {}
 
@@ -51,7 +51,7 @@ export class Fetcher<APIRoutes extends APIRouteMap> {
                 }
             }
 
-            const response = await this.fetcher(url, { method, headers, body });
+            const response = await Fetcher.fetcher(url, { method, headers, body });
             if (!response.ok && !ignoreHTTPError) {
                 throw new HttpError(response.status, response.statusText);
             }

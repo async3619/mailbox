@@ -39,7 +39,16 @@ export function MediaViewerItem({ attachment, active, expanded }: MediaViewerIte
     if (attachment?.url) {
         if (attachment.type === "image") {
             // eslint-disable-next-line @next/next/no-img-element
-            content = <img ref={mediaRef} src={attachment.url} alt={attachment.url} className="media" style={styles} />;
+            content = (
+                <img
+                    ref={mediaRef}
+                    src={attachment.url}
+                    alt={attachment.url}
+                    className="media"
+                    style={styles}
+                    data-testid="media-viewer-item-img"
+                />
+            );
         } else if (attachment.type === "video" || attachment.type === "gifv") {
             content = (
                 <video
@@ -71,5 +80,5 @@ export function MediaViewerItem({ attachment, active, expanded }: MediaViewerIte
         }
     }, [mediaDOM, active]);
 
-    return <Root>{content}</Root>;
+    return <Root data-testid="media-viewer-item">{content}</Root>;
 }

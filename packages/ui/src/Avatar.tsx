@@ -8,14 +8,16 @@ export interface AvatarProps {
     secondarySrc?: string;
     size?: AvatarSize;
     sx?: SxProps;
+    testId?: string;
 }
 
-export function Avatar({ src, secondarySrc, size = "medium", sx }: AvatarProps) {
+export function Avatar({ src, secondarySrc, size = "medium", sx, testId }: AvatarProps) {
     if (secondarySrc) {
         return (
             <Box component={SecondaryRoot} size={size} sx={sx}>
                 <Avatar src={src} sx={{ position: "absolute", top: 0, left: 0, width: "80%", height: "80%" }} />
                 <Avatar
+                    testId="secondary-avatar"
                     size="tiny"
                     src={secondarySrc}
                     sx={{ position: "absolute", bottom: 0, right: 0, outline: "2px solid white" }}
@@ -24,5 +26,5 @@ export function Avatar({ src, secondarySrc, size = "medium", sx }: AvatarProps) 
         );
     }
 
-    return <Box component={Root} imageSrc={src} size={size} sx={sx} />;
+    return <Box component={Root} imageSrc={src} size={size} sx={sx} data-testid={testId} />;
 }
