@@ -8,7 +8,7 @@ interface BatchProcessorOptions<TData, TExecutorReturns, TComposedReturns> {
 interface DataQueueItem<TData, TComposedReturns> {
     data: TData;
     resolve: (result: TComposedReturns) => void;
-    reject: (error: Error) => void;
+    reject: (error: unknown) => void;
 }
 
 export class BatchProcessor<TData, TExecutorReturns, TComposedReturns = TExecutorReturns> {
@@ -60,10 +60,6 @@ export class BatchProcessor<TData, TExecutorReturns, TComposedReturns = TExecuto
                 item.resolve(composedData[i]);
             }
         } catch (e) {
-            if (!(e instanceof Error)) {
-                throw e;
-            }
-
             for (const item of data) {
                 item.reject(e);
             }

@@ -2,7 +2,7 @@ import _ from "lodash";
 import React from "react";
 
 import { ApolloClient } from "@apollo/client";
-import { executeInvalidateEmojis, queryEmojis } from "@apollo/queries";
+import { executeInvalidateEmojis, queryEmojis } from "@queries";
 
 import { EmojiContext } from "@components/Emoji/context";
 

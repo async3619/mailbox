@@ -2,7 +2,7 @@ import React from "react";
 
 import { PostAttachment } from "@services/types";
 
-interface MediaContextValues {
+export interface MediaContextValues {
     openMediaViewer(attachments: PostAttachment[], index?: number): void;
     closeMediaViewer(): void;
 }

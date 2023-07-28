@@ -14,7 +14,7 @@ import { EmojiProvider } from "@components/Emoji/Provider";
 import { theme } from "@styles/theme";
 
 import { ApolloProvider } from "@apollo/client";
-import { useApollo } from "@apollo/useApollo";
+import { useApollo } from "@api/useApollo";
 
 import { PageProps } from "@utils/routes/types";
 

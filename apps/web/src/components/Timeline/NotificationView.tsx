@@ -90,7 +90,7 @@ export function NotificationView({ notification }: NotificationViewProps) {
     ));
 
     return (
-        <Root>
+        <Root data-testid="notification-view">
             <Box display="flex" alignItems="center">
                 {helperIcon && <Box mr={1.5}>{helperIcon}</Box>}
                 <ProfileList>

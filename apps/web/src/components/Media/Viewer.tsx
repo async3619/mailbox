@@ -106,11 +106,12 @@ export function MediaViewer({ attachments, onClose, onClosed, index, open, onInd
             sx={{
                 zIndex: theme => theme.zIndex.drawer + 1,
             }}
+            data-testid="media-viewer-backdrop"
         >
-            <Root>
+            <Root data-testid="media-viewer">
                 <Content>
                     <Container>
-                        <Navigator disabled={!canSlidePrev} onClick={handleSlidePrev}>
+                        <Navigator disabled={!canSlidePrev} onClick={handleSlidePrev} aria-label="Previous Media">
                             <ChevronLeftRoundedIcon fontSize="large" />
                         </Navigator>
                         <SwiperRoot onSwiper={setSwiper}>
@@ -124,7 +125,7 @@ export function MediaViewer({ attachments, onClose, onClosed, index, open, onInd
                                 </SwiperSlide>
                             ))}
                         </SwiperRoot>
-                        <Navigator disabled={!canSlideNext} onClick={handleSlideNext}>
+                        <Navigator disabled={!canSlideNext} onClick={handleSlideNext} aria-label="Next Media">
                             <ChevronRightRoundedIcon fontSize="large" />
                         </Navigator>
                     </Container>

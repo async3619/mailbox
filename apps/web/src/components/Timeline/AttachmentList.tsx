@@ -96,7 +96,7 @@ export function AttachmentList({ post, attachments }: AttachmentListProps) {
     }
 
     return (
-        <Root>
+        <Root data-testid="attachment-list">
             <Grid container spacing={0.5}>
                 {content}
             </Grid>

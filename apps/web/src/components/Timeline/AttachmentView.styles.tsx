@@ -1,9 +1,7 @@
 import styled from "@emotion/styled";
 import { ButtonBase } from "@mui/material";
 
-export const Root = styled(ButtonBase, {
-    shouldForwardProp: prop => prop !== "blur",
-})<{ blur: boolean }>`
+export const Root = styled(ButtonBase)`
     width: 100%;
 
     margin: 0;
@@ -28,23 +26,6 @@ export const Root = styled(ButtonBase, {
         height: 100%;
 
         object-fit: cover;
-    }
-
-    &:before {
-        content: "";
-
-        width: 100%;
-        height: 100%;
-
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-
-        visibility: ${({ blur }) => (blur ? "visible" : "hidden")};
-
-        background: rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(48px);
     }
 `;
 
@@ -82,4 +63,17 @@ export const Play = styled.div`
     > svg {
         display: block;
     }
+`;
+
+export const BlurOverlay = styled.div`
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(48px);
 `;

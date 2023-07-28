@@ -6,7 +6,7 @@ import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import { TimelinePost } from "@services/types";
 
 import { useColumn } from "@components/Column/context";
-import { Label, Play, Root } from "@components/Timeline/AttachmentView.styles";
+import { BlurOverlay, Label, Play, Root } from "@components/Timeline/AttachmentView.styles";
 import { SensitiveBlurring } from "@components/Column/types";
 
 export interface AttachmentViewProps {
@@ -35,7 +35,7 @@ export function AttachmentView({ post, attachment, aspectRatio, fullHeight = fal
         children = (
             <>
                 <Play>
-                    <PlayArrowRoundedIcon fontSize="inherit" />
+                    <PlayArrowRoundedIcon fontSize="inherit" data-testid="play-icon" />
                 </Play>
             </>
         );
@@ -43,7 +43,7 @@ export function AttachmentView({ post, attachment, aspectRatio, fullHeight = fal
 
     return (
         <Root
-            blur={sensitiveBlurring === SensitiveBlurring.WithBlur && post.sensitive}
+            data-testid="attachment-view"
             onClick={onClick}
             style={{
                 backgroundImage: `url(${previewUrl})`,
@@ -52,6 +52,9 @@ export function AttachmentView({ post, attachment, aspectRatio, fullHeight = fal
             }}
         >
             {children}
+            {sensitiveBlurring !== SensitiveBlurring.WithoutBlur && post.sensitive && (
+                <BlurOverlay data-testid="blur-overlay" />
+            )}
         </Root>
     );
 }

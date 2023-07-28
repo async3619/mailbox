@@ -42,7 +42,14 @@ export function Layout({ children }: LayoutProps) {
                             <Global styles={GlobalStyles} />
                             <CssBaseline />
                             <Navigator />
-                            <Box position="fixed" top={0} left={DRAWER_WIDTH} right={0} bottom={0}>
+                            <Box
+                                data-testid="layout-main"
+                                position="fixed"
+                                top={0}
+                                left={DRAWER_WIDTH}
+                                right={0}
+                                bottom={0}
+                            >
                                 {drawerMenuNode}
                                 <Scrollbars ref={setScrollBarRef}>
                                     <Box display="flex" height="100vh">

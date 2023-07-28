@@ -21,7 +21,7 @@ export function IntersectionLoader({ onLoadMore }: IntersectionLoaderProps) {
     }, [inView, onLoadMore]);
 
     return (
-        <Box ref={ref} p={2} display="flex" justifyContent="center">
+        <Box ref={ref} p={2} display="flex" justifyContent="center" data-testid="intersection-loader">
             <CircularProgress size={24} />
         </Box>
     );

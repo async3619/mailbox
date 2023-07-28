@@ -74,7 +74,12 @@ export const TimelineItemView = React.memo(
         }
 
         return (
-            <Root ref={measureRef} withoutPadding={standalone} style={{ border: standalone ? "0" : undefined }}>
+            <Root
+                ref={measureRef}
+                withoutPadding={standalone}
+                style={{ border: standalone ? "0" : undefined }}
+                data-testid="timeline-item-view"
+            >
                 {helperTextContent && helperTextIcon && helperTextInstanceUrl && (
                     <Box mb={1.5} display="flex" fontSize="0.8rem" alignItems="center" color="text.secondary">
                         {helperTextIcon}

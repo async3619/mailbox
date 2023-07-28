@@ -5,11 +5,11 @@ import { Stack } from "@mui/material";
 import {
     closestCenter,
     DndContext,
+    DragEndEvent,
     KeyboardSensor,
+    PointerSensor,
     useSensor,
     useSensors,
-    DragEndEvent,
-    PointerSensor,
 } from "@dnd-kit/core";
 import {
     arrayMove,
@@ -22,11 +22,11 @@ import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 import { useColumnNodes } from "@states/columns";
 
 import { useLayout } from "@components/Layout/context";
+import { Column } from "@components/Column";
 import { ColumnInstance } from "@components/Column/types";
 import { Root } from "@components/Column/Container.styles";
 
 import { getClosestIndex } from "@utils/closest";
-import { Column } from "@components/Column/index";
 
 export interface ColumnContainerProps {
     columns: ColumnInstance[];

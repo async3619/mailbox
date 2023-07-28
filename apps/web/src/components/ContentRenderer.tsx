@@ -13,7 +13,7 @@ export interface ContentRendererProps {
 export function ContentRenderer({ content, instanceUrl }: ContentRendererProps) {
     if (Array.isArray(content)) {
         return (
-            <Root>
+            <Root data-testid="content-renderer">
                 {content.map((item, index) => (
                     <ContentRenderer key={index} content={item} instanceUrl={instanceUrl} />
                 ))}

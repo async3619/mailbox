@@ -116,7 +116,7 @@ export function VirtualizedList<T>({
     }, [addedHeights, scrollElement]);
 
     return (
-        <Root ref={rootRef} style={{ height: totalSize }}>
+        <Root data-testid="virtualized-list" ref={rootRef} style={{ height: totalSize }}>
             <VirtualizedListHelper
                 width={width}
                 items={outerItems}

@@ -1,11 +1,12 @@
 import React from "react";
 import { Transition, TransitionStatus } from "react-transition-group";
-import { mergeRefs } from "react-merge-refs";
+import useMeasure from "react-use-measure";
 
 import { StepHolder } from "@components/Stepper/Stepper";
 import { Root } from "@components/Stepper/StepRenderer.styles";
 import { Step } from "@components/Stepper/types";
-import useMeasure from "react-use-measure";
+
+import { mergeRefs } from "@utils/merge-refs";
 
 export interface StepRendererProps {
     stepHolder: StepHolder;

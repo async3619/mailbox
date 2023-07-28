@@ -1,5 +1,4 @@
 import React from "react";
-import { mergeRefs } from "react-merge-refs";
 import Scrollbars from "rc-scrollbars";
 
 import { IconButton } from "ui";
@@ -14,13 +13,14 @@ import { ColumnSidebarProps } from "@components/Column/Sidebar/Base";
 import { ColumnSettingsSidebar } from "@components/Column/Sidebar/Settings/Column";
 import { ColumnContext } from "@components/Column/context";
 import { ColumnInstance } from "@components/Column/types";
+import { AccountHeader } from "@components/AccountHeader";
 import { Content, Handle, Header, ProgressWrapper, Root, Title, Wrapper } from "@components/Column/Base.styles";
 
 import { BaseAccount } from "@services/base/account";
 
 import { useColumnNodeSetter, useColumns } from "@states/columns";
+import { mergeRefs } from "@utils/merge-refs";
 import { Fn } from "@utils/types";
-import { AccountHeader } from "@components/AccountHeader";
 
 export interface ColumnProps {
     instance: ColumnInstance;
@@ -73,7 +73,7 @@ export const BaseColumn = ({ instance, children, loading, onScroll, account }: C
 
     return (
         <ColumnContext.Provider value={{ column: instance }}>
-            <Wrapper style={{ ...style, zIndex: isDragging ? 1000 : 0 }}>
+            <Wrapper style={{ ...style, zIndex: isDragging ? 1000 : 0 }} data-testid="column-wrapper">
                 <Root
                     size={instance.size}
                     ref={ref}
@@ -83,7 +83,7 @@ export const BaseColumn = ({ instance, children, loading, onScroll, account }: C
                     }}
                 >
                     <Header>
-                        <Handle {...attributes} {...listeners} />
+                        <Handle {...attributes} {...listeners} data-testid="column-handle" />
                         <Title role="button" onClick={handleTitleClick}>
                             <AccountHeader avatarSize="small" account={account} titleText={title} />
                         </Title>

@@ -47,7 +47,7 @@ export function Stepper({ step, onComplete }: StepperProps) {
     }, []);
 
     return (
-        <Root style={{ height }}>
+        <Root data-testid="stepper" style={{ height }}>
             <StepContainer>
                 {steps.map((holder, index) => (
                     <StepRenderer

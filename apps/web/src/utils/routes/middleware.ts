@@ -1,7 +1,7 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult, PreviewData } from "next";
 import { ParsedUrlQuery } from "querystring";
 
-import { createClient } from "@apollo/createClient";
+import { createClient } from "@api/createClient";
 
 import { getApiUrl } from "@utils/getApiUrl";
 import { PageProps } from "@utils/routes/types";

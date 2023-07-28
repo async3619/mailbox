@@ -10,8 +10,8 @@
             "@styles/*": ["./src/styles/*"],
             "@states/*": ["./src/states/*"],
             "@services/*": ["./src/services/*"],
-            "@apollo/*": ["./src/apollo/*"],
-            "@apollo/queries": ["./src/queries/index.tsx"]
+            "@api/*": ["./src/api/*"],
+            "@queries": ["./src/queries/index.tsx"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

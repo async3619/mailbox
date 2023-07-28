@@ -153,6 +153,10 @@ export class TimelineSubscription extends React.PureComponent<SubscriptionProps,
         });
     };
     private handleDeletePost: AccountEventMap["delete-post"] = (type, postId) => {
+        if (type !== this.props.type) {
+            return;
+        }
+
         this.setState(prevStates => ({
             ...prevStates,
             items: prevStates.items.filter(item => item.id !== postId),

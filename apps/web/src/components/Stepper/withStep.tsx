@@ -13,8 +13,8 @@ export interface OuterProps<TStep extends Step = Step> {
 
 export const withStep =
     <TStep extends Step>() =>
-    (BaseComponent: React.ComponentType<WithStepProps<TStep>>) => {
-        type HocProps = WithStepProps<TStep> & OuterProps<TStep>;
+    <TProps extends WithStepProps<TStep>>(BaseComponent: React.ComponentType<TProps>) => {
+        type HocProps = TProps & OuterProps<TStep>;
 
         function Hoc({ step, moveNext, onComplete, ...restProps }: HocProps) {
             return (
