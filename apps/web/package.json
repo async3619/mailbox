@@ -49,6 +49,7 @@
         "shortid": "^2.2.16",
         "swiper": "^10.0.4",
         "ui": "*",
+        "services": "*",
         "utility-types": "^3.10.0",
         "yup": "^1.2.0",
         "zod": "^3.21.4"
