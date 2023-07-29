@@ -10,7 +10,7 @@ import { Box, Typography } from "@mui/material";
 import RepeatRoundedIcon from "@mui/icons-material/RepeatRounded";
 import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded";
 
-import { TimelinePost } from "@services/types";
+import { TimelinePost } from "services";
 
 import { AttachmentList } from "@components/Timeline/AttachmentList";
 import { EmojiText } from "@components/Emoji/Text";

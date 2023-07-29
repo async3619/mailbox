@@ -3,7 +3,7 @@ import { act, render, screen } from "@testing-library/react";
 
 import { TimelineSubscription } from "@components/TimelineSubscription";
 
-import { NotificationItem, TimelinePost, TimelineType } from "@services/types";
+import { NotificationItem, TimelinePost, TimelineType } from "services";
 
 import { TestAccount } from "../../__tests__/account";
 

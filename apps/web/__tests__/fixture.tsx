@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { NotificationItem, PostAttachment, PostAuthor, TimelinePost, TimelineType } from "@services/types";
+import { NotificationItem, PostAttachment, PostAuthor, TimelinePost, TimelineType } from "services";
 import { ColumnInstance, ColumnSize, ImagePreviewSize, SensitiveBlurring } from "@components/Column/types";
 import { BaseStepProps } from "@components/Stepper/BaseStep";
 import { BranchedStep, NormalStep } from "@components/Stepper/types";

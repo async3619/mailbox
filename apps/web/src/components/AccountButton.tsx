@@ -6,7 +6,7 @@ import { Tooltip } from "@mui/material";
 import { useDrawerMenu } from "@components/DrawerMenu";
 import { MastodonAddColumnDrawerMenu } from "@components/DrawerMenu/MastodonAddColumn";
 
-import { BaseAccount } from "@services/base/account";
+import { BaseAccount } from "services";
 
 export interface AccountButtonProps {
     account: BaseAccount<string>;

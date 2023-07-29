@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Grid } from "@mui/material";
-import { TimelinePost } from "@services/types";
+import { TimelinePost } from "services";
 
 import { useMedia } from "@components/Media";
 import { AttachmentView } from "@components/Timeline/AttachmentView";

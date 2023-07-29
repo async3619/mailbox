@@ -1,6 +1,6 @@
 import React from "react";
 
-import { PostAuthor } from "@services/types";
+import { PostAuthor } from "services";
 
 import { Root } from "@components/UserLink.styles";
 

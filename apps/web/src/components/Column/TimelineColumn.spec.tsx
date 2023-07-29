@@ -4,7 +4,7 @@ import { RecoilRoot } from "recoil";
 import { createTheme, ThemeProvider } from "@mui/material";
 
 import { accountState } from "@states/accounts";
-import { BaseAccount } from "@services/base/account";
+import { BaseAccount } from "services";
 
 import { TimelineColumn } from "@components/Column/TimelineColumn";
 import { TimelineColumnInstance } from "@components/Column/types";

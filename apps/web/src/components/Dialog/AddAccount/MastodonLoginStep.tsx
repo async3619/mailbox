@@ -9,7 +9,7 @@ import { Box, TextField, Typography } from "@mui/material";
 
 import { withStep } from "@components/Stepper/withStep";
 
-import { MastodonAuth } from "@services/mastodon/auth";
+import { MastodonAuth } from "services";
 
 interface MastodonLoginStepValues {
     instanceUrl: string;

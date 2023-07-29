@@ -1,5 +1,5 @@
-import { NotificationItem, PostTimelineType, TimelinePost, TimelineType } from "@services/types";
-import { EventEmitter } from "@utils/events";
+import { NotificationItem, PostTimelineType, TimelinePost, TimelineType } from "../types";
+import { EventEmitter } from "../utils";
 
 export interface AccountEventMap {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,22 +46,4 @@ export abstract class BaseAccount<
     public abstract stopWatch(type: TimelineType): Promise<void>;
 
     public abstract serialize(): TRawData;
-}
-
-export abstract class AccountHydrator<
-    TAccount extends BaseAccount<string, TRawData>,
-    TRawData extends Record<string, unknown> = Record<string, unknown>,
-> {
-    protected readonly rawData: Readonly<TRawData>;
-
-    public constructor(data: Record<string, unknown>) {
-        if (!this.validate(data)) {
-            throw new Error("Invalid data");
-        }
-
-        this.rawData = data;
-    }
-
-    public abstract validate(data: Record<string, unknown>): data is TRawData;
-    public abstract hydrate(): Promise<TAccount>;
 }

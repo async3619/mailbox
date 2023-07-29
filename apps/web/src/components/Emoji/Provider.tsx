@@ -6,7 +6,7 @@ import { executeInvalidateEmojis, queryEmojis } from "@queries";
 
 import { EmojiContext } from "@components/Emoji/context";
 
-import { CUSTOM_EMOJI_REGEX } from "@services/mastodon/constants";
+import { CUSTOM_EMOJI_REGEX } from "services";
 
 import { CustomEmojiItem, Dictionary } from "@utils/types";
 import { BatchProcessor } from "@utils/batch";

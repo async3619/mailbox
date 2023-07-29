@@ -9,8 +9,8 @@ import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 
-import { BaseAccount } from "@services/base/account";
-import { PostTimelineType, TimelineType } from "@services/types";
+import { BaseAccount } from "services";
+import { PostTimelineType, TimelineType } from "services";
 
 import { useColumns } from "@states/columns";
 

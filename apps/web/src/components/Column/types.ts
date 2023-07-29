@@ -1,4 +1,4 @@
-import { PostTimelineType } from "@services/types";
+import { PostTimelineType } from "services";
 
 export enum ColumnSize {
     Small = "small",

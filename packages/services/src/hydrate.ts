@@ -1,9 +1,11 @@
-import { MastodonAccountHydrator } from "@services/mastodon/account";
-import { AccountHydrator, BaseAccount } from "@services/base/account";
+import { MastodonAccountHydrator } from "./mastodon";
+import { AccountHydrator, BaseAccount } from "./base";
 
-const hydrators = [MastodonAccountHydrator];
+const HYDRATORS: Array<new (data: Record<string, unknown>) => AccountHydrator<BaseAccount<string>>> = [
+    MastodonAccountHydrator,
+];
 
-export function hydrateAccount(json: string) {
+export function hydrateAccount(json: string, hydrators = HYDRATORS) {
     const parsedDataItems = JSON.parse(json);
     if (!Array.isArray(parsedDataItems)) {
         return [];

@@ -1,4 +1,4 @@
-import { EventEmitter } from "@utils/events";
+import { EventEmitter } from "./events";
 
 describe("EventEmitter class", () => {
     it("should be able to register event listener", () => {

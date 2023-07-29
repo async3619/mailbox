@@ -4,7 +4,7 @@ import { ThemeProvider } from "@mui/material";
 import { NotificationView } from "@components/Timeline/NotificationView";
 
 import { theme } from "@styles/theme";
-import { NotificationItem } from "@services/types";
+import { NotificationItem } from "services";
 
 import {
     MOCK_FAVOURITE_NOTIFICATION,

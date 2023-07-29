@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { PostContentItem } from "content-parser";
 
-import { Nullable } from "@utils/types";
+export type Nullable<T> = T | null | undefined;
 
 export enum TimelineType {
     Home = "home",
