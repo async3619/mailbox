@@ -16,16 +16,18 @@
         "@types/lodash": "^4.14.196",
         "eslint": "^8.44.0",
         "eslint-config-custom": "*",
+        "isomorphic-unfetch": "^4.0.2",
         "jest": "^29.6.1",
         "jest-environment-jsdom": "^29.6.1",
+        "jsdom": "^22.1.0",
         "ts-jest": "^29.1.1",
         "tsconfig": "*",
         "tsup": "^7.1.0",
         "typescript": "^4.5.2"
     },
     "dependencies": {
-        "fetcher": "*",
         "dayjs": "^1.11.9",
+        "fetcher": "*",
         "lodash": "^4.17.21",
         "masto": "^5.11.3",
         "zod": "^3.21.4"

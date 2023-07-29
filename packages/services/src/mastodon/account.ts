@@ -4,9 +4,10 @@ import dayjs from "dayjs";
 import compact from "lodash/compact";
 import { parsePostContent } from "content-parser";
 
-import { AccountHydrator, BaseAccount } from "../base";
 import { GetTokenData } from "./auth.types";
+
 import { composeNotifications } from "../utils";
+import { BaseAccount } from "../base";
 import {
     BaseNotificationItem,
     NotificationItem,
@@ -16,7 +17,7 @@ import {
     TimelineType,
 } from "../types";
 
-const SERIALIZED_MASTODON_ACCOUNT = z.object({
+export const SERIALIZED_MASTODON_ACCOUNT = z.object({
     serviceType: z.literal("mastodon"),
     instanceUrl: z.string(),
     token: z.object({
@@ -74,25 +75,29 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         return this.instanceUrl;
     }
 
+    private fetchTimelineItems(type: PostTimelineType, limit: number, maxId?: TimelinePost["id"]) {
+        switch (type) {
+            case TimelineType.Home:
+                return this.client.v1.timelines.listHome({ limit, maxId });
+
+            case TimelineType.Local:
+            case TimelineType.Federated:
+                return this.client.v1.timelines.listPublic({
+                    limit,
+                    maxId,
+                    local: type === TimelineType.Local,
+                });
+        }
+    }
+    private fetchNotificationItems(limit: number, maxId?: TimelinePost["id"]) {
+        return this.client.v1.notifications.list({ limit, maxId });
+    }
+
     public async *getTimelinePosts(type: PostTimelineType, limit: number, after?: TimelinePost["id"]) {
         let maxId: string | undefined = after;
-        const getItems = () => {
-            switch (type) {
-                case TimelineType.Home:
-                    return this.client.v1.timelines.listHome({ limit, maxId });
-
-                case TimelineType.Local:
-                case TimelineType.Federated:
-                    return this.client.v1.timelines.listPublic({
-                        limit,
-                        maxId,
-                        local: type === TimelineType.Local,
-                    });
-            }
-        };
 
         while (true) {
-            const posts = await getItems();
+            const posts = await this.fetchTimelineItems(type, limit, maxId);
             if (posts.length === 0) {
                 break;
             }
@@ -104,7 +109,7 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
     public async *getNotificationItems(limit: number, after?: TimelinePost["id"]) {
         let maxId: string | undefined = after;
         while (true) {
-            const data = await this.client.v1.notifications.list({ limit, maxId });
+            const data = await this.fetchNotificationItems(limit, maxId);
             if (data.length === 0) {
                 break;
             }
@@ -112,9 +117,9 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
             const items = data.map(item => this.composeNotification(item));
             let composedItems = composeNotifications(items);
             while (composedItems.length <= limit) {
-                const lastItem = items[items.length - 1];
+                const lastItem = composedItems[composedItems.length - 1];
                 const lastId = lastItem.lastId ?? lastItem.id;
-                const partialData = await this.client.v1.notifications.list({ limit, maxId: lastId });
+                const partialData = await this.fetchNotificationItems(limit, lastId);
                 if (partialData.length === 0) {
                     break;
                 }
@@ -255,17 +260,5 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         } else {
             throw new Error(`Invalid notification type: ${item.type}`);
         }
-    }
-}
-
-export class MastodonAccountHydrator extends AccountHydrator<MastodonAccount, SerializedMastodonAccount> {
-    public hydrate(): Promise<MastodonAccount> {
-        const { token } = this.rawData;
-
-        return MastodonAccount.create(this.rawData.instanceUrl, token);
-    }
-
-    public validate(data: Record<string, unknown>): data is SerializedMastodonAccount {
-        return SERIALIZED_MASTODON_ACCOUNT.safeParse(data).success;
     }
 }

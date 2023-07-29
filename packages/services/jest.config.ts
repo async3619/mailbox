@@ -8,10 +8,11 @@ const jestConfig: JestConfigWithTsJest = {
         "^.+\\.(t|j)s$": "ts-jest",
     },
     collectCoverage: true,
-    collectCoverageFrom: ["./src/**/*.ts"],
+    collectCoverageFrom: ["./src/**/*.ts", "!./src/**/*.spec.ts", "!./src/**/fixtures/**/*", "!./src/**/index.ts"],
     coverageDirectory: "./coverage",
     testEnvironment: "node",
     roots: ["<rootDir>"],
+    setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
     modulePaths: ["."], // <-- This will be set to 'baseUrl' value
     coveragePathIgnorePatterns: ["<rootDir>/src/fixtures/", "<rootDir>/src/index.ts"],
     passWithNoTests: true,
