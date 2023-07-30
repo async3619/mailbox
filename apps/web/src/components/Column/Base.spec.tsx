@@ -62,14 +62,14 @@ describe("<BaseColumn />", () => {
             </RecoilRoot>,
         );
 
-        const settingsButton = screen.getByLabelText("Column Settings");
+        const settingsButton = screen.getByLabelText("columns.settings.title");
         expect(settingsButton).toBeInTheDocument();
 
         act(() => {
             settingsButton.click();
         });
 
-        expect(screen.getByText("Column Size")).toBeInTheDocument();
+        expect(screen.getByText("columns.settings.size.title")).toBeInTheDocument();
     });
 
     it("should delete column when delete button is clicked", () => {
@@ -91,7 +91,7 @@ describe("<BaseColumn />", () => {
             </RecoilRoot>,
         );
 
-        const deleteButton = screen.getByLabelText("Delete Column");
+        const deleteButton = screen.getByLabelText("columns.delete");
         expect(deleteButton).toBeInTheDocument();
 
         act(() => {

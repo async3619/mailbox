@@ -1,6 +1,6 @@
 import React from "react";
-
 import { List, ListItem } from "ui";
+import { useTranslation } from "next-i18next";
 
 import { Divider, Stack } from "@mui/material";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
@@ -9,8 +9,7 @@ import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import PublicRoundedIcon from "@mui/icons-material/PublicRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 
-import { BaseAccount } from "services";
-import { PostTimelineType, TimelineType } from "services";
+import { BaseAccount, PostTimelineType, TimelineType } from "services";
 
 import { useColumns } from "@states/columns";
 
@@ -24,6 +23,7 @@ export interface AddColumnDrawerMenuProps extends BaseDrawerMenuProps {
 }
 
 export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawerMenuProps) {
+    const { t } = useTranslation("common");
     if (account.getServiceType() !== "mastodon") {
         throw new Error(`Invalid service type: ${account.getServiceType()}`);
     }
@@ -62,7 +62,9 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
         [account, addColumns, rest],
     );
 
-    const headerContent = <AccountHeader account={account} titleWeight={800} titleText="Add Column" />;
+    const headerContent = (
+        <AccountHeader account={account} titleWeight={800} titleText={t("actions.addColumn.title")} />
+    );
 
     return (
         <BaseDrawerMenu header={headerContent} {...rest}>
@@ -72,23 +74,23 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
                         <ListItem
                             startIcon={<HomeRoundedIcon fontSize="small" />}
                             endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                            onClick={() => addTimeline("Home", TimelineType.Home)}
+                            onClick={() => addTimeline(t("mastodon.timeline.home"), TimelineType.Home)}
                         >
-                            Home
+                            {t("mastodon.timeline.home")}
                         </ListItem>
                         <ListItem
                             startIcon={<PeopleAltRoundedIcon fontSize="small" />}
                             endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                            onClick={() => addTimeline("Local Timeline", TimelineType.Local)}
+                            onClick={() => addTimeline(t("mastodon.timeline.local"), TimelineType.Local)}
                         >
-                            Local Timeline
+                            {t("mastodon.timeline.local")}
                         </ListItem>
                         <ListItem
                             startIcon={<PublicRoundedIcon fontSize="small" />}
                             endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                            onClick={() => addTimeline("Federated Timeline", TimelineType.Federated)}
+                            onClick={() => addTimeline(t("mastodon.timeline.federated"), TimelineType.Federated)}
                         >
-                            Federated Timeline
+                            {t("mastodon.timeline.federated")}
                         </ListItem>
                     </List>
                     <Divider />
@@ -96,9 +98,9 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
                         <ListItem
                             startIcon={<NotificationsRoundedIcon fontSize="small" />}
                             endIcon={<ChevronRightRoundedIcon fontSize="small" />}
-                            onClick={() => addNotification("Notifications")}
+                            onClick={() => addNotification(t("mastodon.notifications"))}
                         >
-                            Notifications
+                            {t("mastodon.notifications")}
                         </ListItem>
                     </List>
                 </Stack>

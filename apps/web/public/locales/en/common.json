@@ -1,0 +1,48 @@
+{
+    "mastodon": {
+        "timeline": {
+            "home": "Home Timeline",
+            "local": "Local Timeline",
+            "federated": "Federated Timeline"
+        },
+        "notifications": "Notifications"
+    },
+    "actions": {
+        "addColumn": {
+            "title": "Add Column"
+        },
+        "addAccount": {
+            "title": "Add New Account",
+            "mastodon": {
+                "title": "Add Mastodon Account",
+                "description": "Please type your Mastodon instance URL and click 'Next' button.",
+                "placeholder": "Mastodon instance URL",
+                "action": "Next"
+            }
+        }
+    },
+    "columns": {
+        "delete": "Delete Column",
+        "settings": {
+            "title": "Column Settings",
+            "size": {
+                "title": "Column Size",
+                "small": "Small",
+                "medium": "Medium",
+                "large": "Large"
+            },
+            "previewRatio": {
+                "title": "Image Preview Ratio",
+                "description": "You can change the aspect ratio of the image preview of posts in this column.",
+                "rectangle": "16:9",
+                "original": "Original"
+            },
+            "sensitiveImages": {
+                "title": "Show Sensitive Images",
+                "description": "Specify to show sensitive images without blurring in this column.",
+                "show": "Show",
+                "hide": "Hide"
+            }
+        }
+    }
+}

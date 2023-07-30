@@ -70,14 +70,14 @@ describe("<Navigator />", () => {
             </RecoilRoot>,
         );
 
-        const addAccountButton = screen.getByLabelText("Add Account");
+        const addAccountButton = screen.getByLabelText("actions.addAccount.title");
         expect(addAccountButton).toBeInTheDocument();
 
         act(() => {
             addAccountButton.click();
         });
 
-        const addAccountDialogTitle = screen.getByText("Add New Account");
+        const addAccountDialogTitle = screen.getByText("actions.addAccount.title");
         expect(addAccountDialogTitle).toBeInTheDocument();
     });
 });

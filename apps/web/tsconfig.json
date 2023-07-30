@@ -4,6 +4,9 @@
         "downlevelIteration": true,
         "plugins": [{ "name": "next" }],
         "baseUrl": ".",
+        "strict": true,
+        "strictNullChecks": true,
+        "resolveJsonModule": true,
         "paths": {
             "@utils/*": ["./src/utils/*"],
             "@components/*": ["./src/components/*"],
@@ -13,6 +16,6 @@
             "@queries": ["./src/queries/index.tsx"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "./types"],
     "exclude": ["node_modules"]
 }

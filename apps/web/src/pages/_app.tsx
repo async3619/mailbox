@@ -4,6 +4,7 @@ import { SnackbarProvider } from "notistack";
 
 import Head from "next/head";
 import type { AppProps } from "next/app";
+import { appWithTranslation } from "next-i18next";
 
 import { ThemeProvider } from "@mui/material";
 
@@ -20,7 +21,7 @@ import { PageProps } from "@utils/routes/types";
 
 import "swiper/css";
 
-export default function App({ Component, pageProps }: AppProps<PageProps>) {
+function App({ Component, pageProps }: AppProps<PageProps>) {
     const apolloClient = useApollo(pageProps);
 
     return (
@@ -45,3 +46,5 @@ export default function App({ Component, pageProps }: AppProps<PageProps>) {
         </>
     );
 }
+
+export default appWithTranslation(App);

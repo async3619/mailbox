@@ -1,5 +1,6 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult, PreviewData } from "next";
 import { ParsedUrlQuery } from "querystring";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import { createClient } from "@api/createClient";
 
@@ -39,6 +40,7 @@ export function installRouteMiddleware<T extends PageProps>(options: RouteMiddle
 
                 return {
                     props: {
+                        ...(await serverSideTranslations(context.locale || "en", ["common"])),
                         ...data.props,
                         title: title ?? props.title ?? null,
                         apiUrl: apiUrl.client ?? "",

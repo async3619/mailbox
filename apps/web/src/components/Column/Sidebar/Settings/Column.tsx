@@ -1,5 +1,6 @@
 import React from "react";
 import { Switch } from "ui";
+import { useTranslation } from "next-i18next";
 
 import { Box, Divider, Stack, Typography } from "@mui/material";
 
@@ -13,6 +14,7 @@ import { Root } from "@components/Column/Sidebar/Settings/Column.styles";
 export function ColumnSettingsSidebar(props: ColumnSidebarProps) {
     const { instance } = props;
     const { updateColumn } = useColumns();
+    const { t } = useTranslation();
 
     return (
         <BaseColumnSidebar {...props}>
@@ -20,15 +22,15 @@ export function ColumnSettingsSidebar(props: ColumnSidebarProps) {
                 <Stack spacing={2}>
                     <Box>
                         <Typography gutterBottom variant="body2" fontWeight={600}>
-                            Column Size
+                            {t("columns.settings.size.title")}
                         </Typography>
                         <Switch
                             fullWidth
                             size="small"
                             options={{
-                                [ColumnSize.Small]: "Small",
-                                [ColumnSize.Medium]: "Medium",
-                                [ColumnSize.Large]: "Large",
+                                [ColumnSize.Small]: t("columns.settings.size.small"),
+                                [ColumnSize.Medium]: t("columns.settings.size.medium"),
+                                [ColumnSize.Large]: t("columns.settings.size.large"),
                             }}
                             value={instance.size}
                             onChange={size => updateColumn(instance.id, { size })}
@@ -37,17 +39,17 @@ export function ColumnSettingsSidebar(props: ColumnSidebarProps) {
                     <Divider />
                     <Box>
                         <Typography gutterBottom variant="body2" fontWeight={600}>
-                            Image Preview Ratio
+                            {t("columns.settings.previewRatio.title")}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                            You can change the aspect ratio of the image preview of posts in this column.
+                            {t("columns.settings.previewRatio.description")}
                         </Typography>
                         <Switch
                             fullWidth
                             size="small"
                             options={{
-                                [ImagePreviewSize.Rectangle]: "16:9",
-                                [ImagePreviewSize.Original]: "Original",
+                                [ImagePreviewSize.Rectangle]: t("columns.settings.previewRatio.rectangle"),
+                                [ImagePreviewSize.Original]: t("columns.settings.previewRatio.original"),
                             }}
                             value={instance.imagePreviewSize ?? ImagePreviewSize.Rectangle}
                             onChange={size => updateColumn(instance.id, { imagePreviewSize: size })}
@@ -56,17 +58,17 @@ export function ColumnSettingsSidebar(props: ColumnSidebarProps) {
                     <Divider />
                     <Box>
                         <Typography gutterBottom variant="body2" fontWeight={600}>
-                            Show Sensitive Images
+                            {t("columns.settings.sensitiveImages.title")}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                            Specify to show sensitive images without blurring in this column.
+                            {t("columns.settings.sensitiveImages.description")}
                         </Typography>
                         <Switch
                             fullWidth
                             size="small"
                             options={{
-                                [SensitiveBlurring.WithoutBlur]: "Show",
-                                [SensitiveBlurring.WithBlur]: "Hide",
+                                [SensitiveBlurring.WithoutBlur]: t("columns.settings.sensitiveImages.show"),
+                                [SensitiveBlurring.WithBlur]: t("columns.settings.sensitiveImages.hide"),
                             }}
                             value={instance.sensitiveBlurring ?? SensitiveBlurring.WithBlur}
                             onChange={value => updateColumn(instance.id, { sensitiveBlurring: value })}

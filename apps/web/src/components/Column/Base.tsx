@@ -1,5 +1,6 @@
 import React from "react";
 import Scrollbars from "rc-scrollbars";
+import { useTranslation } from "next-i18next";
 
 import { IconButton } from "ui";
 
@@ -36,6 +37,7 @@ interface SidebarHolder {
 
 export const BaseColumn = ({ instance, children, loading, onScroll, account }: ColumnProps) => {
     const { id, title } = instance;
+    const { t } = useTranslation();
     const [scrollbars, setScrollbars] = React.useState<Scrollbars | null>(null);
     const setColumnNode = useColumnNodeSetter(id);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
@@ -90,7 +92,7 @@ export const BaseColumn = ({ instance, children, loading, onScroll, account }: C
                         <Stack direction="row" spacing={1} className="controls" flex="0 0 auto" ml={1.5}>
                             <IconButton
                                 size="small"
-                                tooltip="Delete Column"
+                                tooltip={t("columns.delete")}
                                 tooltipPlacement="bottom"
                                 color="error"
                                 onClick={handleColumnDelete}
@@ -99,7 +101,7 @@ export const BaseColumn = ({ instance, children, loading, onScroll, account }: C
                             </IconButton>
                             <IconButton
                                 size="small"
-                                tooltip="Column Settings"
+                                tooltip={t("columns.settings.title")}
                                 tooltipPlacement="bottom"
                                 onClick={handleSettingsClick}
                             >

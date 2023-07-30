@@ -49,7 +49,7 @@ describe("<ColumnSettingsSidebar />", () => {
             </RecoilRoot>,
         );
 
-        const sizeButton = screen.getByText("Medium");
+        const sizeButton = screen.getByText("columns.settings.size.medium");
         expect(sizeButton).toBeInTheDocument();
 
         act(() => {
@@ -78,7 +78,7 @@ describe("<ColumnSettingsSidebar />", () => {
             </RecoilRoot>,
         );
 
-        const sizeButton = screen.getByText("16:9");
+        const sizeButton = screen.getByText("columns.settings.previewRatio.rectangle");
         expect(sizeButton).toBeInTheDocument();
 
         act(() => {
@@ -109,7 +109,7 @@ describe("<ColumnSettingsSidebar />", () => {
             </RecoilRoot>,
         );
 
-        const sizeButton = screen.getByText("Show");
+        const sizeButton = screen.getByText("columns.settings.sensitiveImages.show");
         expect(sizeButton).toBeInTheDocument();
 
         act(() => {

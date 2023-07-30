@@ -9,3 +9,11 @@ import fetch from "isomorphic-unfetch";
 
 global.ResizeObserver = require("resize-observer-polyfill");
 global.fetch = fetch;
+
+jest.mock("next-i18next", () => ({
+    useTranslation: () => {
+        return {
+            t: (id: string) => id,
+        };
+    },
+}));
