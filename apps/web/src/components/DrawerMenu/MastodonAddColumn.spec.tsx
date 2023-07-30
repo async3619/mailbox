@@ -71,14 +71,14 @@ describe("<MastodonAddColumnDrawerMenu />", () => {
             </Content>,
         );
 
-        const homeTimelineButton = screen.getByText("Home");
+        const homeTimelineButton = screen.getByText("mastodon.timeline.home");
         expect(homeTimelineButton).toBeInTheDocument();
 
         act(() => {
             fireEvent.click(homeTimelineButton, { bubbles: true });
         });
 
-        const home = screen.getByText("Home Column");
+        const home = screen.getByText("mastodon.timeline.home Column");
         expect(home).toBeInTheDocument();
     });
 
@@ -89,14 +89,14 @@ describe("<MastodonAddColumnDrawerMenu />", () => {
             </Content>,
         );
 
-        const localTimelineButton = screen.getByText("Local Timeline");
+        const localTimelineButton = screen.getByText("mastodon.timeline.local");
         expect(localTimelineButton).toBeInTheDocument();
 
         act(() => {
             fireEvent.click(localTimelineButton, { bubbles: true });
         });
 
-        const local = screen.getByText("Local Timeline Column");
+        const local = screen.getByText("mastodon.timeline.local Column");
         expect(local).toBeInTheDocument();
     });
 
@@ -107,14 +107,14 @@ describe("<MastodonAddColumnDrawerMenu />", () => {
             </Content>,
         );
 
-        const federatedTimelineButton = screen.getByText("Federated Timeline");
+        const federatedTimelineButton = screen.getByText("mastodon.timeline.federated");
         expect(federatedTimelineButton).toBeInTheDocument();
 
         act(() => {
             fireEvent.click(federatedTimelineButton, { bubbles: true });
         });
 
-        const federated = screen.getByText("Federated Timeline Column");
+        const federated = screen.getByText("mastodon.timeline.federated Column");
         expect(federated).toBeInTheDocument();
     });
 
@@ -125,14 +125,14 @@ describe("<MastodonAddColumnDrawerMenu />", () => {
             </Content>,
         );
 
-        const notificationsButton = screen.getByText("Notifications");
+        const notificationsButton = screen.getByText("mastodon.notifications");
         expect(notificationsButton).toBeInTheDocument();
 
         act(() => {
             fireEvent.click(notificationsButton, { bubbles: true });
         });
 
-        const notifications = screen.getByText("Notifications Column");
+        const notifications = screen.getByText("mastodon.notifications Column");
         expect(notifications).toBeInTheDocument();
     });
 });

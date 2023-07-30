@@ -14,7 +14,7 @@ describe("<AddAccountDialog />", () => {
             </ThemeProvider>,
         );
 
-        const addMastodonAccount = screen.getByText("Add Mastodon Account");
+        const addMastodonAccount = screen.getByText("actions.addAccount.mastodon.title");
         expect(addMastodonAccount).toBeInTheDocument();
     });
 });

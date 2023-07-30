@@ -13,7 +13,7 @@ describe("<SelectServiceStep />", () => {
             </ThemeProvider>,
         );
 
-        const addMastodonAccount = screen.getByText("Add Mastodon Account");
+        const addMastodonAccount = screen.getByText("actions.addAccount.mastodon.title");
         expect(addMastodonAccount).toBeInTheDocument();
     });
 
@@ -26,7 +26,7 @@ describe("<SelectServiceStep />", () => {
             </ThemeProvider>,
         );
 
-        const addMastodonAccount = screen.getByText("Add Mastodon Account");
+        const addMastodonAccount = screen.getByText("actions.addAccount.mastodon.title");
         addMastodonAccount.click();
         expect(moveNext).toBeCalledWith("mastodon");
     });
