@@ -13,9 +13,10 @@ import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded";
 import { TimelinePost } from "services";
 
 import { AttachmentList } from "@components/Timeline/AttachmentList";
+import { TimelineItemReaction } from "@components/Timeline/ItemReaction";
 import { EmojiText } from "@components/Emoji/Text";
 
-import { Header, Root } from "@components/Timeline/Item.styles";
+import { AttachmentWrapper, Header, Root } from "@components/Timeline/Item.styles";
 import { PostContent } from "@components/Timeline/PostContent";
 
 dayjs.extend(relativeTime);
@@ -146,10 +147,11 @@ export const TimelineItemView = React.memo(
                 </Header>
                 <PostContent item={item} spoilerOpened={spoilerOpened} onSpoilerStatusChange={onSpoilerStatusChange} />
                 {attachments.length > 0 && (
-                    <Box mt={2}>
+                    <AttachmentWrapper>
                         <AttachmentList post={item} attachments={attachments} />
-                    </Box>
+                    </AttachmentWrapper>
                 )}
+                <TimelineItemReaction />
             </Root>
         );
     },
