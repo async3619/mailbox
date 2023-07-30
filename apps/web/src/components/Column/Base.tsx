@@ -35,14 +35,15 @@ interface SidebarHolder {
     component: React.ComponentType<ColumnSidebarProps> | null;
 }
 
-export const BaseColumn = ({ instance, children, loading, onScroll, account }: ColumnProps) => {
-    const { id, title } = instance;
+export const BaseColumn = ({ instance: column, children, loading, onScroll, account }: ColumnProps) => {
+    const { id, title } = column;
     const { t } = useTranslation();
     const [scrollbars, setScrollbars] = React.useState<Scrollbars | null>(null);
     const setColumnNode = useColumnNodeSetter(id);
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
     const { removeColumn } = useColumns();
     const [sidebar, setSidebar] = React.useState<SidebarHolder>({ component: null });
+    const contextValue = React.useMemo(() => ({ column, account }), [column, account]);
 
     const handleScroll = React.useCallback(
         (event: React.UIEvent<HTMLElement>) => {
@@ -70,14 +71,14 @@ export const BaseColumn = ({ instance, children, loading, onScroll, account }: C
     if (sidebar.component) {
         const { component: Component } = sidebar;
 
-        sidebarContent = <Component instance={instance} />;
+        sidebarContent = <Component instance={column} />;
     }
 
     return (
-        <ColumnContext.Provider value={{ column: instance }}>
+        <ColumnContext.Provider value={contextValue}>
             <Wrapper style={{ ...style, zIndex: isDragging ? 1000 : 0 }} data-testid="column-wrapper">
                 <Root
-                    size={instance.size}
+                    size={column.size}
                     ref={ref}
                     style={{
                         borderTopRightRadius: sidebar.component ? "0" : undefined,

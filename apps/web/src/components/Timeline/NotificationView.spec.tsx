@@ -2,6 +2,8 @@ import { act, render, screen } from "@testing-library/react";
 import { ThemeProvider } from "@mui/material";
 
 import { NotificationView } from "@components/Timeline/NotificationView";
+import { ColumnContext } from "@components/Column/context";
+import { ColumnInstance } from "@components/Column/types";
 
 import { theme } from "@styles/theme";
 import { NotificationItem } from "services";
@@ -23,7 +25,9 @@ function Content({ notification }: ContentProps) {
     return (
         <ThemeProvider theme={theme}>
             <MockEmojiProvider>
-                <NotificationView notification={notification} />
+                <ColumnContext.Provider value={{ column: {} as ColumnInstance }}>
+                    <NotificationView notification={notification} />
+                </ColumnContext.Provider>
             </MockEmojiProvider>
         </ThemeProvider>
     );

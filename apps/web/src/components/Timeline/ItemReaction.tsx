@@ -8,11 +8,15 @@ import BookmarkRoundedIcon from "@mui/icons-material/BookmarkRounded";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded";
 
+import { useColumn } from "@components/Column/context";
+
 import { Root } from "@components/Timeline/ItemReaction.styles";
 
 export interface TimelineItemReactionProps {}
 
-export function TimelineItemReaction({}: TimelineItemReactionProps) {
+export const TimelineItemReaction = React.memo(({}: TimelineItemReactionProps) => {
+    const { account } = useColumn();
+
     return (
         <Root data-testid="root">
             <Button minimal size="small" color="inherit" tooltip="Reply">
@@ -32,4 +36,6 @@ export function TimelineItemReaction({}: TimelineItemReactionProps) {
             </Button>
         </Root>
     );
-}
+});
+
+TimelineItemReaction.displayName = "TimelineItemReaction";

@@ -14,7 +14,7 @@ export interface PostContentProps {
     spoilerOpened: boolean;
 }
 
-export function PostContent({ item, spoilerOpened, onSpoilerStatusChange }: PostContentProps) {
+export const PostContent = React.memo(({ item, spoilerOpened, onSpoilerStatusChange }: PostContentProps) => {
     const { author, content } = item;
 
     const handleSpoilerButtonClick = React.useCallback(() => {
@@ -51,4 +51,6 @@ export function PostContent({ item, spoilerOpened, onSpoilerStatusChange }: Post
             )}
         </Root>
     );
-}
+});
+
+PostContent.displayName = "PostContent";

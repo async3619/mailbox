@@ -7,6 +7,7 @@ import { Timeline } from ".";
 
 import { MOCK_TIMELINE_POSTS } from "../../../__tests__/fixture";
 import { MockEmojiProvider } from "../../../__tests__/emoji";
+import { Wrapper } from "../../../__tests__/wrapper";
 
 describe("<Timeline />", () => {
     it("should render Timeline properly", async () => {
@@ -17,6 +18,7 @@ describe("<Timeline />", () => {
                         <Timeline items={[]} />
                     </ThemeProvider>
                 </MockEmojiProvider>,
+                { wrapper: Wrapper },
             );
         });
 
@@ -32,6 +34,7 @@ describe("<Timeline />", () => {
                         <Timeline items={MOCK_TIMELINE_POSTS} />
                     </ThemeProvider>
                 </MockEmojiProvider>,
+                { wrapper: Wrapper },
             );
         });
 
