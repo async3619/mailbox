@@ -1,0 +1,15 @@
+{
+    "mastodon": {
+        "timeline": {
+            "home": "Home Timeline",
+            "local": "Local Timeline",
+            "federated": "Federated Timeline"
+        },
+        "notifications": "Notifications"
+    },
+    "menu": {
+        "addColumn": {
+            "title": "Add Column"
+        }
+    }
+}
