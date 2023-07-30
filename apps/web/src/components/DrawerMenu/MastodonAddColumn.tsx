@@ -62,7 +62,9 @@ export function MastodonAddColumnDrawerMenu({ account, ...rest }: AddColumnDrawe
         [account, addColumns, rest],
     );
 
-    const headerContent = <AccountHeader account={account} titleWeight={800} titleText={t("menu.addColumn.title")} />;
+    const headerContent = (
+        <AccountHeader account={account} titleWeight={800} titleText={t("actions.addColumn.title")} />
+    );
 
     return (
         <BaseDrawerMenu header={headerContent} {...rest}>

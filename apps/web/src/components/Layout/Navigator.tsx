@@ -1,6 +1,7 @@
 import React from "react";
 import { Scrollbars } from "rc-scrollbars";
 import { IconButton } from "ui";
+import { useTranslation } from "next-i18next";
 
 import { Box, Divider, Drawer, Stack } from "@mui/material";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
@@ -19,6 +20,7 @@ import { AccountButton } from "@components/AccountButton";
 export function Navigator() {
     const { showDialog } = useDialog();
     const { accounts } = useAccounts();
+    const { t } = useTranslation();
 
     const handleAccountAdd = () => {
         showDialog(AddAccountDialog);
@@ -52,7 +54,7 @@ export function Navigator() {
                             ))}
                             <IconButton
                                 color="primary"
-                                tooltip="Add Account"
+                                tooltip={t("actions.addAccount.title")}
                                 tooltipPlacement="right"
                                 onClick={handleAccountAdd}
                                 size="large"

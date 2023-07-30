@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "next-i18next";
 
 import { BaseDialog, BaseDialogProps } from "ui";
 
@@ -12,12 +13,14 @@ import { Header, Root } from "@components/Dialog/AddAccount/index.styles";
 export interface AddAccountDialogProps extends BaseDialogProps {}
 
 export function AddAccountDialog({ ...props }: AddAccountDialogProps) {
+    const { t } = useTranslation();
+
     return (
         <BaseDialog maxWidth="xs" fullWidth {...props}>
             <Root>
                 <Header>
                     <Typography variant="h6" fontWeight={800} textAlign="center">
-                        Add New Account
+                        {t("actions.addAccount.title")}
                     </Typography>
                 </Header>
                 <Stepper step={ADD_ACCOUNT_STEP} />

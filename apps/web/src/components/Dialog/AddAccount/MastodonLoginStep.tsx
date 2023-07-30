@@ -1,5 +1,6 @@
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "next-i18next";
 import { Button } from "ui";
 import * as yup from "yup";
 import isUrl from "is-url";
@@ -23,6 +24,7 @@ const MASTODON_LOGIN_FORM_SCHEMA = yup.object().shape({
 });
 
 export const MastodonLoginStep = withStep()(() => {
+    const { t } = useTranslation();
     const [submitting, setSubmitting] = React.useState(false);
     const { formState, handleSubmit, control } = useForm<MastodonLoginStepValues>({
         mode: "all",
@@ -55,7 +57,7 @@ export const MastodonLoginStep = withStep()(() => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Typography variant="body1" color="text.secondary">
-                Please type your Mastodon instance URL and click &quot;Next&quot; button.
+                {t("actions.addAccount.mastodon.description")}
             </Typography>
             <Box mt={2}>
                 <Controller
@@ -65,7 +67,7 @@ export const MastodonLoginStep = withStep()(() => {
                         <TextField
                             size="small"
                             fullWidth
-                            label="Mastodon instance URL"
+                            label={t("actions.addAccount.mastodon.placeholder")}
                             placeholder="masdoton.social"
                             autoComplete="off"
                             error={!!fieldState.error}
@@ -78,7 +80,7 @@ export const MastodonLoginStep = withStep()(() => {
             </Box>
             <Box mt={1}>
                 <Button type="submit" fullWidth variant="contained" disabled={!formState.isValid} loading={submitting}>
-                    Next
+                    {t("actions.addAccount.mastodon.action")}
                 </Button>
             </Box>
         </form>
