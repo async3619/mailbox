@@ -28,6 +28,10 @@ class MockAccount extends BaseAccount<"mock"> {
     serialize(): Record<string, unknown> {
         return {};
     }
+    async cancelRepost(): Promise<void> {}
+    async repost(): Promise<TimelinePost> {
+        return {} as TimelinePost;
+    }
     async startWatch(): Promise<void> {}
     async stopWatch(): Promise<void> {}
 }

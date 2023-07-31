@@ -1,8 +1,11 @@
 import React from "react";
+import { BaseAccount } from "services";
+
 import { ColumnInstance } from "@components/Column/types";
 
 export interface ColumnContextValue {
     column: ColumnInstance;
+    account?: BaseAccount<string> | null;
 }
 
 export const ColumnContext = React.createContext<ColumnContextValue | null>(null);
@@ -13,5 +16,5 @@ export function useColumn() {
         throw new Error("useColumn must be used within a <BaseColumn />");
     }
 
-    return ctx.column;
+    return { ...ctx.column, account: ctx.account };
 }

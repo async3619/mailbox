@@ -1,6 +1,11 @@
 import dayjs from "dayjs";
 import { PostContentItem } from "content-parser";
 
+import { MastodonAccount } from "./mastodon";
+
+export type Accounts = MastodonAccount;
+export type AccountTypes = Accounts["serviceType"];
+
 export type Nullable<T> = T | null | undefined;
 
 export enum TimelineType {
@@ -27,8 +32,10 @@ export interface PostAuthor {
 }
 
 export interface TimelinePost {
-    serviceType: string;
+    serviceType: AccountTypes;
     id: string;
+    originId?: string;
+    reposted?: Nullable<boolean>;
     title?: string;
     content: PostContentItem[];
     author: PostAuthor;

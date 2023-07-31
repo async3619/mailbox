@@ -19,7 +19,7 @@ export interface FetchOptions<TRoute extends Route<unknown, unknown, unknown>> {
 }
 
 export class Fetcher<APIRoutes extends APIRouteMap> {
-    private static readonly fetcher: typeof fetch = fetch;
+    private static readonly fetcher: typeof fetch = (...params) => fetch(...params);
 
     public constructor(private readonly baseUrl: string) {}
 

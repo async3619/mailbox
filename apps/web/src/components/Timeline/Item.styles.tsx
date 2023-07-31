@@ -14,3 +14,11 @@ export const Header = styled.div`
     display: flex;
     align-items: center;
 `;
+
+export const AttachmentWrapper = styled.div`
+    margin-top: ${({ theme }) => theme.spacing(2)};
+
+    &:not(:last-of-type) {
+        margin-bottom: ${({ theme }) => theme.spacing(1.5)};
+    }
+`;

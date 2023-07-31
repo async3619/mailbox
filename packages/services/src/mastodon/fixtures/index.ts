@@ -109,7 +109,12 @@ export function createMastodonPost(id: string, reblog?: Status, replyTo?: Status
             username: `user_${id}`,
             displayName: `user_${id}`,
         },
-        reblog,
+        reblog: reblog
+            ? {
+                  ...reblog,
+                  reblogged: true,
+              }
+            : undefined,
         reblogged: !!reblog,
         inReplyToId: replyTo?.id,
         inReplyToAccountId: replyTo?.account?.id,

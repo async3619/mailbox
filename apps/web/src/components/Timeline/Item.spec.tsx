@@ -11,6 +11,7 @@ import {
     MOCK_SPOILER_TIMELINE_POST,
     MOCK_TIMELINE_POST,
 } from "../../../__tests__/fixture";
+import { Wrapper } from "../../../__tests__/wrapper";
 
 describe("<TimelineItemView />", () => {
     it("should render TimelineItemView properly", async () => {
@@ -25,6 +26,7 @@ describe("<TimelineItemView />", () => {
                         />
                     </ThemeProvider>
                 </MockEmojiProvider>,
+                { wrapper: Wrapper },
             );
         });
 
@@ -44,6 +46,7 @@ describe("<TimelineItemView />", () => {
                         />
                     </ThemeProvider>
                 </MockEmojiProvider>,
+                { wrapper: Wrapper },
             );
         });
 
@@ -63,6 +66,7 @@ describe("<TimelineItemView />", () => {
                         />
                     </ThemeProvider>
                 </MockEmojiProvider>,
+                { wrapper: Wrapper },
             );
         });
 
@@ -84,6 +88,7 @@ describe("<TimelineItemView />", () => {
                         />
                     </ThemeProvider>
                 </MockEmojiProvider>,
+                { wrapper: Wrapper },
             );
         });
 
