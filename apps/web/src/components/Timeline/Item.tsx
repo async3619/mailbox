@@ -151,7 +151,7 @@ export const TimelineItemView = React.memo(
                         <AttachmentList post={item} attachments={attachments} />
                     </AttachmentWrapper>
                 )}
-                <TimelineItemReaction />
+                <TimelineItemReaction post={item} />
             </Root>
         );
     },

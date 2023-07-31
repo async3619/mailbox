@@ -1,6 +1,8 @@
 import { NotificationItem, PostTimelineType, TimelinePost, TimelineType } from "../types";
 import { EventEmitter } from "../utils";
 
+export type PostUpdateType = "reblog" | "unreblog";
+
 export interface AccountEventMap {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: (...args: any[]) => unknown;
@@ -9,6 +11,8 @@ export interface AccountEventMap {
     "delete-post": (type: PostTimelineType, postId: string) => void;
 
     "new-notification": (item: NotificationItem) => void;
+
+    "post-state-update": (postId: string, type: PostUpdateType) => void;
 }
 
 export abstract class BaseAccount<
@@ -26,7 +30,6 @@ export abstract class BaseAccount<
     public getServiceType() {
         return this.serviceType;
     }
-
     public abstract getUniqueId(): string;
     public abstract getUserId(): string;
     public abstract getDisplayName(): string;
@@ -41,6 +44,9 @@ export abstract class BaseAccount<
         count: number,
         after?: TimelinePost["id"],
     ): AsyncIterableIterator<TimelinePost[]>;
+
+    public abstract repost(post: TimelinePost): Promise<TimelinePost>;
+    public abstract cancelRepost(post: TimelinePost): Promise<void>;
 
     public abstract startWatch(type: TimelineType): Promise<void>;
     public abstract stopWatch(type: TimelineType): Promise<void>;

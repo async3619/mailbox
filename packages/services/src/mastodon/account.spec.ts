@@ -1,6 +1,6 @@
 import { MastodonAccount } from "./account";
-import { NotificationItem, TimelinePost, TimelineType } from "../types";
 import { createMastodonNotification, createMastodonPost } from "./fixtures";
+import { NotificationItem, TimelinePost, TimelineType } from "../types";
 
 jest.mock("masto", () => ({
     login: jest.fn().mockResolvedValue({
@@ -11,6 +11,10 @@ jest.mock("masto", () => ({
                     displayName: "displayName",
                     avatar: "avatar",
                 }),
+            },
+            statuses: {
+                reblog: jest.fn().mockImplementation(() => Promise.resolve(createMastodonPost("1"))),
+                unreblog: jest.fn().mockImplementation(() => Promise.resolve(createMastodonPost("1"))),
             },
         },
     }),
@@ -59,19 +63,15 @@ describe("MastodonAccount class", () => {
     it("should be able to get unique id", () => {
         expect(account.getUniqueId()).toBe("@username@instanceUrl");
     });
-
     it("should be able to get user id", () => {
         expect(account.getUserId()).toBe("username");
     });
-
     it("should be able to get display name", () => {
         expect(account.getDisplayName()).toBe("displayName");
     });
-
     it("should be able to get avatar url", () => {
         expect(account.getAvatarUrl()).toBe("avatar");
     });
-
     it("should be able to get instance url", () => {
         expect(account.getInstanceUrl()).toBe("instanceUrl");
     });
@@ -84,7 +84,6 @@ describe("MastodonAccount class", () => {
         expect(fetchTimelineItems).toBeCalledTimes(1);
         expect(fetchTimelineItems).toBeCalledWith(TimelineType.Home, 10, undefined);
     });
-
     it("should be able to fetch local timeline items", async () => {
         fetchTimelineItems.mockResolvedValue([]);
 
@@ -95,7 +94,6 @@ describe("MastodonAccount class", () => {
         expect(fetchTimelineItems).toBeCalledTimes(1);
         expect(fetchTimelineItems).toBeCalledWith(TimelineType.Local, 10, undefined);
     });
-
     it("should be able to fetch federated timeline items", async () => {
         fetchTimelineItems.mockResolvedValue([]);
 
@@ -118,7 +116,6 @@ describe("MastodonAccount class", () => {
         expect(result).toHaveLength(1);
         expect(result[0]).toMatchObject({ id: "1" });
     });
-
     it("should compose reposted post data correctly", async () => {
         fetchTimelineItems.mockResolvedValueOnce([createMastodonPost("2", createMastodonPost("1"))]);
 
@@ -135,7 +132,6 @@ describe("MastodonAccount class", () => {
             }),
         });
     });
-
     it("should compose replied post data correctly", async () => {
         fetchTimelineItems.mockResolvedValueOnce([
             createMastodonPost("1"),
@@ -158,7 +154,6 @@ describe("MastodonAccount class", () => {
             }),
         });
     });
-
     it("should use cached user data for replied post author", async () => {
         fetchTimelineItems
             .mockResolvedValueOnce([createMastodonPost("1")])
@@ -172,7 +167,15 @@ describe("MastodonAccount class", () => {
         expect(result).toHaveLength(2);
         expect(result[0].author).toEqual(result[1].originPostAuthor);
     });
+    it("should cache reposted post for later use", async () => {
+        fetchTimelineItems.mockResolvedValueOnce([createMastodonPost("2", createMastodonPost("1"))]);
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for await (const _ of account.getTimelinePosts(TimelineType.Home, 10)) {
+        }
+
+        expect(account["reblogIds"].has("1")).toBe(true);
+    });
     it("should throw error if fetched post is not a valid post data", async () => {
         fetchTimelineItems.mockResolvedValueOnce([
             {
@@ -198,7 +201,6 @@ describe("MastodonAccount class", () => {
         expect(fetchNotificationItems).toBeCalledTimes(1);
         expect(fetchNotificationItems).toBeCalledWith(10, undefined);
     });
-
     it("should truncate notification items with limit", async () => {
         fetchNotificationItems.mockResolvedValueOnce([
             createMastodonNotification("1", "favourite", createMastodonPost("1")),
@@ -213,7 +215,6 @@ describe("MastodonAccount class", () => {
         expect(fetchNotificationItems).toBeCalledTimes(2);
         expect(fetchNotificationItems).toBeCalledWith(1, undefined);
     });
-
     it("should try to fetch more notification items if limit is not reached", async () => {
         fetchNotificationItems
             .mockResolvedValueOnce([createMastodonNotification("1", "favourite", createMastodonPost("1"))])
@@ -229,7 +230,6 @@ describe("MastodonAccount class", () => {
         expect(fetchNotificationItems).toHaveBeenNthCalledWith(2, 3, "1");
         expect(fetchNotificationItems).toHaveBeenNthCalledWith(3, 3, "2");
     });
-
     it("should compose notification data with post correctly", async () => {
         fetchNotificationItems.mockResolvedValueOnce([
             createMastodonNotification("1", "favourite", createMastodonPost("1")),
@@ -269,7 +269,6 @@ describe("MastodonAccount class", () => {
             users: expect.arrayContaining([expect.objectContaining({ accountName: "user_4" })]),
         });
     });
-
     it("should throw error when trying to compose notification data without post data", async () => {
         fetchNotificationItems.mockResolvedValueOnce([
             { ...createMastodonNotification("1", "favourite", createMastodonPost("1")), status: null },
@@ -281,7 +280,6 @@ describe("MastodonAccount class", () => {
             }
         }).rejects.toThrowError("Invalid notification data");
     });
-
     it("should compose follow notification data correctly", async () => {
         fetchNotificationItems.mockResolvedValueOnce([createMastodonNotification("1", "follow")]);
 
@@ -297,7 +295,6 @@ describe("MastodonAccount class", () => {
             users: expect.arrayContaining([expect.objectContaining({ accountName: "user_1" })]),
         });
     });
-
     it("should throw error when trying to compose unknown notification type", async () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fetchNotificationItems.mockResolvedValueOnce([createMastodonNotification("1", "unknown" as any)]);
@@ -315,21 +312,18 @@ describe("MastodonAccount class", () => {
         expect(account["client"].v1.stream.streamUser).toBeCalledTimes(1);
         expect(onStreamUser).toBeCalledTimes(3);
     });
-
     it("should able to start watching local timeline", async () => {
         await account.startWatch(TimelineType.Local);
 
         expect(account["client"].v1.stream.streamCommunityTimeline).toBeCalledTimes(1);
         expect(onStreamCommunityTimeline).toBeCalledTimes(3);
     });
-
     it("should able to start watching public timeline", async () => {
         await account.startWatch(TimelineType.Federated);
 
         expect(account["client"].v1.stream.streamPublicTimeline).toBeCalledTimes(1);
         expect(onStreamPublicTimeline).toBeCalledTimes(3);
     });
-
     it("should able to start watching notifications", async () => {
         await account.startWatch(TimelineType.Notifications);
 
@@ -344,7 +338,6 @@ describe("MastodonAccount class", () => {
         expect(account["client"].v1.stream.streamUser).toBeCalledTimes(1);
         expect(onStreamUser).toBeCalledTimes(3);
     });
-
     it("should able to stop watching timeline", async () => {
         await account.startWatch(TimelineType.Home);
         await account.stopWatch(TimelineType.Home);
@@ -358,5 +351,24 @@ describe("MastodonAccount class", () => {
             instanceUrl: "instanceUrl",
             token: { access_token: "", token_type: "", scope: "", created_at: 0 },
         });
+    });
+
+    it("should be able to repost a post", async () => {
+        const targetPost = createMastodonPost("1");
+        const composedPost = account["composePost"](targetPost);
+
+        await account.repost(composedPost);
+
+        expect(account["client"].v1.statuses.reblog).toBeCalledTimes(1);
+        expect(account["client"].v1.statuses.reblog).toBeCalledWith("1");
+    });
+    it("should be able to cancel reposting a post", async () => {
+        const targetPost = createMastodonPost("1");
+        const composedPost = account["composePost"](targetPost);
+
+        await account.cancelRepost(composedPost);
+
+        expect(account["client"].v1.statuses.unreblog).toBeCalledTimes(1);
+        expect(account["client"].v1.statuses.unreblog).toBeCalledWith("1");
     });
 });

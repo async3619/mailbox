@@ -6,7 +6,7 @@ import { parsePostContent } from "content-parser";
 
 import { GetTokenData } from "./auth.types";
 
-import { composeNotifications } from "../utils";
+import { composeNotifications, ObservableSet } from "../utils";
 import { BaseAccount } from "../base";
 import {
     BaseNotificationItem,
@@ -45,6 +45,8 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
     private readonly client: mastodon.Client;
     private readonly account: mastodon.v1.AccountCredentials;
 
+    private readonly reblogIds = new ObservableSet<string>();
+
     private constructor(
         instanceUrl: string,
         token: GetTokenData,
@@ -57,6 +59,9 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         this.token = token;
         this.client = client;
         this.account = account;
+
+        this.reblogIds.addEventListener("add", this.handleAddReblogId.bind(this));
+        this.reblogIds.addEventListener("delete", this.handleRemoveReblogId.bind(this));
     }
 
     public getUniqueId() {
@@ -181,6 +186,22 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         this.watcherMap.delete(watcherType);
     }
 
+    public async repost(post: TimelinePost): Promise<TimelinePost> {
+        const targetId = post.originId ?? post.id;
+        const resultPost = await this.client.v1.statuses.reblog(targetId);
+        if (!this.reblogIds.has(targetId)) {
+            this.reblogIds.add(targetId);
+        }
+
+        return this.composePost(resultPost);
+    }
+    public async cancelRepost(post: TimelinePost): Promise<void> {
+        const targetId = post.originId ?? post.id;
+
+        await this.client.v1.statuses.unreblog(targetId);
+        this.reblogIds.delete(targetId);
+    }
+
     public serialize() {
         return {
             serviceType: this.getServiceType(),
@@ -215,9 +236,15 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         const target = post.reblog ?? post;
         const originPostAuthor = post.inReplyToAccountId ? this.authorMap.get(post.inReplyToAccountId) : null;
 
+        if (target.reblogged) {
+            this.reblogIds.add(target.id);
+        }
+
         return {
             serviceType: this.getServiceType(),
             id: post.id,
+            originId: post.reblog?.id,
+            reposted: target.reblogged,
             content: parsePostContent(target.content),
             instanceUrl: parsedUrl.hostname,
             createdAt: dayjs(target.createdAt),
@@ -260,5 +287,12 @@ export class MastodonAccount extends BaseAccount<"mastodon", SerializedMastodonA
         } else {
             throw new Error(`Invalid notification type: ${item.type}`);
         }
+    }
+
+    private handleAddReblogId(id: string) {
+        this.emit("post-state-update", id, "reblog");
+    }
+    private handleRemoveReblogId(id: string) {
+        this.emit("post-state-update", id, "unreblog");
     }
 }

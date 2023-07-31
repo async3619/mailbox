@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { BaseAccount } from "services";
-import { NotificationItem, TimelinePost, TimelineType } from "services";
+import { AccountEventMap, BaseAccount, NotificationItem, TimelinePost, TimelineType } from "services";
 
 export class TestAccount extends BaseAccount<string> {
     public constructor(private readonly userId = "__TEST__", serviceType = "test") {
@@ -27,10 +26,17 @@ export class TestAccount extends BaseAccount<string> {
         return [];
     }
 
+    repost = jest.fn();
+    cancelRepost = jest.fn();
+
     public serialize(): Record<string, unknown> {
         return {};
     }
 
-    public async startWatch(type: TimelineType): Promise<void> {}
-    public async stopWatch(type: TimelineType): Promise<void> {}
+    public async startWatch(): Promise<void> {}
+    public async stopWatch(): Promise<void> {}
+
+    emitEvent<K extends keyof AccountEventMap>(eventName: K, ...args: Parameters<AccountEventMap[K]>): void {
+        this.emit(eventName, ...args);
+    }
 }

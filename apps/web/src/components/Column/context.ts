@@ -5,7 +5,7 @@ import { ColumnInstance } from "@components/Column/types";
 
 export interface ColumnContextValue {
     column: ColumnInstance;
-    account?: BaseAccount<string>;
+    account?: BaseAccount<string> | null;
 }
 
 export const ColumnContext = React.createContext<ColumnContextValue | null>(null);
